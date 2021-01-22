@@ -214,6 +214,7 @@ $('.slideList1').slick({
 	autoplaySpeed: 2000,
 /* 	rtl: true */
 });
+console.log("hello git");
 </script>
 
 <%@ include file="/WEB-INF/views/include/footer.jsp" %>
