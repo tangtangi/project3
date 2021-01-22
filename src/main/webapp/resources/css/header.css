@@ -1,0 +1,195 @@
+@charset "UTF-8";
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400&display=swap');
+
+*{
+	margin: 0;
+    padding: 0;
+}
+body{
+	font-family: "Noto Sans KR"; 
+}
+button{
+	font-family: "Noto Sans KR"; 
+}
+
+a{
+	text-decoration:blink;
+}
+#header{
+	position: fixed;
+	top:0px;
+	left: 0px;
+    width: 100%;
+	z-index: 9999;
+}
+#header a{
+	color: black;	
+}
+	.top-wrap{
+	    padding-top: 35px;
+	    justify-content: space-between;
+	    display: flex;
+	    flex-direction: row;
+		position: fixed;
+		top: 0px;
+		width: 100%;
+		border-top: 1px solid #ddd;
+	
+	}
+	
+	.inner-box>a{
+		vertical-align: middle;
+	    width: 50%;
+	    margin: 0 auto;
+	    text-align: center;
+    }
+	.gnb-wrap{
+	    padding-top: 35px;
+		position: fixed;
+		top: 70px;
+		width: 100%;
+		background: white;
+	
+	}
+	.gnb-inner{
+	    padding: 0px;
+	    padding-bottom:15px;
+	    justify-content: space-between;
+	    display: flex;
+	    flex-direction: row;
+		width: 100%;
+		border-bottom: 1px solid #ddd;
+	
+	}
+	
+	.gnb-inner>ul{
+	    width: 80%;
+	
+	}
+	
+	.gnb-inner>ul>li{
+/*float: left; */
+		display: inline-block;	
+		position:relative;
+		width: 12%;
+		font-size: 18px;
+		text-align: center;
+	}
+/* gnb밑줄 효과 시작 */
+	.gnb-inner>ul>li span{
+		position:relative; /* 부모 상대위치 */
+	   
+	} 
+	.gnb-inner>ul>li span:after{ /* 애프터효과 */
+	   content:""; /* 밑줄효과 위한 공백값 */
+	   position: absolute; /* 자식 절대위치 */
+	   width:100%; 
+	   left:0;
+	   height:3px;
+	   bottom: -1px; /* 밑줄설정 */
+	   background: black;
+	   transition:transform .4s; /* 0.4초동안 transform효과를 바꾸겠다. */
+	   transform : scaleX(0); 
+	}
+	.gnb-inner>ul>li span:hover:after{
+	   transform : scaleX(1); /* x스케일을 0에서 1로. 마우스 올리면. 0.4초동안 바꿈 */
+	}
+/* gnb밑줄 효과 꿑 */	
+
+    #top{ /* 탑버튼! */
+    	position: fixed;
+    	top: 90%;
+    	left:90%;
+    }
+    #bottom{ /* 바텀 버튼! */
+    	position: fixed;
+    	top: 93%;
+    	left:90%;
+    }
+    .snb-more{
+    	align-self: center;
+    	flex: auto;
+    	min-width: 75px;
+    }
+    
+/* 아코디언 시작 */
+ input[id="more"]{
+		display: none; 
+    }
+    input[id="more"] + label{
+        cursor: pointer;
+        position: relative;
+    }
+    input[id="more"] + label em{
+        position: absolute;
+        top: 50%;
+        right: 10px;
+        width: 30px;
+        height: 30px;
+        margin-top: -15px;
+        display: inline-block;
+        background: url('') 0 0 no-repeat;
+        
+    }
+  
+   div[class="snb-wrap"] {
+       max-height: 0px; /* 0px로 바꾸기 */
+       transition: all .3s;
+       overflow: hidden;
+    }
+    
+/*      input[id="more"]:checked + label + div { */
+/*          max-height: 100px; */
+/*     } */
+/* 아코디언 끝 */
+	.mnu-wrap{
+		padding-top: 30px;
+		padding-bottom : 30px;
+		display: flex;
+   		justify-content: space-evenly;
+   		background: white;
+	}
+	.mnu-box li{
+		list-style-type: none;
+		margin:10px 0;
+	}
+	.mnu-box>a{
+	    font-weight: bold;
+	    font-size: larger;
+	}
+	.myloc{
+	    width: 301px;
+	    display: inline-block;
+	    border-bottom: 1px solid black;
+	    text-align: -webkit-left;
+    }
+    .cartCnt{
+	    width: 10px;
+	    outline: 0;
+	    border: 0;
+	    cursor: pointer;
+    }
+/* 상단바 메뉴*/
+ .menuname{
+ font-size:35px;
+ }
+ .menuname2{
+ font-size:35px;
+ border-bottom:2px solid black;
+ }
+ .submenu{/* 서브메뉴 */
+  font-size:15px;
+  border-bottom:2px solid black;
+ }
+ .submenu_a{
+  height:30px;
+  color:#888888;
+  font-size:16px;
+    border-right: 1px solid lightgrey;
+ }
+ .submenu_a>a:link { color:#888888; text-decoration: none;}
+ .submenu_a>a:visited {color: #888888; text-decoration: none;}/* 들어갔다 나오면 */
+ .submenu_a>a:hover { color: black; text-decoration: none;}
+ .submenu_a>a:active { color: black; text-decoration: none;}/* 클릭했을 때 */
+/* .submenu_a>a:alink { color:red; text-decoration: none;}/*  마우스로 클릭한 하이퍼링크의 색상 */ 
+/* 상단바 메뉴 끝*/

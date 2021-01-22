@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-4.3.xsd
+		http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring-1.2.xsd
+		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+	<!-- Root Context: defines shared resources visible to all other web components -->
+		<!-- Root Context: defines shared resources visible to all other web components -->
+
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver"></property>
+		<property name="url" value="jdbc:mysql://localhost:3306/domino?serverTimezone=Asia/Seoul"></property>
+		<property name="username" value="root"></property>
+		<property name="password" value="1111"></property>
+	</bean>
+		
+	<!-- mybatis -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"></property>
+		<property name="configLocation" value="classpath:/mybatis-config.xml"></property>
+			<!-- 매퍼스의 어떤 경로든지 다 여기로 가져옴.-->	
+		<property name="mapperLocations" value="classpath:mappers/**/*Mapper.xml"></property>
+	</bean>
+
+	<!-- sql 실제 구문 연동 -->
+	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate" destroy-method="clearCache">
+		<constructor-arg name="sqlSessionFactory" ref="sqlSessionFactory"></constructor-arg>
+	</bean>
+	<!-- 트랜젝션 처리 -->
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+	<tx:annotation-driven />
+	
+	<!--MemberDAOImpl 에 @Repository 에노테이션이 설정되더라도 스프링에서 해당 패키지를 스캔하지 않으면 제대로 스프링의 빈으로 등록되지 못한다.  -->
+	<context:component-scan base-package="com.dominos.persistence"></context:component-scan>	
+	<context:component-scan base-package="com.dominos.service"></context:component-scan>
+										<!-- service 패키지 만든거 등록. -->	
+	
+	
+<!-- 						== 설명 ==
+. 트랜잭션을  처리하기 위해서는 기본적으로 트랜잭션을 처리하는 트랜잭션 매니저를 설정해야 한다.
+. 가장 간단한 설정은 DataSource의 설정이 존재하는 곳에 적용하는 것이 가장 편리하다.
+
+﻿. <tx:annotation-driven />﻿은 @Transactional 애노테이션을 이용한 트랜잭션의 관리가 가능하다.   -->
+</beans>

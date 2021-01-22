@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<mapper namespace="com.dominos.mapper.MemberMapper">
+	<insert id="joininsert" >
+		<![CDATA[
+			insert into member (id, pass, name, gender, email, phone, birth, address, level) values (#{id},#{pass},#{name},#{gender},#{email},#{phone},#{birth},#{address},#{level})
+		]]>
+	</insert>
+	<select id="login" resultType="int">
+		<![CDATA[
+			select count(*) from member where id=#{id} and pass=#{pass} 
+		]]>
+	</select>
+	<select id="memberselect" resultType="MemberVO">
+		<![CDATA[
+			select * from member where id=#{id} 
+		]]>
+	</select>
+	<select id="modifyPass" resultType="int">
+		<![CDATA[
+			select count(*) from member where id=#{id} and pass=#{pass}  
+		]]>
+	</select>
+	<select id="modifyGet" resultType="MemberVO">
+		<![CDATA[
+			select * from member where id=#{id}
+		]]>
+	</select>
+	<update id="modifyPost" >
+		<![CDATA[
+			update member set pass=#{pass}, gender=#{gender}, email=#{email}, phone=#{phone}, birth=#{birth}, address=#{address} where id=#{id}
+		]]>
+	</update>
+	<select id="idFind" resultType="int">
+		<![CDATA[
+			select count(*) from member where name=#{name} and email=#{email} and phone=#{phone}
+		]]>
+	</select>
+	<select id="idselect" resultType="MemberVO">
+		<![CDATA[
+			select * from member where name=#{name} and email=#{email} and phone=#{phone}
+		]]>
+	</select>
+	<select id="passFind" resultType="int">
+		<![CDATA[
+			select count(*) from member where id=#{id} and name=#{name} and email=#{email} 
+		]]>
+	</select>
+	<select id="passSelect" resultType="MemberVO">
+		<![CDATA[
+			select * from member where id=#{id} and name=#{name} and email=#{email} 
+		]]>
+	</select>
+	<update id="withdraw">
+		<![CDATA[
+			update member set level='0' where id=#{session_id}
+		]]>
+	</update>
+	<select id="idCheck" resultType="int">
+		select count(*) from member where id=#{id}
+	</select>
+</mapper>

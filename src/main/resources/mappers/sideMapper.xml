@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<mapper namespace = "com.dominos.mapper.SideMapper">
+	<insert id="insert">
+		insert into side (name, price, category, signdate,image,image_o,image_s) values (#{name},#{price},#{category},#{signdate},#{image},#{image_o},#{image_s})
+	</insert>
+	<delete id="delete">
+		delete from side
+	</delete>
+	<select id="list" resultType="SideVO">
+		select * from side where category = #{menu}
+	</select>
+	<select id="listAll" resultType="SideVO">
+		select * from side
+	</select>
+	<select id="read" resultType="SideVO">
+		<![CDATA[
+			select * from side where uid=#{uid}
+		]]>
+	</select>
+	<select id="readFromName" resultType="SideVO">
+		<![CDATA[
+			select * from side where name=#{name}
+		]]>
+	</select>
+</mapper>

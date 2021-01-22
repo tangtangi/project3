@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<mapper	 namespace = "com.dominos.mapper.pizzaMapper">
+	<insert id="insert">
+		insert into pizza (name,price_L,size_L,price_M,size_M,signdate,dough,topping,image,image_o,image_s) values (#{name},#{price_L},#{size_L},#{price_M},#{size_M},#{signdate},#{dough},#{topping},#{image},#{image_o},#{image_s})
+	</insert>
+	<select id="list" resultType="PizzaVO">
+		<![CDATA[
+			select * from pizza
+		]]> 
+	</select>
+	<select id="read" resultType="PizzaVO">
+		<![CDATA[
+			select * from pizza where uid = #{uid}		
+		]]>
+	</select>
+	<update	id="update">
+		update pizza set size_L=#{size_L},price_L=#{price_L},size_M=#{size_M},price_M=#{price_M},info=#{info},kind=#{kind} where uid=#{uid} 
+	</update>
+	<delete	id="delete">
+		delete from pizza where uid=#{uid} 
+	</delete>
+</mapper>

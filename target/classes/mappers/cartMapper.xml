@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dominos.mapper.CartMapper">
+	<update id="update">
+		update cart_pizza set count = #{count} where menu_uid=#{menu_uid}
+	</update>
+	<update id="updateDough">
+		update cart_pizza set name=#{name}, price=#{price} where category=#{category} and user_id=#{user_id} 
+	</update>
+	<update id="updateOrderUid">
+		update cart_pizza set order_uid=#{order_uid}, state='장바구니' where user_id=#{user_id} and state='담기전'
+	</update>
+	<update id="updateUser_id">
+		update cart_pizza set user_id=#{user_id}, state='장바구니', order_uid=#{order_uid} where user_id=#{session_id2} and state='담기전'
+	</update>
+	<insert id ="insert">
+		insert into cart_pizza (cart_id,user_id,name, price, count, size,menu_uid,category,order_uid,image,image_o,image_s,dough_name,dough_price) values (#{cart_id},#{user_id},#{name},#{price},#{count},#{size},#{menu_uid},#{category},#{order_uid},#{image},#{image_o},#{image_s},#{dough_name},#{dough_price})
+	</insert>
+	<select id="check" resultType="int">
+		select count(*) from cart_pizza where menu_uid=#{menu_uid} and user_id=#{user_id}  and state = '담기전'
+	</select>
+	<select id="checkFromId" resultType="int">
+		select count(*) from cart_pizza where user_id=#{user_id} 
+	</select>
+	<select id="cartCnt" resultType="int">
+		select count(distinct cart_id) from cart_pizza where user_id = #{user_id}
+	</select>
+	<select id="getCountDough" resultType="int">
+		select count(*) from cart_pizza where category=#{category} and user_id=#{user_id}  and state = '담기전'
+	</select>
+	<select id="sumPizza" resultType="String">
+		select sum(count) from cart_pizza where user_id=#{user_id} and category is null
+	</select>
+	<select id="sumJuice" resultType="String">
+		select sum(count) from cart_pizza where user_id=#{user_id} and category = 'juice'
+	</select>
+	<select id="sumSide" resultType="String">
+		select sum(count) from cart_pizza where user_id=#{user_id} and category = 'sidedish'
+	</select>
+	<select id="getMaxCart_id" resultType="String">
+		select max(cart_id) from cart_pizza where category is null;
+	</select>
+	<delete id="delete">
+		delete from cart_pizza where name=#{name}
+	</delete>
+	<delete id="deletePizzaOne">
+		delete from cart_pizza where (menu_uid=#{menu_uid} and cart_id=#{cart_id} and category is null) or(cart_id=#{cart_id} and category = 'topping' ) 
+	</delete>
+	<delete id="deleteSideOne">
+		delete from cart_pizza where menu_uid=#{menu_uid} and cart_id=#{cart_id} and category=#{category} 
+	</delete>
+	<delete id="deletePizzaAll">
+		delete from cart_pizza where user_id = #{session_id}
+	</delete>
+	<delete id="deleteAll">
+		delete from cart_pizza where user_id = #{user_id} and state = '담기전'
+	</delete>
+	<select id="list" resultType="CartVO">
+		select * from cart_pizza where category = #{category}
+	</select>
+	<select id="listFromId" resultType="CartVO">
+		select * from cart_pizza where user_id = #{user_id} and state = '장바구니' order by uid desc
+	</select>
+	
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~gift~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<select id="giftSelect" resultType="GiftVO" >
+		<![CDATA[
+			select * from gift where pizza=#{pizza}		
+		]]>
+	</select>
+	<select id="giftGetLest" resultType="GiftVO">
+		<![CDATA[
+			select * from cart_gift where user_id=#{user_id} and state='장바구니'
+		]]>
+	</select>
+	<insert id="giftInsert">
+		<![CDATA[
+			insert into cart_gift (pizza_uid, user_id, pizza, price_L, size_L, image, image_o, image_s, count) values (#{uid},#{user_id},#{pizza},#{price_L},#{size_L},#{image},#{image_o},#{image_s},#{count})
+		]]>	
+	</insert>
+	<select id="pizzacount" resultType="int">
+		<![CDATA[
+			select count(*) from cart_gift where pizza=#{pizza} and user_id=#{user_id} and state='장바구니'
+		]]>
+	</select>
+	<delete id="giftdelete">
+		<![CDATA[
+			delete from cart_gift where uid=#{uid} 
+		]]>
+	</delete>
+	<delete id="giftDeleteAll">
+		<![CDATA[
+			delete from cart_gift where user_id=#{user_id}
+		]]>
+	</delete>
+	<update id="giftOrderUpdate">
+		<![CDATA[
+			update cart_gift set order_uid=#{order_uid}, state='대기' where user_id=#{user_id} and state='장바구니'
+		]]>
+	</update>
+		<select id="giftSelectGet" resultType="GiftVO">
+		<![CDATA[
+			select * from cart_gift
+		]]>
+	</select>
+	<select id="giftOrderSelect" resultType="GiftVO">
+		<![CDATA[
+			select * from cart_gift where user_id=#{user_id} and state='대기'
+		]]>
+	</select>
+	<select id="memberSelect" resultType="MemberVO">
+		<![CDATA[
+			select * from member where id=#{id}
+		]]>
+	</select>
+
+</mapper>
