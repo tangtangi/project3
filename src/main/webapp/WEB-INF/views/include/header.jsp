@@ -169,8 +169,8 @@ session_level:${session_level}<br>
 					<a href="/menu/store"><span>매장검색</span></a>
 				</li>
 				<li>
-<!-- 					<a href="/cart/cart2"><span>카트1</span></a>
-					<a href="/cart/pizza_cart"><span>피자주문</span></a>
+					<a href="/cart/cart2"><span>카트1</span></a>
+	<!-- 				<a href="/cart/pizza_cart"><span>피자주문</span></a>
 					<a href="/cart/pizza_cart_last"><span>카트Last</span></a>
  -->				</li>
 			</ul>
