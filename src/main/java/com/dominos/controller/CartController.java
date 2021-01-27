@@ -23,6 +23,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.dominos.domain.AddressVO;
 import com.dominos.domain.CartVO;
 import com.dominos.domain.GiftVO;
+import com.dominos.domain.OrderVO;
 import com.dominos.domain.PizzaVO;
 import com.dominos.domain.SideVO;
 import com.dominos.persistence.AddressDAO;
@@ -53,6 +54,7 @@ public class CartController {
 	private MemberDAO member;
 	
 	
+	
 	/*
 	@ResponseBody
 	@PostMapping("pizzaCount")
@@ -65,11 +67,9 @@ public class CartController {
 
 	@RequestMapping(value = "cart", method = RequestMethod.GET)
 	public void cart(Locale locale, Model model) {
-		logger.info("cart");
 	}
 	@RequestMapping(value = "/cart3", method = RequestMethod.GET)
 	public void cart3(Locale locale, Model model) {
-		logger.info("cart3");
 	}
 	
 	
@@ -79,18 +79,29 @@ public class CartController {
 	 */
 	@RequestMapping(value = "cart2", method = RequestMethod.GET)
 	public void cart2(HttpSession session,Model model) {
-		logger.info("cart2 get~~~");
 		String user_id = (String)session.getAttribute("id");
 		
 		model.addAttribute("address",address.getAll(user_id));
-		System.out.println("aaaaaaaaaaaa"+model);
 	}
 	
 	/** 주소 등록하기
 	 */
+	@RequestMapping(value = "addressEnrollBefore", method = RequestMethod.GET)
+	public String addressEnrollBefore(HttpSession session,RedirectAttributes rttr) {
+		String session_id = (String)session.getAttribute("id");
+		int count = address.getCount(session_id); //개수 가져오기
+		
+		String msg = "";
+		if(count >= 5) {
+			msg = "주소등록은 5개까지 가능합니다. 삭제 후 다시 시도하세요.";
+			rttr.addFlashAttribute("msg",msg);
+			return "redirect:/cart/cart2";
+		}else {
+			return "redirect:/cart/addressEnroll";
+		}
+	}
 	@RequestMapping(value = "addressEnroll", method = RequestMethod.GET)
 	public void addressEnroll() {
-		logger.info("addressEnroll get~~~");
 	}
 	
 	/** 배달주소 등록하기 하고 주문방법선택으로 다시 오기.
@@ -99,7 +110,6 @@ public class CartController {
 	 */
 	@RequestMapping(value = "cart2", method = RequestMethod.POST)
 	public String cart2(HttpSession session,AddressVO vo,String category,RedirectAttributes rttr) {
-		logger.info("cart2 post~~~" + vo.getAddress());
 		String user_id = (String)session.getAttribute("id");
 		vo.setUser_id(user_id);
 		
@@ -122,7 +132,6 @@ public class CartController {
 	@GetMapping("deleteOneAddress")
 	@ResponseBody
 	public void deleteOneAddress(String uid) throws Exception {
-		logger.info("deleteOneAddress get~~~~~~~~~~uid:" + uid);
 		address.deleteOneAddress(uid);
 		
 	}
@@ -263,7 +272,6 @@ public class CartController {
 	        }else { // (cnt < pre_cnt){ // 업데이트. 개수 증감.
 	        	dao.update(cartVO);
 	        }
-	        System.out.println("cnt :" + cnt + ",check : "+check);
 
 		}
 		//topping,Side,Juice 수량 버튼을 누르면 ajax
@@ -335,7 +343,6 @@ public class CartController {
 	        	}else { // (cnt < pre_cnt){ // 업데이트. 개수 증감.
 	        		dao.updatePlus(cartVO);
 	        	}
-	        	System.out.println("cnt :" + cnt + ",checkJuice : "+checkJuice);
 
 	        	return 2;
 	        }
@@ -385,7 +392,6 @@ public class CartController {
         }else {
         	dao.updateDough(cartVO);
         }
-        System.out.println("name :" + name );
 	}*/
 	
 	
@@ -406,7 +412,6 @@ public class CartController {
 		}
 		model.addAttribute("list",dao.listFromId((String)session.getAttribute("id")));
 		model.addAttribute("cartCnt",dao.cartCnt(session_id));
-		logger.info("pizzaCart~~~Get~~~"+model);
 	}
 	
 	/** 피자카트에 주소uid 등록하기
@@ -419,7 +424,6 @@ public class CartController {
 		vo.setAddress_uid(uid);
 		vo.setUser_id((String)session.getAttribute("id"));
 		member.updateAddr(vo);
-		System.out.println("uid:"+uid);
 	}
 	
 	//장바구니 하나 삭제	//ajax로 온건데 왜 ResponsBody 안해도 되지?
@@ -437,7 +441,6 @@ public class CartController {
 	@GetMapping("deleteOne")
 	@ResponseBody
 	public int deleteOne(CartVO cartVO, HttpSession session) throws Exception {
-		logger.info("deleteOne get~~~~~~~~~~uid:" + cartVO);
 		
 		String session_id = (String)session.getAttribute("id");
 		cartVO.setUser_id(session_id);
@@ -470,7 +473,6 @@ public class CartController {
 	@GetMapping("deleteAllPizza")
 	@ResponseBody
 	public String deleteAllPizza(HttpSession session)  throws Exception {
-		logger.info("deleteAllPizza get~~~~~~~~~~");
 		String session_id = (String)session.getAttribute("id");
 		dao.deletePizza(session_id);
 		
@@ -481,7 +483,6 @@ public class CartController {
 	@GetMapping("cartCnt")	
 	@ResponseBody
 	public int cartCnt(HttpSession session)  throws Exception {
-		logger.info("cartCnt get~~~~~~~~~~");
 		String session_id = (String)session.getAttribute("id");
 		return dao.cartCnt(session_id);
 		
@@ -492,6 +493,17 @@ public class CartController {
 	public void pizzacart_last(HttpSession session,Model model)  throws Exception {
 		//카트db에서 아이디랑 장바구니에 해당되는 값 불러오기
 		String session_id = (String)session.getAttribute("id");
+		
+		CartVO cartVO = new CartVO();
+		//order_uid : 날짜 시작!! 주문번호 order_uid 입력!!
+		Date now = new Date();
+		SimpleDateFormat sdate = new SimpleDateFormat("MMdd");
+		String signdate = sdate.format(now);
+		int random = (int) (Math.random()*10000000);
+		cartVO.setOrder_uid(Integer.parseInt(signdate+random));//주문번호 패턴 생성
+		cartVO.setUser_id(session_id);
+		
+		dao.updateOrderUid(cartVO,"장바구니to장바구니");
 		
 		
 		String addrUid = member.getAddrUid(session_id); //아이디로 주소uid 찾기.
@@ -513,20 +525,34 @@ public class CartController {
 	//카카오 페이 결제
 	@GetMapping("kakao")	
 	public void kakao(HttpSession session,Model model,String total_price)  throws Exception {
-		logger.info("kakao get~~~~~~~~~~"+model+""+total_price);
 		model.addAttribute("sum",total_price);
 		model.addAttribute("list",model);
 	}
 	@GetMapping("paySuccess")
-	public String paySuccess(HttpSession session,String total_price) throws Exception {
+	public String paySuccess(HttpSession session,OrderVO orderVO) throws Exception {
 		String session_id = (String)session.getAttribute("id");
 		CartVO vo = new CartVO();
 		List<CartVO> list =  dao.listFromId(session_id);
 		for(int i = 0; i<list.size(); i++) {	//결제완료 처리하고
+			vo = list.get(i);
 			dao.update(vo,"결제완료");
 		}
+		vo = list.get(0);
+		orderVO.setUser_id(session_id);
+		orderVO.setOrder_uid(vo.getOrder_uid());
+		orderVO.setPay_type("카카오");
+		//orderVO.setTotal_price(total_price); 그냥 들어갈껄??
 		
-		//orderAll에 인서트하기. 
+		Date date = new Date();
+		SimpleDateFormat s = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+		String simple = s.format(date);
+		orderVO.setSigndate(simple);
+		
+		logger.info("paySuccess kkkkGetMa kkkkkkkkkkkkkkkkkkkkkkkkkkkkkk/ vo :"+vo);
+		logger.info("paySuccess kkkkGetMa kkkkkkkkkkkkkkkkkkkkkkkkkkkkkk/ orderVO"+orderVO);
+		//orderAll에 인서트하기.
+		dao.insert(orderVO,"결제 완료 된거 오더올db에 새로 넣기");
+		
 		return "redirect:/myPage/myOrderList";
 	}
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -560,7 +586,6 @@ public class CartController {
 				vo.setUser_id(user_id); 
 				dao.giftInsert(vo);
 				
-				logger.info("+++++++++++++++++++++++++"+vo.toString());
 			}
 			
 		}else{

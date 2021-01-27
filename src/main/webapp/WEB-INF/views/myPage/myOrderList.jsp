@@ -35,6 +35,30 @@ div a{
     margin: 2px 20px;
     vertical-align: middle;
 }
+   .myBlack{
+      width: 100%;
+      height: 250px;
+      background: #111;
+      color: #fff;
+      display: flex;
+       justify-content: space-around;
+       align-items: center;
+   }
+   .myBlack>div{
+      text-align: center;
+      position: relative;
+      color: #aaa;
+   }
+   .before:before{
+       content: "";
+       width: 1px;
+       height: 70px;
+       background: #aaa;
+       display: inline-block;
+       position: absolute;
+       left: 0%;
+       top: -66%;
+   }
 </style>
 
 
@@ -69,12 +93,49 @@ div a{
 		<div class="box_head" >
 			<div style="  border-right: 1px solid black;padding-right: 35px;color:#8c8888;">
 				<a href="/myPage/myOrderList"><b>피자 주문내역</b></a></div>
-			<div style="padding: 0 35px;color:#8c8888;"><a href="/myPage/myOrderList_gift">상품권 주문내역</a></div>
-		</div>	
-	</div>
-	<div style ="width: 13.5%"></div>
+         <div style="padding: 0 35px;color:#8c8888;"><a href="/myPage/myOrderList_gift"><b>상품권 주문내역</b></a></div>
+      </div>   
+      <div class="myBlack" >
+         <div style="width: 50%;">
+         <div style="width: 80%; margin-left: 100px; text-align: left;">
+            <p>'${session_id }'님이 주문하신 내역입니다.</p>
+            <p style="width: 300px;height: 3px; background: #1391ff;"></p>
+            <p>주문을 취소하시려면 해당 매장으로 전화하셔야 합니다.</p>
+         </div>
+      </div>
+         <div style="width: 25%;" class="before">매니아 등급</div>
+         <div style="width: 25%;" class="before">매니아 등급</div>
+      </div>
+   </div>
+   <div style ="width: 13.5%"></div>
 </div>
-
-
+<table width=100% align= center>
+   <tr>
+      <td width=13.5%></td>
+      <td width=73% align= center>
+         <table width=100% align= center>
+            <c:forEach var="pizza" items="${pizza }">
+               <tr>
+                  <td width=100% >
+                     <table border=1 width=100% class="orderBox">
+                        <tr>
+                           <td width= 15% align= center>${pizza.kind }</td>
+                           <td width= 30% align= center>주문일시 ${pizza.signdate}</td>
+                           <td width= 55% align= left>주문번호 ${pizza.order_uid }</td>
+                        </tr>
+                        <tr>
+                           <td align= center>결제완료</td>
+                           <td align= center>결제방식 : ${pizza.pay_type }</td>
+                           <td>total_price : <fmt:formatNumber value="${pizza.total_price }" maxFractionDigits="3"/>원 </td>
+                        </tr>
+                     </table>
+                  </td>
+               </tr>
+            </c:forEach>
+         </table>
+      </td>
+      <td width=13.5%></td>
+   </tr>
+</table>
 
 <%@ include file="/WEB-INF/views/include/footer.jsp" %>

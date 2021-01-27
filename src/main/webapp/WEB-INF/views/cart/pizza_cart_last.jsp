@@ -222,7 +222,6 @@
 	    text-align: center;
 	}
 	.paybox{
-	
 		border: 1px solid #c1c1c1;
 	    width: 130px;
 	    height: 50px;
@@ -251,6 +250,17 @@
 	}
 	.recipient p{
 		color: red;
+	}
+	
+	
+	/* 결제 수단 */
+	.payActive{
+	    background: black;
+	    color: white; 
+	    border: 1px solid;
+	}
+	.payActive a{
+		color: white;
 	}
 </style>
 
@@ -404,9 +414,12 @@
 		<div class="form_box" style="clear: both;" >
 			<table style="margin-left: 80px;margin-top: 55px;margin-bottom: 55px;">
 				<tr>
-					<td class="paybox"><a href="kakao?total_price=${sum }">카카오페이 결제</a></td>
-					<td width=10px></td>
-					<td class="paybox"><a href="">무통장 결제</a></td>
+					<td class="paybox payActive" id="kakaoTD"><a href="javascript:void(0)" onclick="payMethod()" name="payMethod"><label for="kakao">카카오페이 결제</label></a></td>
+					<td width=10px>
+						<input type="radio" id="kakao" name="pay" checked style="display: none;">
+						<input type="radio" id="withOutPayBook" name="pay" style="display: none;">
+					</td>
+					<td class="paybox" id="payBookTD"><a href="javascript:void(0)" onclick="payMethod()" name="payMethod"><label for="withOutPayBook">무통장 결제</label></a></td>
 				</tr>
 			</table>
 			
@@ -443,7 +456,7 @@
 		
 			<div style="display: flex;justify-content: center; padding: 40px 40px 40px 0; line-height: 4;">
 				<div style="width: 15px;"> </div>
-				<a href="kakao?total_price=${sum }" class="goToGift" style="color: white;background: #ff143c; text-align: center;">결제하기</a>
+				<a href="javascript:void(0)" onclick="pay()" class="goToGift" style="color: white;background: #ff143c; text-align: center;">결제하기</a>
 			</div>	
 <!-- 		</form> -->
 	</div><!-- 중간폭 -->
@@ -452,8 +465,35 @@
 
 
 <script>
-
-
+/* 결제하기 버튼 누르면 */
+ function pay(){
+	if(kakao.checked){
+		location.href="kakao?total_price=${sum }";
+	}else if(withOutPayBook){
+		alert('준비중입니다. 카카오페이를 이용해주세요');
+	}
+}
+// 왜 한템포 늦지....
+function payMethod(){
+	setTimeout("css()", 1);
+}
+function css(){
+	if(kakao.checked){
+		kakaoTD.className = "paybox payActive";
+		payBookTD.className = "paybox";
+	}else {
+		kakaoTD.className = "paybox";
+		payBookTD.className = "paybox payActive";
+	}
+}
+ 
+/*  $("a[name=payMethod]").click(function(){
+	if($("#kakao").prop("checked")){
+		console.log('aaa');
+	}else{
+		console.log('bbb');
+	}
+ }); */
 var b = $('.box_head a');		
 	b.click(function(){
 	b.removeClass("active");

@@ -28,5 +28,10 @@
 			insert into order_all (order_uid, user_id, total_price, pay_type, signdate, kind) values (1,'1',1,'1','1','1')
 		]]>
 	</insert>
+	<select id="pizzaSelect" resultType="OrderVO">
+		<![CDATA[
+			select * from order_all where user_id=#{user_id} and kind="피자" order by uid desc 
+		]]>
+	</select>
 
 </mapper>

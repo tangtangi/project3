@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.dominos.domain.CartVO;
 import com.dominos.domain.GiftVO;
+import com.dominos.domain.OrderVO;
 
 /**
  * @author pc5
@@ -16,8 +17,10 @@ public interface CartDAO {
 	public void updatePlus(CartVO cartVO) throws Exception;
 	public void updateDough(CartVO cartVO) throws Exception;
 	public void updateOrderUid(CartVO cartVO) throws Exception;
+	public void updateOrderUid(CartVO cartVO,String state) throws Exception;
 	public void updateUser_id(CartVO cartVO) throws Exception;
 	public void insert(CartVO cartVO) throws Exception;
+	public void insert(OrderVO orderVO,String text) throws Exception;
 	public void insertJuice(CartVO cartVO) throws Exception;
 
 	/**피자 하나 삭제

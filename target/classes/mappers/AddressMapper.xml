@@ -13,6 +13,11 @@
 			select count(*) from address where address = #{address}
 		]]>
 	</select>
+	<select id="getCountID" resultType="int">
+		<![CDATA[
+			select count(*) from address where user_id =#{session_id}
+		]]>
+	</select>
 	<insert id="insert" >
 		<![CDATA[
 			insert into address (user_id, category, store_name, address, phone, event) values (#{user_id},#{category},#{store_name},#{address},#{phone},#{event});

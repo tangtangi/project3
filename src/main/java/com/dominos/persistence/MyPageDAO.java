@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.dominos.domain.GiftVO;
 import com.dominos.domain.MemberVO;
+import com.dominos.domain.OrderVO;
 
 public interface MyPageDAO {
 
@@ -14,4 +15,5 @@ public interface MyPageDAO {
 	public void orderAll_insert(GiftVO vo)throws Exception; 
 	
 	public void giftselect(String user_id) throws Exception;
+	public List<OrderVO> pizzaSelect(String user_id) throws Exception;
 }

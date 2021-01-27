@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import com.dominos.domain.CartVO;
 import com.dominos.domain.GiftVO;
+import com.dominos.domain.OrderVO;
 
 @Repository
 public class CartImpl implements CartDAO{
@@ -39,6 +40,10 @@ public class CartImpl implements CartDAO{
 	public void updateOrderUid(CartVO cartVO) throws Exception {
 		sql.update(namespace+"updateOrderUid",cartVO);
 	}
+	@Override	//OrderUid 업데이트 /오버라이드 장바구니 포함 상태 포함.
+	public void updateOrderUid(CartVO cartVO,String state) throws Exception {
+		sql.update(namespace+"updateOrderUidState",cartVO);
+	}
 	@Override	//User_id 업데이트
 	public void updateUser_id(CartVO cartVO) throws Exception {
 		sql.update(namespace+"updateUser_id",cartVO);
@@ -47,6 +52,11 @@ public class CartImpl implements CartDAO{
 	@Override	//카트 인서트
 	public void insert(CartVO cartVO) throws Exception {
 		sql.insert(namespace+"insert",cartVO);
+		
+	}
+	@Override	//OrderAll 에  인서트하기
+	public void insert(OrderVO orderVO,String text) throws Exception {
+		sql.insert(namespace+"insertOrderAll",orderVO);
 		
 	}
 	@Override	//카트 인서트

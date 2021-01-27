@@ -66,7 +66,11 @@ private static final Logger logger = LoggerFactory.getLogger(MemberController.cl
 
 	//주문 내역 - 피자
 	@GetMapping("myOrderList")
-	public void myOrderList()throws Exception {
+	public void myOrderList(HttpSession session,Model model)throws Exception {
+
+		String user_id = (String)session.getAttribute("id");
+		
+		model.addAttribute("pizza",dao.pizzaSelect(user_id));
 	}
 	
 	
@@ -111,14 +115,11 @@ private static final Logger logger = LoggerFactory.getLogger(MemberController.cl
 
 	@RequestMapping(value = "maniaGrade", method = RequestMethod.GET)
 	public void maniaGrade(Locale locale, Model model) {
-		logger.info("maniaGrade");
 	}
 	@RequestMapping(value = "myCoupon", method = RequestMethod.GET)
 	public void myCoupon(Locale locale, Model model) {
-		logger.info("myCoupon");
 	}
 	@RequestMapping(value = "questionList", method = RequestMethod.GET)
 	public void questionList(Locale locale, Model model) {
-		logger.info("questionList");
 	}
 }//닫지 말자

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import com.dominos.domain.GiftVO;
 import com.dominos.domain.MemberVO;
+import com.dominos.domain.OrderVO;
 
 @Repository
 public class MyPageImpl implements MyPageDAO{
@@ -51,6 +52,11 @@ public class MyPageImpl implements MyPageDAO{
 	@Override
 	public void giftselect(String user_id) throws Exception {
 		
+	}
+	//주문 내역 - 피자
+	@Override
+	public List<OrderVO> pizzaSelect(String user_id) throws Exception {
+		return sql.selectList(namespace+"pizzaSelect",user_id);
 	}
 
 	

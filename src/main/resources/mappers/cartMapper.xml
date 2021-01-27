@@ -20,11 +20,17 @@
 	<update id="updateOrderUid">
 		update cart_pizza set order_uid=#{order_uid}, state='장바구니' where user_id=#{user_id} and state='담기전'
 	</update>
+	<update id="updateOrderUidState">
+		update cart_pizza set order_uid=#{order_uid} where user_id=#{user_id} and state='장바구니'
+	</update>
 	<update id="updateUser_id">
 		update cart_pizza set user_id=#{user_id}, state='장바구니', order_uid=#{order_uid} where user_id=#{session_id2} and state='담기전'
 	</update>
 	<insert id ="insert">
 		insert into cart_pizza (cart_id,user_id,name, price, count, size,menu_uid,category,order_uid,image,image_o,image_s,dough_name,dough_price) values (#{cart_id},#{user_id},#{name},#{price},#{count},#{size},#{menu_uid},#{category},#{order_uid},#{image},#{image_o},#{image_s},#{dough_name},#{dough_price})
+	</insert>
+	<insert id ="insertOrderAll">
+		insert into order_all (order_uid , user_id, total_price, pay_type, signdate, kind) values (#{order_uid},#{user_id},#{total_price},#{pay_type},#{signdate},'피자')
 	</insert>
 	<insert id ="insertJuice">
 		insert into cart_pizza (cart_id,user_id,name, price, count, size,menu_uid,category,order_uid,image,image_o,image_s,dough_name,dough_price,state) values (#{cart_id},#{user_id},#{name},#{price},#{count},#{size},#{menu_uid},#{category},#{order_uid},#{image},#{image_o},#{image_s},#{dough_name},#{dough_price},'장바구니')
@@ -41,7 +47,7 @@
 		select count(*) from cart_pizza where user_id=#{user_id} 
 	</select>
 	<select id="cartCnt" resultType="int">
-		select count(distinct cart_id) from cart_pizza where user_id = #{user_id}
+		select count(distinct cart_id) from cart_pizza where user_id = #{user_id} and state = '장바구니'
 	</select>
 	<select id="getCountDough" resultType="int">
 		select count(*) from cart_pizza where category=#{category} and user_id=#{user_id}  and state = '담기전'

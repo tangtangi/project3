@@ -133,7 +133,7 @@
 							<div>
 								<input type="text" class="form-control" id="sample6_detailAddress" name="zip3" placeholder="상세주소">
 								<input type="hidden" id="address" name="address" >
-								<input type="hidden" name="category" value="delivery">
+								<input type="hidden" name="category" value="배달">
 							</div>
 
 			<div style="display: flex;justify-content: center; padding: 40px 40px 40px 0; line-height: 4; float: right;">
@@ -277,7 +277,7 @@ var b = $('.box_head a');
        var two = document.getElementById("sample6_address");
        var three = document.getElementById("sample6_extraAddress");
        var four = document.getElementById("sample6_detailAddress");
-       if(one.value== "" ||two.value== "" ||three.value== "" ||four.value== "" ){
+       if(one.value== "" ||two.value== "" || four.value== "" ){
 			alert('값을 입력하세요');    	   
        }else{
 			address.value = one.value + two.value + three.value + four.value ; 

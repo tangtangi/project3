@@ -136,8 +136,8 @@
 		
 		<div class="addressBox" >
 			<div style="color: #238ece; padding: 0 30px;">
-				<a href="addressEnroll" class="addressEnroll" >+ 배달주소 등록</a>
-					<a href="#"><span style="float: right;color: orange; ">*배달 주소는 10개까지만 등록 가능합니다.</span></a>
+				<a href="addressEnrollBefore" class="addressEnroll" >+ 배달주소 등록</a>
+					<a href="#"><span style="float: right;color: orange; ">*배달 주소는 5개까지만 등록 가능합니다.</span></a>
 			</div>
 		</div>	
 			<div style="display: flex;justify-content: center; padding: 40px 40px 40px 0; line-height: 4; float: right;">
@@ -195,6 +195,8 @@ window.onload = function(){
 	if(${session_id == null}){
 		alert('로그인 먼저 하세요');
 		location.href="/member/login";
+	}else if(${msg != null}){
+		alert("${msg}");
 	}
 }
 

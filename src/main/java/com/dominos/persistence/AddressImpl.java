@@ -26,6 +26,10 @@ public class AddressImpl implements AddressDAO{
 	public int getCount(AddressVO vo) {
 		return sql.selectOne(namespace+"getCount",vo);
 	}
+	@Override
+	public int getCount(String session_id) {	//세션 아이디의 주소 개수
+		return sql.selectOne(namespace+"getCountID",session_id);
+	}
 
 	@Override
 	public void insert(AddressVO vo) {
