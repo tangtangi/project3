@@ -18,6 +18,15 @@ public class CartVO {
 	private String image_s;
 	private String dough_name;
 	private String dough_price;
+	private String address_uid;
+	
+	
+	public String getAddress_uid() {
+		return address_uid;
+	}
+	public void setAddress_uid(String address_uid) {
+		this.address_uid = address_uid;
+	}
 	public Integer getUid() {
 		return uid;
 	}
@@ -126,7 +135,7 @@ public class CartVO {
 				+ price + ", size=" + size + ", count=" + count + ", menu_uid=" + menu_uid + ", category=" + category
 				+ ", state=" + state + ", session_id2=" + session_id2 + ", order_uid=" + order_uid + ", image=" + image
 				+ ", image_o=" + image_o + ", image_s=" + image_s + ", dough_name=" + dough_name + ", dough_price="
-				+ dough_price + "]";
+				+ dough_price + ", address_uid=" + address_uid + "]";
 	}
 	
 	

@@ -17,14 +17,12 @@ public class GiftImpl implements GiftDAO{
 	@Inject
 	private SqlSession sql;
 
-	//gift 페이지 글쓰기
-	@Override
+	@Override //gift 페이지 글쓰기
 	public void giftWrite(GiftVO vo) throws Exception {
 		sql.insert(namespace+"giftWrite",vo);
 	}
-
-	//gift 리스트 출력
-	@Override
+	
+	@Override //gift 리스트 출력
 	public List<GiftVO> giftList() throws Exception {
 		return sql.selectList(namespace+"gifrList");
 	}

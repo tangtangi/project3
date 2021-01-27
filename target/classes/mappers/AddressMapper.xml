@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace = "com.dominos.mapper.AddressMapper">
+	<select id="getAll" resultType="AddressVO">
+		<![CDATA[
+			select * from address where user_id = #{user_id}
+		]]>
+	</select>
+	<select id="getCount" resultType="int">
+		<![CDATA[
+			select count(*) from address where address = #{address}
+		]]>
+	</select>
+	<insert id="insert" >
+		<![CDATA[
+			insert into address (user_id, category, store_name, address, phone, event) values (#{user_id},#{category},#{store_name},#{address},#{phone},#{event});
+		]]>
+	</insert>
+	<delete id="deleteOneAddress" >
+		<![CDATA[
+			delete from address where uid = #{uid}
+		]]>
+	</delete>
+	<select id="selectOne" resultType="AddressVO">
+		<![CDATA[
+			select * from address where uid = #{uid}
+		]]>
+	</select>
+</mapper>

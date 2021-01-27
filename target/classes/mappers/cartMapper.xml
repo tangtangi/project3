@@ -4,8 +4,16 @@
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.dominos.mapper.CartMapper">
 	<update id="update">
-		update cart_pizza set count = #{count} where menu_uid=#{menu_uid}
+		update cart_pizza set count = #{count} where menu_uid=#{menu_uid} and user_id=#{user_id} and state='장바구니' 
 	</update>
+	<update id="updateState">
+		update cart_pizza set state = '결제완료' where menu_uid=#{menu_uid} and user_id=#{user_id} and state='장바구니' 
+	</update>
+	<update id="updatePlus">
+		update cart_pizza set count = count+#{count} where menu_uid=#{menu_uid} and user_id=#{user_id} and state='장바구니'
+	</update>
+	
+	
 	<update id="updateDough">
 		update cart_pizza set name=#{name}, price=#{price} where category=#{category} and user_id=#{user_id} 
 	</update>
@@ -18,8 +26,16 @@
 	<insert id ="insert">
 		insert into cart_pizza (cart_id,user_id,name, price, count, size,menu_uid,category,order_uid,image,image_o,image_s,dough_name,dough_price) values (#{cart_id},#{user_id},#{name},#{price},#{count},#{size},#{menu_uid},#{category},#{order_uid},#{image},#{image_o},#{image_s},#{dough_name},#{dough_price})
 	</insert>
+	<insert id ="insertJuice">
+		insert into cart_pizza (cart_id,user_id,name, price, count, size,menu_uid,category,order_uid,image,image_o,image_s,dough_name,dough_price,state) values (#{cart_id},#{user_id},#{name},#{price},#{count},#{size},#{menu_uid},#{category},#{order_uid},#{image},#{image_o},#{image_s},#{dough_name},#{dough_price},'장바구니')
+	</insert>
 	<select id="check" resultType="int">
 		select count(*) from cart_pizza where menu_uid=#{menu_uid} and user_id=#{user_id}  and state = '담기전'
+	</select>
+	<select id="checkJuice" resultType="int">
+		<![CDATA[
+		select count(*) from cart_pizza where menu_uid = #{menu_uid} and user_id = #{user_id} and state = "장바구니"
+		]]>
 	</select>
 	<select id="checkFromId" resultType="int">
 		select count(*) from cart_pizza where user_id=#{user_id} 
@@ -30,6 +46,7 @@
 	<select id="getCountDough" resultType="int">
 		select count(*) from cart_pizza where category=#{category} and user_id=#{user_id}  and state = '담기전'
 	</select>
+	
 	<select id="sumPizza" resultType="String">
 		select sum(count) from cart_pizza where user_id=#{user_id} and category is null
 	</select>
@@ -37,22 +54,24 @@
 		select sum(count) from cart_pizza where user_id=#{user_id} and category = 'juice'
 	</select>
 	<select id="sumSide" resultType="String">
-		select sum(count) from cart_pizza where user_id=#{user_id} and category = 'sidedish'
+		select sum(count) from cart_pizza where user_id=#{user_id} and category = #{category}
 	</select>
 	<select id="getMaxCart_id" resultType="String">
 		select max(cart_id) from cart_pizza where category is null;
 	</select>
-	<delete id="delete">
-		delete from cart_pizza where name=#{name}
-	</delete>
+	
 	<delete id="deletePizzaOne">
 		delete from cart_pizza where (menu_uid=#{menu_uid} and cart_id=#{cart_id} and category is null) or(cart_id=#{cart_id} and category = 'topping' ) 
 	</delete>
+	<delete id="deletePizzaAll">
+		delete from cart_pizza where user_id = #{session_id}
+	</delete>
+	
 	<delete id="deleteSideOne">
 		delete from cart_pizza where menu_uid=#{menu_uid} and cart_id=#{cart_id} and category=#{category} 
 	</delete>
-	<delete id="deletePizzaAll">
-		delete from cart_pizza where user_id = #{session_id}
+	<delete id="delete">
+		delete from cart_pizza where name=#{name}
 	</delete>
 	<delete id="deleteAll">
 		delete from cart_pizza where user_id = #{user_id} and state = '담기전'
@@ -64,6 +83,21 @@
 		select * from cart_pizza where user_id = #{user_id} and state = '장바구니' order by uid desc
 	</select>
 	
+	<select id="countPizza" resultType="String">
+		<![CDATA[
+			select sum(count) from cart_pizza where user_id=#{user_id} and state='장바구니' and category is null
+		]]>
+	</select>
+	<select id="countJuice" resultType="String">
+		<![CDATA[
+			select sum(count) from cart_pizza where user_id=#{user_id} and state='장바구니' and category = 'juice'
+		]]>
+	</select>
+	<select id="countSideDish" resultType="String">
+		<![CDATA[
+			select sum(count) from cart_pizza where user_id=#{user_id} and state='장바구니' and category = 'sidedish'
+		]]>
+	</select>
 
 <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~gift~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 	<select id="giftSelect" resultType="GiftVO" >

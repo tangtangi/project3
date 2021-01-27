@@ -131,7 +131,14 @@
 	@import url('https://fonts.googleapis.com/css2?family=Gothic+A1:wght@300;500&family=Noto+Sans+KR&display=swap');
 	.view_footer{
 		background-color:#f5f5f5;
-		height:140px;
+		max-height:202px;
+		transition : all .3s;
+	}
+	.view_footer_height{
+		background-color:#f5f5f5;
+		max-height:500px;
+		transition : all .3s;
+		overflow: auto;
 		
 	}
 	.order{
@@ -317,20 +324,20 @@
 							<tr>
 								<td width=13%></td>
 								<td class="seeAll" width=5% style="border:1px solid #b6b6b6;background-color:white;font-size:14px;color:#868686;text-align:center"><div >전체보기</div></td>
-								<td width=84%></td>
+								<td width=84%><input id="heightValue" type="hidden" value="0" ></td>
 							</tr>
 						</table>
 					</td>
 				</tr>
 			</table>
 <form action="/cart/orderPizza" id="orderForm" method="post">
-			<table width=100% class="view_footer" border=0  >
+			<table width=100% class="view_footer" border=0 style="display: inline-block;min-height: 168px;margin: 0 0 -7px 0;" >
 				<tr>
 					<td  width=13.5% rowspan=2 ></td>
 					<td  class="ftName1">피자</td>
 					<td  class="ftName1">음료 & 기타</td>
 					<td  class="ftName1"></td>
-					<td  align=center rowspan=2 border=0>
+					<td  align=center rowspan=2 border=0 style="position: absolute;top: 100px;">
 						<table border=0>
 							<tr>
 								<td class="price1" height=45px>총 금액 
@@ -343,9 +350,11 @@
 								<td class="order">
 									<input type="hidden" name="count" id="count" value="1">
 									<input type="hidden" name="size" value="L">
-<!-- 									<input type="hidden" name="size_M" value=""> -->
+									<input type="hidden" name="size_M" value="">
 									<input type="hidden" name="menu_uid" value="${list.uid}">
 									<input type="hidden" name="name" value="${list.name}">
+									<input type="hidden" id="footPrice2" value="${list.price }" >
+									<input type="hidden" name="sidedish" value="side" >
 									<a href="#" onclick="orderForm.submit()">장바구니 담기</a>
 								</td>
 							</tr>
@@ -361,7 +370,7 @@
 									<td  class="ftName2">${list.name }
 										(<input id="footPrice" class="view_footer_input" style="width: 48px; font-size: 15px;text-align: center;" value="<fmt:formatNumber type="number" maxFractionDigits="3" value="${list.price}" />">원)
 										x <input name="countPizza" value="1" readonly class="view_footer_input" style="width: 20px;">
-										x <input id="countPizza" value="1" readonly class="view_footer_input" style="width: 20px;">
+										<!-- x <input id="countPizza" value="1" readonly class="view_footer_input" style="width: 20px;"> -->
 									</td>
 								</tr>
 								<tbody id="tblShow1" class="hide"></tbody>
@@ -369,7 +378,13 @@
 						</td>
 						<td width=18% class="alignTop">
 							<table border=0 width=100%>
-								<tbody id="tblShow3" class="hide"></tbody>
+								<c:forEach items="${juice }" varStatus="stat" var="juice">
+									<tr name="tblShow3" style="display: none;"><td>
+										<input name='juiceNames' value="${juice.name }(${juice.price }원)" readonly class='view_footer_input' style='width:180px;'>
+										<span class='view_footer_input2'>x</span>
+										<input name='juiceCounts' id='countJuice' value="0" readonly class='view_footer_input' style='width:14px;'>
+									</td></tr>
+								</c:forEach>
 							</table>
 						</td>
 						<td width=18% class="alignTop">
@@ -410,25 +425,6 @@
 		}
 	}
 
-/* 	function changeSide(num,index){
-		var x = document.getElementsByName("count1");
-		var y = Number(x[index].value)+num;
-		if(y < 0) y = 0;
-		x[index].value = y;
-	}
-	function changeJuice(num,index){
-		var x = document.getElementsByName("count2");
-		var y = Number(x[index].value)+num;
-		if(y < 0) y = 0;
-		x[index].value = y;
-	} */
-/* 	function changeTopping(num,index){
-		var x = document.getElementsByName("count3");
-		var y = Number(x[index].value)+num;
-		if(y < 0) y = 0;
-		x[index].value = y;
-		//test.HTML = "토핑";
-	} */
 </script>
 
 
@@ -437,195 +433,41 @@
 
 <script>
  
- 
-/* 사이즈 선택 --------------------------------------------------------------------------------------------------- */
-/* 메뉴 라지 선택 시 */
-	$("#sizeL").click(function(){
-		$("input[name=size]").val("L");
-		var toppingCnt = document.getElementsByName("toppingCounts");
-		var sideCnt = document.getElementsByName("sideCounts");
-		var juiceCnt = document.getElementsByName("juiceCounts");
-		var pizzaCnt = document.getElementById("pizzaCnt").value;
-		$("#sizeL").attr("class","pizzaSize");
-		$("#sizeM").attr("class","pizzaSizeNoSel");
-		$("#total").val("<fmt:formatNumber type="number" maxFractionDigits="3" value='${list.price}' />");
-		$("#footPrice").val("<fmt:formatNumber type="number" maxFractionDigits="3" value="${list.price}" />");
-		$("#footPrice2").val("${list.price}");
-	
-		var total = document.getElementById("total").value; //total 인풋 값.
-		var sum = 0 ;
-		for(var i = 0 ; i < toppingCnt.length ; i++){
-			sum = sum + toppingCnt[i].value * document.getElementsByName("toppingPrice")[i].value; //토핑 합
-		}
-		for(var i = 0 ; i < sideCnt.length ; i++){
-			sum = sum + sideCnt[i].value * document.getElementsByName("sidePrice")[i].value; //사이드디시 합
-		}
-		for(var i = 0 ; i < juiceCnt.length ; i++){
-			sum = sum + juiceCnt[i].value * document.getElementsByName("juicePrice")[i].value;// 음료 합
-		}
-		var pizzaPrice = $("#footPrice2").val();
-		total = pizzaPrice*pizzaCnt + sum + parseInt(doughPrice.value);
-		total = total.toString().replace(/\B(?=(\d{3})+(?!\d))/g,",");
-		$("#total").val(total);
-		
-	});
-	
-/* 메뉴  미디엄 선택 시 */	
-	$("#sizeM").click(function(){
-		$("input[name=size]").val("M");
-		var toppingCnt = document.getElementsByName("toppingCounts");
-		var sideCnt = document.getElementsByName("sideCounts");
-		var juiceCnt = document.getElementsByName("juiceCounts");
-		var pizzaCnt = document.getElementById("pizzaCnt").value;
-		$("#sizeL").attr("class","pizzaSizeNoSel");
-		$("#sizeM").attr("class","pizzaSize");
-		$("#total").val("<fmt:formatNumber type="number" maxFractionDigits="3" value='${list.price}' />");
-		$("#footPrice").val("<fmt:formatNumber type="number" maxFractionDigits="3" value="${list.price}" />");
-		$("#footPrice2").val("${list.price}");
-
-		var total = document.getElementById("total").value; //total 인풋 값.
-		var sum = 0 ;
-		for(var i = 0 ; i < toppingCnt.length ; i++){
-			sum = sum + toppingCnt[i].value * document.getElementsByName("toppingPrice")[i].value; //토핑 합
-		}
-		for(var i = 0 ; i < sideCnt.length ; i++){
-			sum = sum + sideCnt[i].value * document.getElementsByName("sidePrice")[i].value; //사이드디시 합
-		}
-		for(var i = 0 ; i < juiceCnt.length ; i++){
-			sum = sum + juiceCnt[i].value * document.getElementsByName("juicePrice")[i].value;// 음료 합
-		}
-		var pizzaPrice = $("#footPrice2").val();
-		total = pizzaPrice*pizzaCnt + sum + parseInt(doughPrice.value);
-		total = total.toString().replace(/\B(?=(\d{3})+(?!\d))/g,",");
-		$("#total").val(total);
-		
-	});
-	
-
-	/* 도우 선택 --------------------------------------------------------------------------------------------------- */
-
-	function doughSelect(num){  //도우 선택 시 하단 값 변경. 및 input크기 조절.
-		var doughSelect = document.getElementsByName("dough");
-		dough.value=doughSelect[num].value;
-	    $("#dough").attr('size', $("#dough").val().length+3);
-	    $("#doughPrice").val("0");
-
-		$.ajax({
-			url:"/cart/orderDough",
-			type:"post",
-			data:{name:dough.value},
-		});/////
-		if(num==1){
-			dough.value="슈퍼시드 함유 도우(+2,000원)";
-		    $("#dough").attr('size', 22);
-		    $("#doughPrice").val("2000");
-		}else if(num==2){
-			dough.value="칠리핫도그 엣지(+5,000원)";
-		    $("#doughPrice").val("5000");
-		}else if(num==3){
-			dough.value="더블 치즈엣지(+5,000원)";
-		    $("#doughPrice").val("5000");
-		}else if(num==6){
-			dough.value="씬 도우";
-		    $("#dough").attr('size', 3);
-		}else if(num==7){
-			dough.value="샌드";
-		    $("#dough").attr('size', 2);
-		}
-
-		var toppingCnt = document.getElementsByName("toppingCounts");
-		var sideCnt = document.getElementsByName("sideCounts");
-		var juiceCnt = document.getElementsByName("juiceCounts");
-		var pizzaCnt = document.getElementById("pizzaCnt").value;
-		var pizzaPrice = $("#footPrice2").val();
-		var total = document.getElementById("total").value; //total 인풋 값.
-		var sum = 0 ;
-		for(var i = 0 ; i < toppingCnt.length ; i++){
-			sum = sum + toppingCnt[i].value * document.getElementsByName("toppingPrice")[i].value; //토핑 합
-		}
-		for(var i = 0 ; i < sideCnt.length ; i++){
-			sum = sum + sideCnt[i].value * document.getElementsByName("sidePrice")[i].value; //사이드디시 합
-		}
-		for(var i = 0 ; i < juiceCnt.length ; i++){
-			sum = sum + juiceCnt[i].value * document.getElementsByName("juicePrice")[i].value;// 음료 합
-		}
-		total = pizzaPrice*pizzaCnt + sum + parseInt(doughPrice.value);
-		total = total.toString().replace(/\B(?=(\d{3})+(?!\d))/g,",");
-		$("#total").val(total);
-	}
-
-//	 $("a[name*=change]").on("click",function(){   /* name 사용법 */
-	
 	/* 피자 수량 플러스 버튼, 마이너스 버튼---------------------------------------------------------------------------------------------------------------------------------- --- */
 	/* 피자 수량 플러스 버튼 */
 	 $("#changePlus").on("click",function(){ 
-		/*$.ajax({
-			url:"/menu/view",
-			data:{menu:"${menu}",uid:"${param.uid}",countPizza:"1"},
-			type : "post",
-			success:function(){
-				$("#countPizza").val(parseInt($("#countPizza").val(), 10)+1) ; 
-				//parseInt(String, radix) ;// 변환할 값, 진수(10진수가 디폴트)
-			}
-		});*/
-				$("#countPizza").val(parseInt($("#countPizza").val(), 10)+1) ; 
-		var toppingCnt = document.getElementsByName("toppingCounts");
-		var sideCnt = document.getElementsByName("sideCounts");
+		$("#countPizza").val(parseInt($("#countPizza").val(), 10)+1) ; 
 		var juiceCnt = document.getElementsByName("juiceCounts");
 		var pizzaCnt = document.getElementById("pizzaCnt").value;
 
 		var total = document.getElementById("total").value; //total 인풋 값.
 		var sum = 0 ;
-		for(var i = 0 ; i < toppingCnt.length ; i++){
-			sum = sum + toppingCnt[i].value * document.getElementsByName("toppingPrice")[i].value; //토핑 합
-		}
-		for(var i = 0 ; i < sideCnt.length ; i++){
-			sum = sum + sideCnt[i].value * document.getElementsByName("sidePrice")[i].value; //사이드디시 합
-		}
 		for(var i = 0 ; i < juiceCnt.length ; i++){
 			sum = sum + juiceCnt[i].value * document.getElementsByName("juicePrice")[i].value;// 음료 합
 		}
 		var pizzaPrice = $("#footPrice2").val();
-		total = pizzaPrice*pizzaCnt + sum + parseInt(doughPrice.value);
+
+		total = parseInt(pizzaPrice*pizzaCnt) + sum ;
 		total = total.toString().replace(/\B(?=(\d{3})+(?!\d))/g,",");
 		$("#total").val(total);
 		count.value=pizzaCnt;
 	});
 	 /* 피자 수량 마이너스 버튼 */
 	 $("#changeMinus").on("click",function(){ 
-		/*$.ajax({
-			url:"/menu/view",
-			data:{menu:"${menu}"},
-			type : "post",
-			success:function(){
-				if($("#countPizza").val()>1){
-					$("#countPizza").val(parseInt($("#countPizza").val(), 10)-1) ; 
-				}
-				//parseInt(String, radix) ;// 변환할 값, 진수(10진수가 디폴트)
-			}
-		});*/
 
-				if($("#countPizza").val()>1){
-					$("#countPizza").val(parseInt($("#countPizza").val(), 10)-1) ; 
-				}
-		var toppingCnt = document.getElementsByName("toppingCounts");
-		var sideCnt = document.getElementsByName("sideCounts");
+		if($("#countPizza").val()>1){
+			$("#countPizza").val(parseInt($("#countPizza").val(), 10)-1) ; 
+		}
 		var juiceCnt = document.getElementsByName("juiceCounts");
 		var pizzaCnt = document.getElementById("pizzaCnt").value;
 
 		var total = document.getElementById("total").value; //total 인풋 값.
 		var sum = 0 ;
-		for(var i = 0 ; i < toppingCnt.length ; i++){
-			sum = sum + toppingCnt[i].value * document.getElementsByName("toppingPrice")[i].value; //토핑 합
-		}
-		for(var i = 0 ; i < sideCnt.length ; i++){
-			sum = sum + sideCnt[i].value * document.getElementsByName("sidePrice")[i].value; //사이드디시 합
-		}
 		for(var i = 0 ; i < juiceCnt.length ; i++){
 			sum = sum + juiceCnt[i].value * document.getElementsByName("juicePrice")[i].value;// 음료 합
 		}
 		var pizzaPrice = $("#footPrice2").val();
-		total = pizzaPrice*pizzaCnt + sum + parseInt(doughPrice.value);
+		total = pizzaPrice*pizzaCnt + sum ;
 		total = total.toString().replace(/\B(?=(\d{3})+(?!\d))/g,",");
 		$("#total").val(total);
 		count.value=pizzaCnt;
@@ -633,297 +475,173 @@
 	 
 	 
 	 
-	 /* 토핑 버튼 누르면 --------------------------------------------------------------------------------------------------------------------------- ------- */
-	 $("a[class*=toppingChange]").on("click",function(){
-		/* 클래스 뒤에 인덱스값 잘라서 가져오기. */
-		var thisClass = $(this).attr('class');		//클래스 이름 가져와서
-/* 		toppingChange(1,${stat.index }) */
-		var start_num = thisClass.indexOf(",")+1;	// ,뒤의 값 변수지정. 
-		var end_num = thisClass.indexOf(")");	// )의 값 변수지정. 
-		var index = thisClass.substring(start_num,end_num); //,부터 )까지 문자열 자르기 => index값이 됨.
-		var num ; 
-		
-	 	/* num 값 세팅 */
-		if(thisClass.substring(14,15)==1){	// + 버튼을 누르면
-			num = parseInt(1);
-		}else{	// - 버튼을 누르면
-			num = parseInt(-1);
-		}
-
-		/* 해당 버튼 옆 인풋(수량) 값 변경 */
-		 var x = document.getElementsByName("count3");
-			var y = Number(x[index].value)+num;
-			if(y < 0) y = 0;
-			x[index].value = y;
-		
-		/* 토핑 uid,name값 가져오기 */
-		var uid = document.getElementsByName("toppingUid")[index].value;
-		var name = document.getElementsByName("toppingName")[index].value;
-		var price = document.getElementsByName("toppingPrice")[index].value;
-		name = name.replace(/(\s*)/g, "");
-
-		$.ajax({
-			url:"/cart/orderSideDish",
-			type:"post",
-			data:{uid:uid,count:x[index].value},
-		});/////
-		
-		/* 하단 푸터 변수선언. */
-		var toppingCnt = document.getElementsByName("toppingCounts");
-		var sideCnt = document.getElementsByName("sideCounts");
-		var juiceCnt = document.getElementsByName("juiceCounts");
-		var pizzaCnt = document.getElementById("pizzaCnt").value;
-	
-		
-		const arr = Array.from({length: 41}, () => 0); //41크기 만큼의 배열에 0값으로 초기화; 삭제문제 위해 만듦. 아직 안씀.
-		//arr[index] = index;
-		if(thisClass.substring(14,15)==1){	// + 버튼을 누르면
-			if(y==1){
-				var objRow;
-				objRow = document.all("tblShow1");
-				var objCell_First = objRow.insertRow().insertCell();
-				objCell_First.innerHTML = "<input name='toppingNames' value="+name+"(+"+price+"원)"+" readonly class='view_footer_input2' style='width:180px;'>"
-					+"<span class='view_footer_input2'>x</span>"
-					+"<input name='toppingCounts' id='countTopping' value="+y+" readonly class='view_footer_input2' style='width:14px;'>";
-
-				
-			}else{
-				toppingCnt[index].value = y;
-			}
-		}else{	// - 버튼을 누르면
-			toppingCnt[index].value = y;
-	//		if($("#countTopping").val()>0){$("#countTopping").val(parseInt($("#countTopping").val(), 10)-1) ;}
-			if(y==0){
-				var objRow;
-				objRow = document.all("tblShow1");
-				var objCell_First = objRow.deleteRow(index); 
-				//생성되는 순서대로 삭제가 된다.
-				//인덱스 순서랑 , 들어가는 순서랑 달라서 삭제하면 엉키게 된다.
-			}
-		}
-
-		var total = document.getElementById("total").value; //total 인풋 값.
-		var sum = 0 ;
-		for(var i = 0 ; i < toppingCnt.length ; i++){
-			sum = sum + toppingCnt[i].value * document.getElementsByName("toppingPrice")[i].value; //토핑 합
-		}
-		for(var i = 0 ; i < sideCnt.length ; i++){
-			sum = sum + sideCnt[i].value * document.getElementsByName("sidePrice")[i].value; //사이드디시 합
-		}
-		for(var i = 0 ; i < juiceCnt.length ; i++){
-			sum = sum + juiceCnt[i].value * document.getElementsByName("juicePrice")[i].value;// 음료 합
-		}
-		var pizzaPrice = $("#footPrice2").val();
-		total = pizzaPrice*pizzaCnt + sum + parseInt(doughPrice.value);
-		total = total.toString().replace(/\B(?=(\d{3})+(?!\d))/g,",");
-		$("#total").val(total);
-		/**ajax 시작*/
-	});
-
-	
-	 /* 사이드 버튼 누르면 ------------------------------------------------------------------------------------------------------------------- - */
-	 $("a[class*=sideChange]").on("click",function(){
-	
-		/* 클래스 뒤에 인덱스값 잘라서 가져오기. */
-		var thisClass = $(this).attr('class');		//클래스 이름 가져와서
-/* 		sideChange(1,${stat.index }) */
-		var start_num = thisClass.indexOf(",")+1;	// ,뒤의 값 변수지정. 
-		var end_num = thisClass.indexOf(")");	// )의 값 변수지정. 
-		var index = thisClass.substring(start_num,end_num); //,부터 )까지 문자열 자르기 => index값이 됨.
-		var num ; 
-		
-	 	/* num 값 세팅 */
-		if(thisClass.substring(11,12)==1){	// + 버튼을 누르면
-			num = parseInt(1);
-		}else{	// - 버튼을 누르면
-			num = parseInt(-1);
-		}
-
-		/* 해당 버튼 옆 인풋(수량) 값 변경 */
-		 var x3 = document.getElementsByName("count1");
-			var y3 = Number(x3[index].value)+num;
-			if(y3 < 0) y3 = 0;
-			x3[index].value = y3;
-		
-		/* 사이드 uid,name값 가져오기 */
-		var uid = document.getElementsByName("sideUid")[index].value;
-		var name = document.getElementsByName("sideName")[index].value;
-		var price = document.getElementsByName("sidePrice")[index].value;
-		name = name.replace(/(\s*)/g, "");
-
-		$.ajax({
-			url:"/cart/orderSideDish",
-			type:"post",
-			data:{uid:uid,count:x3[index].value},
-		});/////
-		
-		/* 하단 푸터 변수선언. */
-		var toppingCnt = document.getElementsByName("toppingCounts");
-		var sideCnt = document.getElementsByName("sideCounts");
-		var juiceCnt = document.getElementsByName("juiceCounts");
-		var pizzaCnt = document.getElementById("pizzaCnt").value;
-	
-	
-		const arr = Array.from({length: 41}, () => 0); //41크기 만큼의 배열에 0값으로 초기화; 삭제문제 위해 만듦. 아직 안씀.
-		//arr[index] = index;
-		
-		if(thisClass.substring(11,12)==1){	// + 버튼을 누르면
-			if(y3==1){
-				var objRow;
-				objRow = document.all("tblShow2");
-				var objCell_First = objRow.insertRow().insertCell();
-				objCell_First.innerHTML = "<input name='sideNames' value="+name+"(+"+price+"원)"+" readonly class='view_footer_input' style='width:180px;'>"
-					+"<span class='view_footer_input2'>x</span>"
-					+"<input name='sideCounts' id='countSide' value="+y3+" readonly class='view_footer_input' style='width:14px;'>";
-
-				
-			}else{
-				sideCnt[index].value = y3;
-			}
-		}else{	// - 버튼을 누르면
-			sideCnt[index].value = y3;
-	//		if($("#countTopping").val()>0){$("#countTopping").val(parseInt($("#countTopping").val(), 10)-1) ;}
-			if(y3==0){
-				var objRow;
-				objRow = document.all("tblShow2");
-				var objCell_First = objRow.deleteRow(index); 
-				//생성되는 순서대로 삭제가 된다.
-				//인덱스 순서랑 , 들어가는 순서랑 달라서 삭제하면 엉키게 된다.
-			}
-		}
-		var total = document.getElementById("total").value; //total 인풋 값.
-		var sum = 0 ;
-		for(var i = 0 ; i < toppingCnt.length ; i++){
-			sum = sum + toppingCnt[i].value * document.getElementsByName("toppingPrice")[i].value; //토핑 합
-		}
-		for(var i = 0 ; i < sideCnt.length ; i++){
-			sum = sum + sideCnt[i].value * document.getElementsByName("sidePrice")[i].value; //사이드디시 합
-		}
-		for(var i = 0 ; i < juiceCnt.length ; i++){
-			sum = sum + juiceCnt[i].value * document.getElementsByName("juicePrice")[i].value;// 음료 합
-		}
-		var pizzaPrice = $("#footPrice2").val();
-		total = pizzaPrice*pizzaCnt + sum + parseInt(doughPrice.value);
-		total = total.toString().replace(/\B(?=(\d{3})+(?!\d))/g,",");
-		$("#total").val(total);
-		/**ajax 시작*/
-	});
 	
 	
 	 /* 음료 버튼 누르면  ---------------------------------------------------------------------------------------------- */
 	 $("a[class*=juiceChange]").on("click",function(){
 	
-		/* 클래스 뒤에 인덱스값 잘라서 가져오기. */
-		var thisClass = $(this).attr('class');		//클래스 이름 가져와서
-/* 		sideChange(1,${stat.index }) */
-		var start_num = thisClass.indexOf(",")+1;	// ,뒤의 값 변수지정. 
-		var end_num = thisClass.indexOf(")");	// )의 값 변수지정. 
-		var index = thisClass.substring(start_num,end_num); //,부터 )까지 문자열 자르기 => index값이 됨.
-		var num ; 
-		
-	 	/* num 값 세팅 */
-		if(thisClass.substring(12,13)==1){	// + 버튼을 누르면
-			num = parseInt(1);
-		}else{	// - 버튼을 누르면
-			num = parseInt(-1);
-		}
+		 /* 클래스 뒤에 인덱스값 잘라서 가져오기. */
+			var thisClass = $(this).attr('class');		//클래스 이름 가져와서
+	/* 		sideChange(1,${stat.index }) */
+			var start_num = thisClass.indexOf(",")+1;	// ,뒤의 값 변수지정. 
+			var end_num = thisClass.indexOf(")");	// )의 값 변수지정. 
+			var index = thisClass.substring(start_num,end_num); //,부터 )까지 문자열 자르기 => index값이 됨.
+			var num ; 
 
-		/* 해당 버튼 옆 인풋(수량) 값 변경 */
-		 var x = document.getElementsByName("count2");
-			var y = Number(x[index].value)+num;
-			if(y < 0) y = 0;
-			x[index].value = y;
+			/* 하단 푸터 변수선언. */
+			var toppingCnt = document.getElementsByName("toppingCounts");
+			var sideCnt = document.getElementsByName("sideCounts");
+			var juiceCnt = document.getElementsByName("juiceCounts");
+			var pizzaCnt = document.getElementById("pizzaCnt").value;
 		
-		/* 음료 uid,name값 가져오기 */
-		var uid = document.getElementsByName("juiceUid")[index].value;
-		var name = document.getElementsByName("juiceName")[index].value;
-		var price = document.getElementsByName("juicePrice")[index].value;
-		name = name.replace(/(\s*)/g, "");
+			
+			//수량 제한
+			var juiceTotalCnt = 0;
+			for(var i = 0 ; i < juiceCnt.length ; i++){
+				juiceTotalCnt = juiceTotalCnt + parseInt(juiceCnt[i].value); 
+			}
+			
+		 	/* num 값 세팅 */
+			if(thisClass.substring(12,13)==1){	// + 버튼을 누르면
+			
+				if(juiceTotalCnt >= pizzaCnt ){
+					alert("음료는 사이드디시 1개당 1개 까지 가능 합니다.");
+				}else{
+			
+					num = parseInt(1);
+					/* 해당 버튼 옆 인풋(수량) 값 변경 */
+					 var x = document.getElementsByName("count2");
+						var y = Number(x[index].value)+num;
+						if(y < 0) y = 0;
+						x[index].value = y;
+					
+					/* 음료 uid,name값 가져오기 */
+					var uid = document.getElementsByName("juiceUid")[index].value;
+					var name = document.getElementsByName("juiceName")[index].value;
+					var price = document.getElementsByName("juicePrice")[index].value;
+					name = name.replace(/(\s*)/g, "");
+		
+					$.ajax({
+						url:"/cart/orderSideDish",
+						type:"post",
+						data:{uid:uid,count:x[index].value},
+					});/////
+					
+		
+					//누르면 보였다 숨겼다 하기.
+					var tblShow3 = document.getElementsByName("tblShow3")[index];
+					if(thisClass.substring(12,13)==1){	// + 버튼을 누르면
+						tblShow3.style.display = "";
+					}else{	// - 버튼을 누르면
+						if(y==0){
+							tblShow3.style.display = "none";
+						}
+					}
+					juiceCnt[index].value = y;
+		
+					
+					var total = document.getElementById("total").value; //total 인풋 값.
+					var sum = 0 ;
+					juiceTotalCnt = 0;
+					for(var i = 0 ; i < toppingCnt.length ; i++){
+						sum = sum + toppingCnt[i].value * document.getElementsByName("toppingPrice")[i].value; //토핑 합
+					}
+					for(var i = 0 ; i < sideCnt.length ; i++){
+						sum = sum + sideCnt[i].value * document.getElementsByName("sidePrice")[i].value; //사이드디시 합
+					}
+					for(var i = 0 ; i < juiceCnt.length ; i++){
+						sum = sum + juiceCnt[i].value * document.getElementsByName("juicePrice")[i].value;// 음료 합
+					}
+					var pizzaPrice = $("#footPrice2").val();
+					total = pizzaPrice*pizzaCnt + sum ;
+					total = total.toString().replace(/\B(?=(\d{3})+(?!\d))/g,",");
+					$("#total").val(total);
+				}
+			}else{	// - 버튼을 누르면
+				num = parseInt(-1);
+				/* 해당 버튼 옆 인풋(수량) 값 변경 */
+				 var x = document.getElementsByName("count2");
+					var y = Number(x[index].value)+num;
+					if(y < 0) y = 0;
+					x[index].value = y;
+				
+				/* 음료 uid,name값 가져오기 */
+				var uid = document.getElementsByName("juiceUid")[index].value;
+				var name = document.getElementsByName("juiceName")[index].value;
+				var price = document.getElementsByName("juicePrice")[index].value;
+				name = name.replace(/(\s*)/g, "");
 
-		$.ajax({
-			url:"/cart/orderSideDish",
-			type:"post",
-			data:{uid:uid,count:x[index].value},
-		});/////
-		
-		/* 하단 푸터 변수선언. */
-		var toppingCnt = document.getElementsByName("toppingCounts");
-		var sideCnt = document.getElementsByName("sideCounts");
-		var juiceCnt = document.getElementsByName("juiceCounts");
-		var pizzaCnt = document.getElementById("pizzaCnt").value;
-	
-	
-		const arr = Array.from({length: 41}, () => 0); //41크기 만큼의 배열에 0값으로 초기화; 삭제문제 위해 만듦. 아직 안씀.
-		//arr[index] = index;
-		
-		if(thisClass.substring(12,13)==1){	// + 버튼을 누르면
-			if(y==1){
-				var objRow;
-				objRow = document.all("tblShow3");
-				var objCell_First = objRow.insertRow().insertCell();
-				objCell_First.innerHTML = "<input name='juiceNames' value="+name+"(+"+price+"원)"+" readonly class='view_footer_input' style='width:180px;'>"
-					+"<span class='view_footer_input2'>x</span>"
-					+"<input name='juiceCounts' id='countJuice' value="+y+" readonly class='view_footer_input' style='width:14px;'>";
+				$.ajax({
+					url:"/cart/orderSideDish",
+					type:"post",
+					data:{uid:uid,count:x[index].value},
+				});/////
 				
-				
-			}else{
+
+				//누르면 보였다 숨겼다 하기.
+				var tblShow3 = document.getElementsByName("tblShow3")[index];
+				if(thisClass.substring(12,13)==1){	// + 버튼을 누르면
+					tblShow3.style.display = "";
+				}else{	// - 버튼을 누르면
+					if(y==0){
+						tblShow3.style.display = "none";
+					}
+				}
 				juiceCnt[index].value = y;
+
+				
+				var total = document.getElementById("total").value; //total 인풋 값.
+				var sum = 0 ;
+				juiceTotalCnt = 0;
+				for(var i = 0 ; i < toppingCnt.length ; i++){
+					sum = sum + toppingCnt[i].value * document.getElementsByName("toppingPrice")[i].value; //토핑 합
+				}
+				for(var i = 0 ; i < sideCnt.length ; i++){
+					sum = sum + sideCnt[i].value * document.getElementsByName("sidePrice")[i].value; //사이드디시 합
+				}
+				for(var i = 0 ; i < juiceCnt.length ; i++){
+					sum = sum + juiceCnt[i].value * document.getElementsByName("juicePrice")[i].value;// 음료 합
+				}
+				var pizzaPrice = $("#footPrice2").val();
+				total = pizzaPrice*pizzaCnt + sum + parseInt(doughPrice.value);
+				total = total.toString().replace(/\B(?=(\d{3})+(?!\d))/g,",");
+				$("#total").val(total);
 			}
-		}else{	// - 버튼을 누르면
-			juiceCnt[index].value = y;
-	//		if($("#countTopping").val()>0){$("#countTopping").val(parseInt($("#countTopping").val(), 10)-1) ;}
-			if(y==0){
-				var objRow;
-				objRow = document.all("tblShow3");
-				var objCell_First = objRow.deleteRow(index); 
-				//생성되는 순서대로 삭제가 된다.
-				//인덱스 순서랑 , 들어가는 순서랑 달라서 삭제하면 엉키게 된다.
-			}
-		}
-		var total = document.getElementById("total").value; //total 인풋 값.
-		var sum = 0 ;
-		for(var i = 0 ; i < toppingCnt.length ; i++){
-			sum = sum + toppingCnt[i].value * document.getElementsByName("toppingPrice")[i].value; //토핑 합
-		}
-		for(var i = 0 ; i < sideCnt.length ; i++){
-			sum = sum + sideCnt[i].value * document.getElementsByName("sidePrice")[i].value; //사이드디시 합
-		}
-		for(var i = 0 ; i < juiceCnt.length ; i++){
-			sum = sum + juiceCnt[i].value * document.getElementsByName("juicePrice")[i].value;// 음료 합
-		}
-		var pizzaPrice = $("#footPrice2").val();
-		total = pizzaPrice*pizzaCnt + sum + parseInt(doughPrice.value);
-		total = total.toString().replace(/\B(?=(\d{3})+(?!\d))/g,",");
-		$("#total").val(total);
-		/**ajax 시작*/
 	});
 
 	/* 전체보기 -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*- */
-	$(".seeAll").on("click",function(){
+/*	$(".seeAll").on("click",function(){
 		$("#tblShow1").toggle();	//클릭하면 보였다 안보였다. 하기.
 		$("#tblShow2").toggle();	//클릭하면 보였다 안보였다. 하기.
-		$("#tblShow3").toggle();	//클릭하면 보였다 안보였다. 하기.
+		//$("[name=tblShow3]").toggle();	//클릭하면 보였다 안보였다. 하기.
+		
+		//var x = document.getElementsByName("tblShow3");
+		var cnt = document.getElementsByName("juiceCounts");
+		
+		for(var i =0 ; i<cnt.length ;i++){
+				console.log(cnt[i].value);
+				console.log(cnt[0]);
+			if(cnt[i].value>=1){
+				$("[name=tblShow3]").eq(i).toggle();	//클릭하면 보였다 안보였다. 하기.
+			}
+		}
+	});
+
+	*/
+
+	/* 전체보기 -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*- */
+	$(".seeAll").on("click",function(){
+		var x = $("#heightValue");
+		if(x.val()==0){ //0이면 작은것 - >키워야함.
+			$('.view_footer').attr('class', 'view_footer_height');
+			x.val("1");
+		}else{	//1이면 큰것 -> 줄여야함.
+			$('.view_footer_height').attr('class', 'view_footer');
+			x.val("0");
+		}
 	});
 
 	
-	
-	
-/* 테스트 -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*- */
-	/* function test(){
-	testForm.submit();
-} */
-$("#testButton").on("click", function(){
-//		$("#testForm").submit();
-	$.ajax({
-		url:"/menu/view",
-		data: {menu:"${menu}",uid:"${param.uid}"},
-		dataType : 'text',
-		type:'post',
-		success:function(){
-			//alert("성공!");
-		}
-	});
-});
 </script>
 
 <!-- position fixed 했기 때문에 푸터는 굳이 필요 없을 듯. -->

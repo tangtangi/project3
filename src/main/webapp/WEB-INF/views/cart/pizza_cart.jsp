@@ -202,7 +202,7 @@
 	.little p{
 		/* display: inline-block; */
 		line-height: 1.5;
-		
+		width: 200px;
 	}
 	 .content{
 		margin: 15px 10px;
@@ -270,8 +270,8 @@
 		<!-- 주문내용 -->
 		<div class="form_box" style="clear: both;">
 			<div class="form_mini_box">
-				<div class="form_left"><span style="font-size: 20px;">울산 울주군 이영산업기계</span><p>울산점</p> <span>055-342-1234</span></div>
-				<div class="form_right"><a class="aModi">수정</a></div>
+				<div class="form_left"><span style="font-size: 20px;">${addressVO.address }</span><p>${addressVO.store_name }</p> <span>${addressVO.phone }</span></div>
+				<div class="form_right"><a class="aModi" href="cart2">수정</a></div>
 			</div>
 		</div>
 		
@@ -283,25 +283,28 @@
 		</div>
 			
 		<div class="littleHeader">
-			<div style="width: 40%; line-height: 3;display: flex;justify-content: center;">상품정보</div>
-			<div style="width: 30%; line-height: 3;display: flex;justify-content: center;">추가토핑</div>
-			<div style="width: 10%; line-height: 3;display: flex;justify-content: center;">수량</div>
-			<div style="width: 10%; line-height: 3;display: flex;justify-content: center;">금액</div>
+			<div style="width: 50%; line-height: 3;display: flex;justify-content: center;">상품정보</div>
+			<div style="width: 20%; line-height: 3;display: flex;justify-content: center;">수량</div>
+			<div style="width: 20%; line-height: 3;display: flex;justify-content: center;">금액</div>
 			<div style="width: 10%; line-height: 3;display: flex;justify-content: center;"></div>
 		</div>
 			<c:forEach var="list" items="${list }" >
 					<div class="littleContent">
-						<div class="little" style="width: 40%; height: 90px;">
+						<div class="little" style="width: 50%; height: 90px;">
 							<div><img alt="사진" src="/image/imageMenu/${list.image_s }" width="90px" height="90px"></div>
 							<div class="content">
 								<p>${list.name }</p>
-								<c:if test="${list.category == null }"><p style="color: lightgray; font-size: 12px;"> ${list.dough_name}/${list.size }</p></c:if>
+								<c:if test="${list.category == null }"><p style="color: lightgray; font-size: 12px;"> ${list.dough_name}<c:if test="${list.size ne '' }">/${list.size }</c:if></p></c:if>
 								<p><fmt:formatNumber type="number" maxFractionDigits="3" value="${list.price + list.dough_price}" />원</p>
 							</div>
 						</div>
-						<div class="little" style="width: 30%;"></div>
-						<div class="little" style="width: 10%;">${list.count }</div>
-						<div class="little" style="width: 10%;"><fmt:formatNumber type="number" maxFractionDigits="3" value="${list.count * list.price + list.count * list.dough_price}" />원</div>
+						<div class="little" style="width: 20%;">
+							<!-- <a href="javascript:void(0)" onclick="">+</a> -->
+								<input value=" ${list.count } " style="outline: 0;border: 0;width: 23px;font-size: 20px;" name="listCount" readonly>
+							<!-- <a href="javascript:void(0)" onclick="">-</a> -->
+						</div>
+						
+						<div class="little" style="width: 20%;"><fmt:formatNumber type="number" maxFractionDigits="3" value="${list.count * list.price + list.count * list.dough_price}" />원</div>
 						<div class="little" style="width: 10%;"><a href="javascript:void(0);" onclick="deleteOne(${list.menu_uid },${list.cart_id },'${list.category }')">x</a></div>
 					</div>
 					
@@ -309,7 +312,7 @@
 				
 			<c:set  var="sum"/>
 			<c:forEach var="list" items="${list }">
-				<c:set var="sum"  value="${sum + list.price + list.dough_price}"/>
+				<c:set var="sum"  value="${sum + list.count * list.price + list.count * list.dough_price}"/>
 			</c:forEach>
 			
 			<div class="littleContent" style="border-bottom: 2px solid black;    padding: 15px 0;">
@@ -323,7 +326,7 @@
 			
 			<div style="display: flex;justify-content: center; padding: 40px 40px 40px 0; line-height: 4; float: left;">
 				<div style="width: 15px;"> </div>
-				<a href="/member/cart4" class="goToGift" style="background: #fff; text-align: center;border: 1px solid lightgray;color: black;">메뉴 추가하기</a>
+				<a href="/menu/list?menu=pizza" class="goToGift" style="background: #fff; text-align: center;border: 1px solid lightgray;color: black;">메뉴 추가하기</a>
 			</div>	
 			<div style="display: flex;justify-content: center; padding: 40px 40px 40px 0; line-height: 4; float: right;">
 				<div style="width: 15px;"> </div>
@@ -366,6 +369,13 @@
 		}
 	
 	
+	}
+	window.onload = function(){
+	
+		if(${addressVO.address == null}){
+			alert('주소를 입력해주세요');	
+			location.href="/cart/cart2";
+		}
 	}
 </script>
 

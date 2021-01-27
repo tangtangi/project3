@@ -4,6 +4,10 @@ import java.util.List;
 
 import com.dominos.domain.PizzaVO;
 
+/**
+ * @author pc5
+ *
+ */
 public interface PizzaDAO {
 	
 	public void create(PizzaVO vo) throws Exception;

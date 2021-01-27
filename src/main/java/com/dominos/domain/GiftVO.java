@@ -10,11 +10,13 @@ public class GiftVO {
 	private String image;
 	private String image_o;
 	private String image_s;
-	private String info;
 	private int count;
 	private int uid;
 	private int pizza_uid;
-	
+	private int order_uid;
+	private String state;
+	private String e_coupon;
+	private int total_price;
 	public String getPizza() {
 		return pizza;
 	}
@@ -57,12 +59,6 @@ public class GiftVO {
 	public void setImage_s(String image_s) {
 		this.image_s = image_s;
 	}
-	public String getInfo() {
-		return info;
-	}
-	public void setInfo(String info) {
-		this.info = info;
-	}
 	public int getCount() {
 		return count;
 	}
@@ -81,16 +77,38 @@ public class GiftVO {
 	public void setPizza_uid(int pizza_uid) {
 		this.pizza_uid = pizza_uid;
 	}
+	public int getOrder_uid() {
+		return order_uid;
+	}
+	public void setOrder_uid(int order_uid) {
+		this.order_uid = order_uid;
+	}
+	public String getState() {
+		return state;
+	}
+	public void setState(String state) {
+		this.state = state;
+	}
+	public String getE_coupon() {
+		return e_coupon;
+	}
+	public void setE_coupon(String e_coupon) {
+		this.e_coupon = e_coupon;
+	}
+	public int getTotal_price() {
+		return total_price;
+	}
+	public void setTotal_price(int total_price) {
+		this.total_price = total_price;
+	}
 	
 	@Override
 	public String toString() {
 		return "GiftVO [pizza=" + pizza + ", user_id=" + user_id + ", price_L=" + price_L + ", size_L=" + size_L
-				+ ", image=" + image + ", image_o=" + image_o + ", image_s=" + image_s + ", info=" + info + ", count="
-				+ count + ", uid=" + uid + ", pizza_uid=" + pizza_uid + "]";
+				+ ", image=" + image + ", image_o=" + image_o + ", image_s=" + image_s + ", count=" + count + ", uid="
+				+ uid + ", pizza_uid=" + pizza_uid + ", order_uid=" + order_uid + ", state=" + state + ", e_coupon="
+				+ e_coupon + ", total_price=" + total_price + "]";
 	}
-	
-
-	
 	
 	
 	

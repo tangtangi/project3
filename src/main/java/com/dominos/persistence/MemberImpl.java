@@ -6,6 +6,7 @@ import javax.xml.stream.events.Namespace;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
+import com.dominos.domain.CartVO;
 import com.dominos.domain.MemberVO;
 
 @Repository
@@ -76,6 +77,17 @@ public class MemberImpl implements MemberDAO{
 		return sql.selectOne(namespace+"idCheck",id);
 	}
 	
-	
-	
+
+	/**
+	 * 주소 uid 넣기
+	 */
+	@Override
+	public void updateAddr(CartVO cartVO) throws Exception {
+		sql.insert(namespace+"updateAddr",cartVO);
+	}
+
+	@Override	//주소 uid 불러오기
+	public String getAddrUid(String session_id) throws Exception {
+		return sql.selectOne(namespace+"getAddrUid",session_id);
+	}
 }

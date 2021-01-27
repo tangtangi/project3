@@ -22,6 +22,15 @@ public class CartImpl implements CartDAO{
 	public void update(CartVO cartVO) throws Exception {
 		sql.update(namespace+"update",cartVO);
 	}
+	@Override	//카트 업데이트
+	public void update(CartVO cartVO,String state) throws Exception {
+		sql.update(namespace+"updateState",cartVO);
+	}
+	@Override	//카트 업데이트
+	public void updatePlus(CartVO cartVO) throws Exception {
+		sql.update(namespace+"updatePlus",cartVO);
+	}
+	
 	@Override	//도우 업데이트
 	public void updateDough(CartVO cartVO) throws Exception {
 		sql.update(namespace+"updateDough",cartVO);
@@ -40,10 +49,19 @@ public class CartImpl implements CartDAO{
 		sql.insert(namespace+"insert",cartVO);
 		
 	}
+	@Override	//카트 인서트
+	public void insertJuice(CartVO cartVO) throws Exception {
+		sql.insert(namespace+"insertJuice",cartVO);
+		
+	}
 
 	@Override	//토핑 이름으로 카트에 있는지 없는지 판별.-> 없으면 인서트, 없으면 감소
 	public int check(CartVO cartVO) throws Exception {
 		return sql.selectOne(namespace+"check", cartVO);
+	}
+	@Override	//토핑 이름으로 카트에 있는지 없는지 판별.-> 없으면 인서트, 없으면 감소
+	public int checkJuice(CartVO cartVO) throws Exception {
+		return sql.selectOne(namespace+"checkJuice", cartVO);
 	}
 
 	@Override
@@ -59,6 +77,21 @@ public class CartImpl implements CartDAO{
 	public int getCountDough(CartVO cartVO) throws Exception {
 		return sql.selectOne(namespace+"getCountDough", cartVO);
 	}
+	
+	
+	@Override
+	public String countPizza(String session_id) throws Exception {
+		return sql.selectOne(namespace+"countPizza", session_id);
+	}
+	@Override
+	public String countJuice(String session_id) throws Exception {
+		return sql.selectOne(namespace+"countJuice", session_id);
+	}
+	@Override
+	public String countSideDish(String session_id) throws Exception {
+		return sql.selectOne(namespace+"countSideDish", session_id);
+	}
+
 	@Override //피자 수량 토탈
 	public String sumPizza(CartVO cartVO) throws Exception {
 		return sql.selectOne(namespace+"sumPizza", cartVO);
@@ -76,15 +109,24 @@ public class CartImpl implements CartDAO{
 	public String getMaxCart_id() throws Exception {
 		return sql.selectOne(namespace+"getMaxCart_id");
 	}
-	@Override
-	public void delete(CartVO cartVO) throws Exception {
-		sql.delete(namespace+"delete",cartVO);
-	}
 
+	/**
+	 * 피자 장바구니에서 피자 하나 삭제
+	 * @param cartVO
+	 * @throws Exception
+	 */
 	@Override		//피자 장바구니에서 피자 하나 삭제
-	public void deletePizzaOne(CartVO cartVO) throws Exception {
+	public void deletePizza(CartVO cartVO) throws Exception {
 		sql.delete(namespace+"deletePizzaOne",cartVO);
 		
+	}
+	/**피자 장바구니에서 전체 삭제 오버로딩
+	 * @param session_id
+	 * @throws Exception
+	 */
+	@Override 	//피자 장바구니에서 전체 삭제
+	public void deletePizza(String session_id) throws Exception {
+		sql.delete(namespace+"deletePizzaAll",session_id);
 	}
 	@Override		//피자 장바구니에서 사이드 하나 삭제
 	public void deleteSideOne(CartVO cartVO) throws Exception {
@@ -92,9 +134,9 @@ public class CartImpl implements CartDAO{
 		
 	}
 	
-	@Override 	//피자 장바구니에서 전체 삭제
-	public void deletePizzaAll(String session_id) throws Exception {
-		sql.delete(namespace+"deletePizzaAll",session_id);
+	@Override
+	public void delete(CartVO cartVO) throws Exception {
+		sql.delete(namespace+"delete",cartVO);
 	}
 	@Override	//'담기전'상태 use_id인것 다 삭제하기
 	public void deleteAll(String user_id) throws Exception {

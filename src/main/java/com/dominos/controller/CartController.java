@@ -2,6 +2,7 @@ package com.dominos.controller;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import javax.inject.Inject;
@@ -15,14 +16,18 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.dominos.domain.AddressVO;
 import com.dominos.domain.CartVO;
 import com.dominos.domain.GiftVO;
 import com.dominos.domain.PizzaVO;
 import com.dominos.domain.SideVO;
+import com.dominos.persistence.AddressDAO;
 import com.dominos.persistence.CartDAO;
+import com.dominos.persistence.MemberDAO;
 import com.dominos.persistence.PizzaDAO;
 import com.dominos.persistence.SideDAO;
 
@@ -31,7 +36,7 @@ import com.dominos.persistence.SideDAO;
 public class CartController {
 
 	private static final Logger logger = LoggerFactory.getLogger(MemberController.class);
-	
+
 	@Inject
 	private CartDAO dao;
 	
@@ -41,34 +46,109 @@ public class CartController {
 	@Inject
 	private PizzaDAO pizza;
 	
-/*
+	@Inject //--> 만들지 말고 cartDAO에서 만들어 쓰자. -->아니다 만들자
+	private AddressDAO address;
+	
+	@Inject
+	private MemberDAO member;
+	
+	
+	/*
+	@ResponseBody
 	@PostMapping("pizzaCount")
-	public String  pizzaCount(String msg) throws Exception{
-		return "redirect:/cart/pizza_cart";
-	}
-*/	
+	public String pizzaCount(HttpSession session) throws Exception{
+		String user_id = (String)session.getAttribute("id");
+		String count = dao.countPizza(user_id);
+		return count;
+	}*/
+	
 
 	@RequestMapping(value = "cart", method = RequestMethod.GET)
 	public void cart(Locale locale, Model model) {
 		logger.info("cart");
-	}
-	@RequestMapping(value = "cart2", method = RequestMethod.GET)
-	public void cart2(Locale locale, Model model) {
-		logger.info("cart2");
 	}
 	@RequestMapping(value = "/cart3", method = RequestMethod.GET)
 	public void cart3(Locale locale, Model model) {
 		logger.info("cart3");
 	}
 	
+	
+	/** 배달/포장 주문
+	 * @param session 세션 아이디 불러오기
+	 * @param model 리스트 값 넣어 보내기
+	 */
+	@RequestMapping(value = "cart2", method = RequestMethod.GET)
+	public void cart2(HttpSession session,Model model) {
+		logger.info("cart2 get~~~");
+		String user_id = (String)session.getAttribute("id");
+		
+		model.addAttribute("address",address.getAll(user_id));
+		System.out.println("aaaaaaaaaaaa"+model);
+	}
+	
+	/** 주소 등록하기
+	 */
+	@RequestMapping(value = "addressEnroll", method = RequestMethod.GET)
+	public void addressEnroll() {
+		logger.info("addressEnroll get~~~");
+	}
+	
+	/** 배달주소 등록하기 하고 주문방법선택으로 다시 오기.
+	 * @param session 세션 아이디 불러오기
+	 * @param m
+	 */
+	@RequestMapping(value = "cart2", method = RequestMethod.POST)
+	public String cart2(HttpSession session,AddressVO vo,String category,RedirectAttributes rttr) {
+		logger.info("cart2 post~~~" + vo.getAddress());
+		String user_id = (String)session.getAttribute("id");
+		vo.setUser_id(user_id);
+		
+		if(address.getCount(vo) >=1) {
+		}else {
+			address.insert(vo);
+		}
+		//model.addAttribute("address",address.getAll(user_id));
+		
+		rttr.addFlashAttribute("address", address.getAll(user_id));
+		
+		return "redirect:/cart/cart2";
+	}
+	
+
+	//주소 하나 삭제	//ajax로 온건데 왜 ResponsBody 안해도 되지?
+	/**주소 하나 삭제	
+	 *  
+	 */
+	@GetMapping("deleteOneAddress")
+	@ResponseBody
+	public void deleteOneAddress(String uid) throws Exception {
+		logger.info("deleteOneAddress get~~~~~~~~~~uid:" + uid);
+		address.deleteOneAddress(uid);
+		
+	}
+	
+	
+	
+	
 	//장바구니 담기 누르면 --> 넘어옴.
 	@PostMapping("orderPizza")	
-	public String  orderPizzaPost(CartVO cartVO,HttpSession session) throws Exception{
-		cartVO.setCart_id(1); //cart_id 보류
-		String getSize = cartVO.getSize(); 
-		String uid = Integer.toString(cartVO.getMenu_uid());
-		PizzaVO pizzaVO = new PizzaVO();
-		pizzaVO = pizza.read(uid);
+	public String  orderPizzaPost(CartVO cartVO,HttpSession session,@RequestParam(required = false) String sidedish) throws Exception{
+		
+		////////cart_id 설정.!!
+		String maxCart_id = "1";
+		if(dao.getMaxCart_id()==null) { ////피자인 것 중에서 가장 큰 카트아이디 값 찾기
+			maxCart_id = "1";
+		}else {
+			maxCart_id = dao.getMaxCart_id();
+		}
+		cartVO.setCart_id(Integer.parseInt(maxCart_id)+1); 
+		
+		//order_uid : 날짜 시작!! 주문번호 order_uid 입력!!
+		Date now = new Date();
+		SimpleDateFormat sdate = new SimpleDateFormat("MMdd");
+		String signdate = sdate.format(now);
+		int random = (int) (Math.random()*10000000);
+		cartVO.setOrder_uid(Integer.parseInt(signdate+random));//주문번호 패턴 생성
 		
 		
 		//user_id
@@ -80,106 +160,190 @@ public class CartController {
 			cartVO.setUser_id(session_id);
 		}
 
-		//order_uid : 날짜 시작
-		Date now = new Date();
-		SimpleDateFormat sdate = new SimpleDateFormat("MMdd");
-		String signdate = sdate.format(now);
-		int random = (int) (Math.random()*10000000);
-		cartVO.setOrder_uid(Integer.parseInt(signdate+random));//주문번호 패턴 생성
+		String uid ="";
+		SideVO sideVO = new SideVO();
+		PizzaVO pizzaVO = new PizzaVO();
+		if(sidedish == null) {	//뷰 피자면~~~~~~~~~~~~~~~~~~~~~~~~ 
+			String getSize = cartVO.getSize(); 
+			uid = Integer.toString(cartVO.getMenu_uid());
+			pizzaVO = pizza.read(uid);
+			
+			//size
+			if(getSize.equals("L")) {
+				cartVO.setPrice(pizzaVO.getPrice_L());
+			}else { //M이면
+				cartVO.setPrice(pizzaVO.getPrice_M());
+			}
+			//vo.setPrice(Integer.parseInt(pizza.getPrice())));
+			cartVO.setImage(pizzaVO.getImage());
+			cartVO.setImage_o(pizzaVO.getImage_o());
+			cartVO.setImage_s(pizzaVO.getImage_s());
 
-		//size
-		if(getSize.equals("L")) {
-			cartVO.setPrice(pizzaVO.getPrice_L());
-		}else { //M이면
-			cartVO.setPrice(pizzaVO.getPrice_M());
+			
+			dao.insert(cartVO);
+			
+			if(session_id==null || session_id.equals("")) {
+				return "redirect:/member/login";
+			}else {
+				dao.updateOrderUid(cartVO);
+				return "redirect:/cart/pizza_cart";
+			}
+		}else {	////뷰 사이드디시~~~~~~~~~~~~~~~~~~~~~~~~
+			uid = Integer.toString(cartVO.getMenu_uid());
+			sideVO = side.read(uid);
+			
+			cartVO.setSize("");
+			cartVO.setPrice(sideVO.getPrice());
+			cartVO.setImage(sideVO.getImage());
+			cartVO.setImage_o(sideVO.getImage_o());
+			cartVO.setImage_s(sideVO.getImage_s());
+
+			
+			dao.insert(cartVO);
+			if(session_id==null || session_id.equals("")) {
+				return "redirect:/member/login";
+			}else {
+				dao.updateOrderUid(cartVO);
+				return "redirect:/cart/pizza_cart";
+			}
 		}
-		//vo.setPrice(Integer.parseInt(pizza.getPrice())));
-		cartVO.setImage(pizzaVO.getImage());
-		cartVO.setImage_o(pizzaVO.getImage_o());
-		cartVO.setImage_s(pizzaVO.getImage_s());
-		String maxCart_id = "1";
-		System.out.println(cartVO.getClass().getName());
-		if(dao.getMaxCart_id()==null) { ////피자인 것 중에서 가장 큰 카트아이디 값 찾기
-			maxCart_id = "1";
-		}else {
-			maxCart_id = dao.getMaxCart_id();
-		}
-		cartVO.setCart_id(Integer.parseInt(maxCart_id)+1); 
-		logger.info("orderPizzaPost~~~~~~~~~~~~~~~~~~~~~"+cartVO);
-		
-		
-		dao.insert(cartVO);
-		
-		if(session_id==null || session_id.equals("")) {
-			return "redirect:/member/login";
-		}else {
-			dao.updateOrderUid(cartVO);
-			return "redirect:/cart/pizza_cart";
-		}
-		
 		
 	}
 
 	//topping,Side,Juice 수량 버튼을 누르면 ajax
-	@ResponseBody
-	@PostMapping("orderSideDish")	
-	public void  orderSideDish(String uid,String count,HttpSession session) throws Exception{
-		SideVO sideVO = new SideVO();
-		CartVO cartVO = new CartVO();
+		@ResponseBody
+		@PostMapping("orderSideDish")	
+		public void  orderSideDish(String uid,String count,HttpSession session) throws Exception{
+			SideVO sideVO = new SideVO();
+			CartVO cartVO = new CartVO();
 
+			//user_id
+			String session_id = (String)session.getAttribute("id");
+			String session_id2 = (String)session.getAttribute("id2");
+			if(session_id==null || session_id.equals("")) {
+				cartVO.setUser_id(session_id2);
+			}else {
+				cartVO.setUser_id(session_id);
+			}
 
+			sideVO = side.read(uid);
+			int cnt = Integer.parseInt(count);
+
+			//order_uid : 날짜 시작
+			Date now = new Date();
+			SimpleDateFormat sdate = new SimpleDateFormat("MMdd");
+			String signdate = sdate.format(now);
+			int random = (int) (Math.random()*10000000);
+			cartVO.setOrder_uid(Integer.parseInt(signdate+random));//주문번호 패턴 생성
+
+			
+			String maxCart_id = "1";
+			if(dao.getMaxCart_id()==null) { ////피자인 것 중에서 가장 큰 카트아이디 값 찾기
+				maxCart_id = "1";
+			}else {
+				maxCart_id = dao.getMaxCart_id();
+			}
+			cartVO.setCart_id(Integer.parseInt(maxCart_id)+1); 
+	        cartVO.setName(sideVO.getName());
+	        cartVO.setPrice(sideVO.getPrice());
+	        cartVO.setCount(cnt);
+	        cartVO.setCategory(sideVO.getCategory());
+	        cartVO.setMenu_uid(Integer.parseInt(uid));
+	        cartVO.setCategory(sideVO.getCategory());
+	        cartVO.setImage(sideVO.getImage());
+	        cartVO.setImage_o(sideVO.getImage_o());
+	        cartVO.setImage_s(sideVO.getImage_s());
+
+	        int check = dao.check(cartVO);	//menu_uid=uid가 일치하는 수량 체크 
+
+	        if(cnt>=1 && check == 0) { // 누른거기 때문에 인서트.
+	        	dao.insert(cartVO);
+	        }else if(cnt==0){ // 삭제하기
+	        	dao.delete(cartVO);
+	        }else { // (cnt < pre_cnt){ // 업데이트. 개수 증감.
+	        	dao.update(cartVO);
+	        }
+	        System.out.println("cnt :" + cnt + ",check : "+check);
+
+		}
+		//topping,Side,Juice 수량 버튼을 누르면 ajax
+		@ResponseBody
+		@PostMapping("orderJuice")	
+		public int  orderJuice(String uid,String count,HttpSession session) throws Exception{
+			SideVO sideVO = new SideVO();
+			CartVO cartVO = new CartVO();
+
+			//user_id
+			String session_id = (String)session.getAttribute("id");
+			String session_id2 = (String)session.getAttribute("id2");
+			if(session_id==null || session_id.equals("")) {
+				cartVO.setUser_id(session_id2);
+			}else {
+				cartVO.setUser_id(session_id);
+			}
+
+			sideVO = side.read(uid);
+			int cnt = Integer.parseInt(count);
+
+			//order_uid : 날짜 시작
+			Date now = new Date();
+			SimpleDateFormat sdate = new SimpleDateFormat("MMdd");
+			String signdate = sdate.format(now);
+			int random = (int) (Math.random()*10000000);
+			cartVO.setOrder_uid(Integer.parseInt(signdate+random));//주문번호 패턴 생성
+
+			
+			String maxCart_id = "1";
+			if(dao.getMaxCart_id()==null) { ////피자인 것 중에서 가장 큰 카트아이디 값 찾기
+				maxCart_id = "1";
+			}else {
+				maxCart_id = dao.getMaxCart_id();
+			}
+			cartVO.setCart_id(Integer.parseInt(maxCart_id)+1); 
+	        cartVO.setName(sideVO.getName());
+	        cartVO.setPrice(sideVO.getPrice());
+	        cartVO.setCount(cnt);
+	        cartVO.setCategory(sideVO.getCategory());
+	        cartVO.setMenu_uid(Integer.parseInt(uid));
+	        cartVO.setCategory(sideVO.getCategory());
+	        cartVO.setImage(sideVO.getImage());
+	        cartVO.setImage_o(sideVO.getImage_o());
+	        cartVO.setImage_s(sideVO.getImage_s());
+
+	        int checkJuice = dao.checkJuice(cartVO);	//menu_uid=uid가 일치하는 수량 체크
+
+	        
+	        String countJuice = dao.countJuice(session_id);
+	        String countPizza = dao.countPizza(session_id);
+	        String countSideDish = dao.countSideDish(session_id);
+	        int cntJuice = 0 + Integer.parseInt(count);
+	        int cntPizza = 0;
+	        int cntSideDish = 0;
+	        if(countJuice == null) {}else {cntJuice += Integer.parseInt(countJuice);}
+	        if(countPizza == null) {}else {cntPizza=Integer.parseInt(countPizza);}
+	        if(countSideDish == null) {}else {cntSideDish=Integer.parseInt(countSideDish);}
+	        	
+	        if(session_id == null || session_id.equals("")) {
+	        	return 0;
+	        }else if((cntPizza*2+cntSideDish) < cntJuice) { //
+	        	return 1;
+	        }else {
+	        	if(cnt>=1 && checkJuice == 0) { // 누른거기 때문에 인서트.
+	        		dao.insertJuice(cartVO);
+	        	}else if(cnt==0){ // 삭제하기 0일 경우가 없어서 어차피 삭제 안됨.
+	        		dao.delete(cartVO); //
+	        	}else { // (cnt < pre_cnt){ // 업데이트. 개수 증감.
+	        		dao.updatePlus(cartVO);
+	        	}
+	        	System.out.println("cnt :" + cnt + ",checkJuice : "+checkJuice);
+
+	        	return 2;
+	        }
+	        
+
+		}
 		
 
-		//user_id
-		String session_id = (String)session.getAttribute("id");
-		String session_id2 = (String)session.getAttribute("id2");
-		if(session_id==null || session_id.equals("")) {
-			cartVO.setUser_id(session_id2);
-		}else {
-			cartVO.setUser_id(session_id);
-		}
-
-		sideVO = side.read(uid);
-		int cnt = Integer.parseInt(count);
-
-		//order_uid : 날짜 시작
-		Date now = new Date();
-		SimpleDateFormat sdate = new SimpleDateFormat("MMdd");
-		String signdate = sdate.format(now);
-		int random = (int) (Math.random()*10000000);
-		cartVO.setOrder_uid(Integer.parseInt(signdate+random));//주문번호 패턴 생성
-
-		
-		String maxCart_id = "1";
-		System.out.println(cartVO.getClass().getName());
-		if(dao.getMaxCart_id()==null) { ////피자인 것 중에서 가장 큰 카트아이디 값 찾기
-			maxCart_id = "1";
-		}else {
-			maxCart_id = dao.getMaxCart_id();
-		}
-		cartVO.setCart_id(Integer.parseInt(maxCart_id)+1); 
-        cartVO.setName(sideVO.getName());
-        cartVO.setPrice(sideVO.getPrice());
-        cartVO.setCount(cnt);
-        cartVO.setCategory(sideVO.getCategory());
-        cartVO.setMenu_uid(Integer.parseInt(uid));
-        cartVO.setCategory(sideVO.getCategory());
-        cartVO.setImage(sideVO.getImage());
-        cartVO.setImage_o(sideVO.getImage_o());
-        cartVO.setImage_s(sideVO.getImage_s());
-
-        int check = dao.check(cartVO);	//menu_uid=uid가 일치하는 수량 체크 
-
-        if(cnt>=1 && check == 0) { // 누른거기 때문에 인서트.
-        	dao.insert(cartVO);
-        }else if(cnt==0){ // 삭제하기
-        	dao.delete(cartVO);
-        }else { // (cnt < pre_cnt){ // 업데이트. 개수 증감.
-        	dao.update(cartVO);
-        }
-        System.out.println("cnt :" + cnt + ",check : "+check);
-
-	}
 /*	
 	//Dough 수량 버튼을 누르면 ajax
 	@ResponseBody
@@ -229,14 +393,47 @@ public class CartController {
 	@GetMapping("pizza_cart")
 	public void pizzaCart(HttpSession session,Model model) throws Exception {
 		//카트db에서 아이디랑 장바구니에 해당되는 값 불러오기
-		
-		model.addAttribute("list",dao.listFromId((String)session.getAttribute("id")));
 		String session_id = (String)session.getAttribute("id");
+
+		String addrUid = member.getAddrUid(session_id); //아이디로 주소uid 찾기.
+		if(addrUid ==null) {
+		}
+		else {
+			if(address.selectOne(addrUid) == null) {
+			}else {
+				model.addAttribute(address.selectOne(addrUid));
+			}
+		}
+		model.addAttribute("list",dao.listFromId((String)session.getAttribute("id")));
 		model.addAttribute("cartCnt",dao.cartCnt(session_id));
 		logger.info("pizzaCart~~~Get~~~"+model);
 	}
 	
+	/** 피자카트에 주소uid 등록하기
+	 */
+	@GetMapping("addrIntoCart")
+	@ResponseBody
+	public void addrIntoCart(String uid,HttpSession session) throws Exception {
+		//카트db에서 아이디랑 장바구니에 해당되는 값 불러오기
+		CartVO vo = new CartVO();
+		vo.setAddress_uid(uid);
+		vo.setUser_id((String)session.getAttribute("id"));
+		member.updateAddr(vo);
+		System.out.println("uid:"+uid);
+	}
+	
 	//장바구니 하나 삭제	//ajax로 온건데 왜 ResponsBody 안해도 되지?
+	/**
+	 *  장바구니에서 x 눌렀을 떄 항목 하나 삭제하는 메소드.
+	 *  피자를 눌렀을 때 사이드보다 적거나 콜라/2 보다 적으면 삭제 불가 return 0
+	 *  피자 눌렀을 때 토핑도 같이 삭제 됨 return 2
+	 *  사이드 메뉴 누르면 삭제 됨. return 1
+	 *  
+	 * @param cartVO menu_uid,cart_id, category 받고 세션아이디도 같이 cartVO에 들어감.
+	 * @param session session 생성해서 세션id 불러옴.
+	 * @return 0 or 1 or 2
+	 * @throws Exception
+	 */
 	@GetMapping("deleteOne")
 	@ResponseBody
 	public int deleteOne(CartVO cartVO, HttpSession session) throws Exception {
@@ -260,7 +457,7 @@ public class CartController {
 			if(intSumPizza <= intSumSide || intSumPizza*2 <= intSumJuice) {
 				return 0;	//alert('삭제 불가. 사이드 메뉴 부터 삭제 바람');
 			}else {
-				dao.deletePizzaOne(cartVO);	//토핑도 같이 삭제
+				dao.deletePizza(cartVO);	//토핑도 같이 삭제
 				
 				return 2;
 			}
@@ -275,7 +472,7 @@ public class CartController {
 	public String deleteAllPizza(HttpSession session)  throws Exception {
 		logger.info("deleteAllPizza get~~~~~~~~~~");
 		String session_id = (String)session.getAttribute("id");
-		dao.deletePizzaAll(session_id);
+		dao.deletePizza(session_id);
 		
 		return "redirect:/cart/pizza_cart";
 		
@@ -292,14 +489,45 @@ public class CartController {
 	
 	//장바구니 - 결제하기
 	@GetMapping("pizza_cart_last")	
-	public void pizza_cart_last(HttpSession session)  throws Exception {
-		logger.info("pizza_cart_last get~~~~~~~~~~");
+	public void pizzacart_last(HttpSession session,Model model)  throws Exception {
+		//카트db에서 아이디랑 장바구니에 해당되는 값 불러오기
+		String session_id = (String)session.getAttribute("id");
+		
+		
+		String addrUid = member.getAddrUid(session_id); //아이디로 주소uid 찾기.
+		
+		if(addrUid ==null) {
+		}
+		else {
+			if(address.selectOne(addrUid) == null) {
+			}else {
+				model.addAttribute(address.selectOne(addrUid));
+			}
+		}
+		
+		model.addAttribute("member",member.memberselect(session_id));
+		model.addAttribute("list",dao.listFromId((String)session.getAttribute("id")));
+		model.addAttribute("cartCnt",dao.cartCnt(session_id));
 	}
 	
 	//카카오 페이 결제
 	@GetMapping("kakao")	
-	public void kakao(HttpSession session)  throws Exception {
-		logger.info("kakao get~~~~~~~~~~");
+	public void kakao(HttpSession session,Model model,String total_price)  throws Exception {
+		logger.info("kakao get~~~~~~~~~~"+model+""+total_price);
+		model.addAttribute("sum",total_price);
+		model.addAttribute("list",model);
+	}
+	@GetMapping("paySuccess")
+	public String paySuccess(HttpSession session,String total_price) throws Exception {
+		String session_id = (String)session.getAttribute("id");
+		CartVO vo = new CartVO();
+		List<CartVO> list =  dao.listFromId(session_id);
+		for(int i = 0; i<list.size(); i++) {	//결제완료 처리하고
+			dao.update(vo,"결제완료");
+		}
+		
+		//orderAll에 인서트하기. 
+		return "redirect:/myPage/myOrderList";
 	}
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 	

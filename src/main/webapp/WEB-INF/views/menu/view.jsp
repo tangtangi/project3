@@ -441,7 +441,7 @@
 					<td  class="ftName1">피자</td>
 					<td  class="ftName1">사이드디시</td>
 					<td  class="ftName1">음료 & 기타</td>
-					<td  align=center rowspan=2 border=0>
+					<td  align=center rowspan=2 border=0 style="position: absolute;top: 100px;">
 						<table border=0>
 							<tr>
 								<td class="price1" height=45px>총 금액 

@@ -15,6 +15,7 @@
 <meta charset="UTF-8">
 <!-- <meta name="viewport" content="width=divice-width, initial-scale=1, minimum-scale=1,maximum-scale=1"> -->
 
+<!-- 헤더css파일 불러오기 -->
 <link rel="stylesheet" href="/css/header.css">
 
 <!-- 가로폭을 기기의 가로폭에 맞추고 콘텐트가 흔들리지 않도록 초기값, 최소,최대값모두 1로 설정. -->
@@ -97,6 +98,8 @@ $(document).ready(function(){
 		
 	});
 });
+
+	
 	
 </script>
 
@@ -117,7 +120,7 @@ session_level:${session_level}<br>
 			</a>
 		</div>
 		<div class = "location " style="width:45%; text-align: center; align-self: center; "> 
-			<a class="myloc"><img alt="왜 안떠" src="/image/locationArrow.JPG" style="margin-bottom: -5px;">현재위치</a>
+			<a class="myloc" href="/myPage/geoLocation"><img alt="왜 안떠" src="/image/locationArrow.JPG" style="margin-bottom: -5px;">현재위치</a>
 		</div>
 		<div class="util-nav" style="width:15%;text-align: center; align-self: center;display: flex;  justify-content: space-evenly;"> 
 			<c:choose>

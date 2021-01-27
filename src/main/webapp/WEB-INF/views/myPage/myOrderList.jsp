@@ -19,6 +19,7 @@ div a{
     display: flex;
     border-bottom: 2px solid black;
     padding: 10px 0px;
+    color:#8c8888;
 }
 .box_head2{
 /* 	padding: 0 10px; 
@@ -65,6 +66,11 @@ div a{
 		<div class="addressBox" id="tab0111" style="">
 			<div style="padding: 0 30px;"><span>주문내역</span></div>
 		</div>
+		<div class="box_head" >
+			<div style="  border-right: 1px solid black;padding-right: 35px;color:#8c8888;">
+				<a href="/myPage/myOrderList"><b>피자 주문내역</b></a></div>
+			<div style="padding: 0 35px;color:#8c8888;"><a href="/myPage/myOrderList_gift">상품권 주문내역</a></div>
+		</div>	
 	</div>
 	<div style ="width: 13.5%"></div>
 </div>

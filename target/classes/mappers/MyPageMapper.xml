@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace = "com.dominos.mapper.MyPageMapper">
+	<select id="modifyPass" resultType="int">
+		<![CDATA[
+			select count(*) from member where id=#{id} and pass=#{pass}  
+		]]>
+	</select>
+	<update id="e_couponList">
+		<![CDATA[
+			update cart_gift set state="결제완료", e_coupon=#{e_coupon} where user_id=#{user_id} and state="대기"
+		]]>
+	</update>
+	<select id="cartGiftSelect" resultType="GiftVO">
+		<![CDATA[
+			select * from cart_gift where user_id=#{user_id}
+		]]>
+	</select>
+	<select id="orderSelect" resultType="GiftVO">
+		<![CDATA[
+			select * from cart_gift where user_id=#{user_id} and state="결제완료" order by uid desc limit 1
+		]]>
+	</select>
+	<insert id="orderAll_insert">
+		<![CDATA[
+			insert into order_all (order_uid, user_id, total_price, pay_type, signdate, kind) values (1,'1',1,'1','1','1')
+		]]>
+	</insert>
+
+</mapper>

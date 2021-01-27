@@ -55,11 +55,34 @@
 </style>
 <script>
 /* 수량 박스 */
-	function change(num){
-		var x = document.getElementsByName("count");
-		var y = Number(x[0].value)+num;
+ /* 주스 카운트 
+ */
+	function change(num,index){
+		var x = document.getElementsByName("countJuice");
+		var y = Number(x[index].value)+num;
 		if(y < 1) y = 1;
-		x[0].value = y;
+		x[index].value = y;
+	}
+	
+	function juiceForm(index,uid){
+		var x = document.getElementsByName("countJuice");
+		
+ 		$.ajax({
+			url:"/cart/orderJuice",
+			data:{count:x[index].value,uid:uid},
+			type:"post",
+			success:function(value){
+				console.log(value);
+				if(value == 0){
+					alert('로그인 먼저 하세요');
+				}else if(value == 1){
+					alert('음료는 피자 1판당 최대2개까지, 사이드디시 1개당 최대 1개까지 주문이 가능합니다.');
+				}else{
+					alert('장바구니에 담았습니다.');
+				}
+			}
+		});
+ 		
 	}
 </script>
 
@@ -115,12 +138,12 @@
 	</tr>
 </c:if>
 	<tr><td align=center width=73% >
-		<table width=100% align=center >
+		<table style="width: 100%; text-align: center;">
 			<c:if test="${menu eq 'pizza' }">
 				<c:forEach var="list" items="${list }" varStatus="status" begin="0" end="10" >
 						<c:if test="${status.index%4 ==0}"><tr></c:if>
 								<td width=25% align=center style="padding:0 0 32px 0;">
-									<table  border=0 width=300>
+									<table style="width:300px;">
 										<tr><td colspan=2><a href="/menu/view?uid=${list.uid }&menu=${menu}"><img src="/image/imageMenu/${list.image}" width=300 height=300></a></td>
 										<tr><td colspan=2 class="foodname"><a href="/menu/view">${list.name} </a>
 											<c:if test="${list.uid <= 2 }"><img src="/image/day.PNG" style="margin-bottom: -3px;"></c:if>
@@ -148,7 +171,7 @@
 				<c:forEach var="list" items="${list }" varStatus="status">
 						<c:if test="${status.index%4 ==0}"><tr></c:if>
 							<td width=25% align=center style="padding:0 0 32px 0;">
-								<table  border=0 width=300>
+								<table  style="width: 300px;" >
 									<tr><td><a href="/menu/viewSide?uid=${list.uid }&menu=${menu}"><img src="/image/imageMenu/${list.image }" width=300 height=300 ></a></td>
 									<tr><td class="foodname">${list.name }<br>  <c:if test="${status.index<=3 }"><img src="/image/new.PNG" style="margin-bottom: -4px;"></c:if></td></tr>
 									<tr><td class="price"><fmt:formatNumber type="number" maxFractionDigits="3" value="${list.price }" />원</td></tr>
@@ -159,9 +182,10 @@
 			</c:if>
 			<c:if test="${menu eq 'juice' }">
 				<c:forEach var="list" items="${list }" varStatus="status">
+					<form method="post" id="juiceForm" action="orderJuiceList">
 						<c:if test="${status.index%4 ==0}"><tr></c:if>
 							<td width=25%  align=center style="padding:0 0 32px 0;">
-								<table  border=0 width=300>
+								<table  style="width: 300px;">
 									<tr><td colspan=2><img src="/image/imageMenu/${list.image }" width=300 height=300></td>
 									<tr><td colspan=2 class="foodname">${list.name }</td></tr>
 									<tr><td colspan=2 class="price"><fmt:formatNumber type="number" maxFractionDigits="3" value="${list.price}" />원</td></tr>
@@ -170,19 +194,20 @@
 											<form name="countform">
 											<table>
 												<tr>
-													<td class="juicebutton" align=center><a href="#" onclick="change(1);" >+</a></td>
-													<td ><input name="count" value="1" class="juicecount"></td>
-													<td class="juicebutton" align=center><a href="#" onclick="change(-1);" >-</a></td>
+													<td class="juicebutton" align=center><a href="javascript:void(0)" onclick="change(1,${status.index});" >+</a></td>
+													<td ><input name="countJuice" value="1" class="juicecount"></td>
+													<td class="juicebutton" align=center><a href="javascript:void(0)" onclick="change(-1,${status.index});" >-</a></td>
 												</tr>
 											</table>
 											</form>
 										</td>
-										<td class="order" width=40%>주문</td>
+										<td class="order" width=40%><a href="javascript:void(0)" onclick="juiceForm(${status.index},${list.uid })" style="color: white;">주문</a></td>
 									</tr>
 									
 								</table>
 							</td>
 						<c:if test="${status.index%4 ==3}"></tr></c:if>
+					</form>
 				</c:forEach>
 			</c:if>
 		</table>
@@ -193,13 +218,13 @@
 		<td class="submenuname">하프앤하프 시그니처</td>
 	</tr>
 	
-	<tr><td align=center border=0 width=73% >
-	<table width=100% align=center border=0>
+	<tr><td align=center  width=73% >
+	<table style="width: 100%; text-align: center;">
 		<c:if test="${menu eq 'pizza' }">
 			<c:forEach var="list" items="${list }" varStatus="status" begin="11" end="14" >
 					<c:if test="${status.index%4 ==3}"><tr></c:if>
 							<td width=25% align=center style="padding:0 0 32px 0;" >
-								<table  border=0 width=300 <c:if test="${status.index == 13 ||status.index == 14 }">style="display:none;"</c:if>>
+								<table  style="width: 300px;" <c:if test="${status.index == 13 ||status.index == 14 }">style="display:none;"</c:if>>
 									<tr><td colspan=2><a href="/menu/view?uid=${list.uid }&menu=${menu}"><img src="/image/imageMenu/${list.image}" width=300 height=300></a></td>
 									<tr><td colspan=2 class="foodname"><a href="/menu/view">${list.name} </a>
 										<c:if test="${list.uid <= 2 }"><img src="/image/day.PNG" style="margin-bottom: -3px;"></c:if>
@@ -229,13 +254,13 @@
 		<td class="submenuname">클래식</td>
 	</tr>
 	
-		<tr><td align=center border=0 width=73% >
-	<table width=100% align=center border=0>
+		<tr><td align=center width=73% >
+	<table style="width: 100%;text-align: center;">
 		<c:if test="${menu eq 'pizza' }">
 			<c:forEach var="list" items="${list }" varStatus="status" begin="13" end="20" >
 					<c:if test="${status.index%4 ==1}"><tr></c:if>
 							<td width=25% align=center style="padding:0 0 32px 0;">
-								<table  border=0 width=300>
+								<table  style="width: 300px;">
 									<tr><td colspan=2><a href="/menu/view?uid=${list.uid }&menu=${menu}"><img src="/image/imageMenu/${list.image}" width=300 height=300></a></td>
 									<tr><td colspan=2 class="foodname"><a href="/menu/view">${list.name} </a>
 										<c:if test="${list.uid <= 2 }"><img src="/image/day.PNG" style="margin-bottom: -3px;"></c:if>
@@ -262,14 +287,6 @@
 	</table>
 	
 </c:if>
-	<!-- 
-	
-	<tr>
-		<td class="submenuname">하프앤하프 시그니처</td>
-	</tr>
-	<tr>
-		<td class="submenuname">클래식</td>
-	</tr> -->
 </table>
 
 
@@ -323,54 +340,4 @@
 
 
 
-	<!-- ----------------------------------- -->
-	
-	<%--  피자 양식
-	<tr>
-		<td align=center>
-			<table  border=0>
-				<tr><td><a href="/menu/view"><img src="/image/pizza1.jpg" width=300 height=300></a></td>
-				<tr><td class="foodname"><a href="/menu/view">세배 피자 </a><img src="/image/day.PNG" style="margin-bottom: -3px;"><img src="/image/new.PNG" style="margin-bottom: -4px;"></td></tr>
-				<tr><td class="price"><span style="color:red;">L</span> 34800원~</td></tr>
-				<fmt:formatNumber type="number" maxFractionDigits="3" value="${price}" />
-				<tr><td class="pizzainfo">#8천원 할인 쿠폰 <br> #주문 시 사이드디시 반값</td></tr>
-			</table>
-		</td>
-	</tr> --%>
-	<%-- 사이드디시 양식 
-	<tr>
-		<td  align=center>
-			<table  border=0>
-				<tr><td><img src="/image/side1.jpg" width=300 height=300></td>
-				<tr><td class="foodname">블랙타이거 슈림프 알리오 올리오<br> 파스타 <img src="/image/new.PNG" style="margin-bottom: -4px;"></td></tr>
-				<tr><td class="price">8800원</td></tr>
-				<fmt:formatNumber type="number" maxFractionDigits="3" value="${price}" />
-			</table>
-		</td>
-	</tr> --%>
-	<%--  음료 및 기타 양식
-	<tr>
-		<td  align=center >
-			<table  border=0 width=300>
-				<tr><td colspan=2><img src="/image/juice1.jpg" width=300 height=300></td>
-				<tr><td colspan=2 class="foodname">코카콜라 1.25L</td></tr>
-				<tr><td colspan=2 class="price">2000원</td></tr>
-				<tr>
-					<td width=60% style="border:1px solid #dddddd;">
-						<form name="countform">
-						<table>
-							<tr>
-								<td class="juicebutton" align=center><a href="#" onclick="change(1);" >+</a></td>
-								<td ><input name="count" value="1" class="juicecount"></td>
-								<td class="juicebutton" align=center><a href="#" onclick="change(-1);" >-</a></td>
-							</tr>
-						</table>
-						</form>
-					</td>
-					<td class="order" width=40%>주문</td>
-				</tr>
-				<fmt:formatNumber type="number" maxFractionDigits="3" value="${price}" />
-			</table>
-		</td>
-	</tr> --%>
 <%@ include file="/WEB-INF/views/include/footer.jsp" %>

@@ -2,6 +2,14 @@
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+
 <link rel="stylesheet" href="/css/header.css">
 <style>
 	body{
@@ -50,12 +58,9 @@
 /* 상단바 메뉴 끝*/
 </style>
 
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-<table 	width=100% height=115px>
+
+<body>
+<table 	style="width: 100%;height: 115px;">
 	<tr>
 		<td  width=13.5% ></td>
 		<td class="menuname" width=73% >관리자 페이지</td>
@@ -64,7 +69,7 @@
 	<tr>
 		<td  width=13.5% ></td>
 		<td class="submenu" width=73%>
-			<table border=0>
+			<table style="border:0;">
 				<tr>
 					<td class="submenu_a" align=left width=80px><a href="/admin/memberList">회원 관리</a></td>
 					<td class="submenu_a" align=center width=120px><a href="/admin/memberList">주문 관리</a></td>

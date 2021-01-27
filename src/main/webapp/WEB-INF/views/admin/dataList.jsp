@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ include file="/WEB-INF/views/include/header.jsp" %>
+<%@ include file="/WEB-INF/views/include/admin_header.jsp" %>
 
 
 <title>Domino's Menu!!</title>    
@@ -9,28 +9,46 @@
 		width: 100px;
 	}
 	div{
-		border-bottom: 1px solid black;
-	}	
+/* 		border-bottom: 1px solid black; */
+		margin: 0 0 5px 0;
+	}
+	form{
+	
+	    width: 75%;
+	    text-align: center;
+	    /* align-items: center; */
+	    display: inline;
+    }
+    .headDiv{
+	    display: inline-block;
+	    width: 75%;
+	    text-align: center;
+    }
 </style>
 <!-- --------------------------------------------------------------------------------------------------------- -->
-데이터 베이스 리스트 페이지
-<a href="/menu/insert">인서트페이지로 이동</a>
-<a></a>
-<a href="/uploadForm">/uploadForm.jsp로 이동.</a>
-
-		<div style="border-bottom: 2px solid black;">
-			&nbsp;&nbsp;
-			<input name="name" placeholder="피자이름" value="이름">
-			<input name="price" placeholder="가격"  value="가격">
-			<label><input type="radio" name="size" value="L" placeholder="사이즈" checked>L</label>
-			<label><input type="radio" name="size" value="M" placeholder="사이즈">M</label>
-			<input name="signdate" placeholder="등록일??"  value="등록일">
-			<input name="dough" placeholder="도우"  value="도우">
-			<input name="topping" placeholder="토핑"  value="토핑">
-			<input name="image" placeholder="이미지"  value="이미지">
-			<input type="file" name="file">
-			<input type="submit" value="수정하기">
-		</div>
+<div style="text-align: center;">
+	<div class="headDiv">
+		데이터 베이스 리스트 페이지&nbsp;&nbsp;
+		<a href="insert">인서트페이지로 이동</a>&nbsp;&nbsp;
+		<a></a>
+		<a href="uploadForm">uploadForm.jsp로 이동.</a>
+	</div>
+</div>
+<div style="text-align: center;">
+	<div class="headDiv" style="border-bottom: 2px solid black;">
+		&nbsp;&nbsp;
+		<input name="name" placeholder="피자이름" value="이름">
+		<input name="price" placeholder="가격"  value="가격">
+		<label><input type="radio" name="size" value="L" placeholder="사이즈" checked>L</label>
+		<label><input type="radio" name="size" value="M" placeholder="사이즈">M</label>
+		<input name="signdate" placeholder="등록일??"  value="등록일">
+		<input name="dough" placeholder="도우"  value="도우">
+		<input name="topping" placeholder="토핑"  value="토핑">
+		<input name="image" placeholder="이미지"  value="이미지">
+		<input type="file" name="file">
+		<input type="submit" value="수정하기">
+	</div>
+</div>
 	
 <!-- <form id='registerForm' role="form"  action="/uploadForm" method="post" enctype="multipart/form-data" target="zeroFrame"> -->
 <c:forEach items="${pizza }" var="pizza" varStatus="stat">
@@ -85,4 +103,4 @@
 
 
 
-<%@ include file="/WEB-INF/views/include/footer.jsp" %>
+<%@ include file="/WEB-INF/views/include/admin_footer.jsp" %>

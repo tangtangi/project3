@@ -137,6 +137,9 @@
 			display: flex;
 			min-height: 100px;
 		}
+		.form_mini_box div{
+			margin: 10px 0;
+		}
 		.form_left{
 			padding : 0 3%; 
 			align-self: center;
@@ -165,6 +168,7 @@
 /* 	   	height: 70px; */
 	    line-height: 70px;
 	    background: #f5f5f5;
+ 	   	border-top: 2px solid black;
 	   
 	}
 	.aModi{
@@ -196,7 +200,7 @@
 	}
 	.little{
 		text-align: center;
-		line-height: 5;
+		line-height: 3;
 	    display: flex;
 	    /* justify-content: center; */
 	}
@@ -239,7 +243,15 @@
 	    text-align: center;
 	    font-size: 55px;
 	}
-	
+	.recipient td{
+		padding: 10px;
+	}
+	.recipient input{
+		padding: 10px;
+	}
+	.recipient p{
+		color: red;
+	}
 </style>
 
 
@@ -271,77 +283,98 @@
 			</div>
 		</div>
 		
-		<!-- 주문내용 -->
+		<!-- 수령인 정보 -->
 		<form method="post" id="tab01">
 			<div class="form_box" style="clear: both;">
 				<div class="form_mini_box">
-					<div class="form_left"><span style="font-size: 20px;">울산 울주군 이영산업기계</span><p>울산점</p> <span>055-342-1234</span></div>
-					<div class="form_right"><a class="aModi">수정</a></div>
+					<div class="form_left"><span style="font-size: 20px;">${addressVO.address }</span><p>${addressVO.store_name }</p> <span>${addressVO.phone }</span></div>
+					<div class="form_right"><a class="aModi" href="cart2">수정</a></div>
 				</div>
 			</div>
-		
+
+			<div class="form_box" style="clear: both;border-top: 1px solid lightgrey;">
+				<div class="form_mini_box">
+					<table style="margin-left: 80px;margin-top: 55px;margin-bottom:55px;" class="recipient">
+					<tr>
+						<td></td>
+						<td><label><input type="checkbox" value="" id="checked" onclick="checkBoxClick()" checked>주문자와 동일</label></td>
+					</tr>
+					<tr>
+						<td>이름</td>
+						<td ><input value="${member.name}" id="name1"></td>
+					</tr>
+					<tr>
+						<td>연락처</td>
+						<td ><input value="${member.phone}" id="phone"></td>
+					</tr>
+					<tr>
+						<td>요청사항</td>
+						<td ><input value="맛있게 해주세요"></td>
+					</tr>
+					<tr>
+						<td>비대면 안전배달 (준비중)</td>
+						<td>
+							<label><input type="checkbox" value="">미리결제 이용 필수
+								
+							</label>
+						</td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>
+							<p>*배달 시 고객님의 문 앞에 피자를 놓은 후 고객님께 확인 연락(초인종 또는 전화) 드리는 서비스입니다.</p>
+							<p>*주류상품이 포함된 경우 수령자의 신분증 확인을 위해 비대면 안전배달 서비스가 제한됩니다.</p>
+						</td>
+					</tr>
+				</table>
+				</div>
+			</div>
+			
+		<!--  -------------------------------- -------------------------------- -->		
 		<!-- 주문내역 -->
 			<div class="addressBox" id="tab0111" style="">
-				<div style="padding: 0 30px; float: left;"><span>주문내역</span></div>
-				<div style="padding: 0 30px; float: right; color: gray;"><a href="" style="font-size: 14px; color:#888;">전체 삭제</a></div>
+				<div style="padding: 0 30px; "><span>주문내역</span></div>
 	<!-- <div style="padding: 0 30px;"><span>포장주문</span></div> -->
 			</div>
-			
-			<div class="littleHeader">
-				<div style="width: 40%; line-height: 3;display: flex;justify-content: center;">상품정보</div>
-				<div style="width: 30%; line-height: 3;display: flex;justify-content: center;">추가토핑</div>
-				<div style="width: 10%; line-height: 3;display: flex;justify-content: center;">수량</div>
-				<div style="width: 10%; line-height: 3;display: flex;justify-content: center;">금액</div>
-				<div style="width: 10%; line-height: 3;display: flex;justify-content: center;"></div>
-			</div>
-			<c:forEach begin="0" end="2">
-				<div class="littleContent">
-					<div class="little" style="width: 40%; height: 90px;">
-						<div><img alt="사진" src="/image/cartImg.jpg" width="90px" height="90px"></div>
-						<div class="content">
-							<p>스타셰프 시그니처</p>
-							<p style="color: lightgray; font-size: 12px;">슈퍼시드 함유 도우/L</p>
-							<p>38,900원</p>
+			<c:set  var="sum2" value="${0 }" />
+			<c:forEach var="list" items="${list }" >
+					<div class="littleContent">
+						<div class="little" style="width: 60%; ">
+							<div class="content">
+								<p>${list.name } * ${list.count } /  
+								<c:if test="${list.category == null }"><p style="color: lightgray; font-size: 12px;"> ${list.dough_name}/${list.size }</c:if>
+								<fmt:formatNumber type="number" maxFractionDigits="3" value="${list.price + list.dough_price}" />원 </p>
+							</div>
 						</div>
+						<div class="little" style="width: 40%;"><fmt:formatNumber type="number" maxFractionDigits="3" value="${list.count * list.price + list.count * list.dough_price}" />원</div>
+						<c:set  var="sum2 " value="${sum2 + (list.count * list.price) + (list.count * list.dough_price)}"/>
 					</div>
-					<div class="little" style="width: 30%;"></div>
-					<div class="little" style="width: 10%;">수량</div>
-					<div class="little" style="width: 10%;">38,900원</div>
-					<div class="little" style="width: 10%;">x</div>
-				</div>
 			</c:forEach>
-				
-				<div class="littleContent" style="border-bottom: 2px solid black;    padding: 15px 0;">
-					<div class="little" style="width: 30%;"></div>
-					<div class="little" style="width: 30%;"></div>
-					<div class="little" style="width: 10%;"></div>
-					<div style="width: 20%; font-size: 30px; color:black;"><span style="font-size: 20px;margin: 0 0 0 30px;">총 금액</span> <%-- ${aa} --%>38,900원</div>
-					<div class="little" style="width: 10%;"></div>
-				</div>
-				
-		<!--  -------------------------------- -------------------------------- -->
-		<div class="addressBox" id="tab0111" style="">
-			<div style="padding: 0 30px;"><span>할인 적용</span></div>
 			
+			
+			<c:set  var="sum"/>
+			<c:forEach var="list" items="${list }">
+				<c:set var="sum"  value="${sum + list.count * list.price + list.count * list.dough_price}"/>
+			</c:forEach>
+			
+		<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+		<div class="addressBox" id="tab0111" style="border-top:1px solid black; ">
+			<div style="padding: 0 30px;"><span>할인 적용</span></div>
 		</div>
 		<div class="form_box" style="clear: both;">
-			<div class="form_mini_box">
-				<div>* 가장 높은 할인율의 혜택으로 자동 적용하였습니다.</div>
-				<ul>
-					<li>[vip쿠폰] 배달 피자 30% 할인</li>
-					<li>온라인 프로모션 선택</li>
-					<li>통신사 및 카드사 제휴 프로모션 선택</li>
-					<li>상품권 및 쿠폰번호 입력</li>
-				</ul>
-			</div>
+			<table style="margin-left: 80px;margin-top: 55px;margin-bottom:55px;">
+				<tr>
+					<td class="discount" style="background-color: white;color: gray;border: 1px solid gray">도미노콘 15% 할인</td>
+				</tr>
+			</table>
 		</div>
 		<!--  -------------------------------- -------------------------------- -->
-		<div class="addressBox" id="tab0111" style="">
+<!--	<div class="addressBox" id="tab0111" style="">
 			<div style="padding: 0 30px;"><span>도착 예정 시간</span></div>
 		</div>
-		<div class="form_box" style="clear: both;">
-			<div class="form_mini_box">
-				<div>
+		<div class="form_box" style="clear: both;text-align: center;">
+			<div class="form_mini_box" style="display: inline-block;">
+				<div style="border-bottom: 1px solid lightgray;">
 					<a href="#">바로주문</a>
 					<a href="#">오늘예약</a>
 					<a href="#">내일예약</a>
@@ -363,108 +396,7 @@
 				<div>*매장 상황에 따라 배달시간이 상이할 수 있습니다.</div>
 			</div>
 		</div>
-		
-		<!--  -------------------------------- -------------------------------- -->
-		<div class="addressBox" id="tab0111" style="">
-			<div style="padding: 0 30px;"><span>결제수단 선택</span></div>
-		</div>
-		
-		<div class="form_box" style="clear: both;">
-			<div class="form_mini_box">
-				<label><input type="radio" name="payMethod">도미노페이 / 준비중</label> 
-				<label><input type="radio" name="payMethod">다른결제수단 / 준비중 </label>
-			</div>
-		</div>
-		<!--  -------------------------------- -------------------------------- -->
-		<div class="addressBox" id="tab0111" style="">
-			<div style="padding: 0 30px;"><span>최종 결제 금액</span></div>
-		</div>
-		
-		<div class="form_box" style="clear: both;">
-			<div class="form_mini_box">
-				<div><p>총 상품 금액</p><span>38,900원</span></div>
-				<div>-</div>
-				<div><p>총 할인 금액</p><span>11,670원</span></div>
-				<div>=</div>
-				<div><p>총 결제 금액</p><span>27,230원</span></div>
-			</div>
-		</div>
-		
-		
-			<div style="display: flex;justify-content: center; padding: 40px 40px 40px 0; line-height: 4;">
-				<div style="width: 15px;"> </div>
-				<a href="kakao" class="goToGift" style="color: white;background: #ff143c; text-align: center;">결제하기</a>
-			</div>	
-<!-- 		</form> -->
-	</div><!-- 중간폭 -->
-	<div style ="width: 13.5%"></div>
-</div>
-
-<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-<div style="display: flex;   ">
-	<div style ="width: 13.5%"></div>
-	<div style ="width: 73%">
-		<!-- 주문내역 -->
-		<div class="addressBox" id="tab0111" style="border-top:1px solid black;">
-			<div style="padding: 0 30px;"><span>주문내역</span></div>
-		</div>
-		<div class="littleHeader" style="height: 80px;">
-			<div style="width: 50%; line-height: 3;display: flex;justify-content: center;align-items: center;">상품정보</div>
-			<div style="width: 20%; line-height: 3;display: flex;justify-content: center;align-items: center;">수량</div>
-			<div style="width: 30%; line-height: 3;display: flex;justify-content: center;align-items: center;">금액</div>
-		</div>
-		<c:forEach var="cartgift" items="${cartgift }" varStatus="stt">
-			<div class="littleContent">
-				<div class="little" style="width: 50%; height: 90px;">
-					<div style="width:200px;"></div>
-					<div><img alt="사진" src="/image/upload/${cartgift.image}" width="90px" height="90px"></div>
-					<div class="content" >
-						<p style="margin-left: 15px;margin-bottom: 8px;">[모바일]${cartgift.pizza}</p>
-						<p style="text-align: left;margin-left: 70px;"><fmt:formatNumber type="number" maxFractionDigits="3" value="${cartgift.price_L}" />원</p>
-					</div>
-				</div>
-				<div class="little" style="width: 20%;justify-content: center;">${cartgift.count }</div>
-				<div class="little" style="width: 30%;justify-content: center;"><fmt:formatNumber type="number" maxFractionDigits="3" value="${cartgift.price_L}" />원</div>
-			</div>
-		</c:forEach>  
-		<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-		<div class="littleContent" style="height:70px;">
-			<div class="little" style="width: 30%;"></div>
-			<div class="little" style="width: 30%;"></div>
-			<div class="little" style="width: 10%;"></div>
-				<c:set var="sum" value="0"/>
-				<c:forEach var="cartgift" items="${cartgift}">
-					<c:set var="sum" value="${sum+cartgift.price_L}"/>
-				</c:forEach>
-			<div style="width: 20%; font-size: 30px; color:black;align-self: center;"><span style="font-size: 20px; margin: 0 30px 0 0px; ">총 금액</span> <fmt:formatNumber type="number" maxFractionDigits="3" value="${sum}" />원</div>
-			<div class="little" style="width: 10%;"></div>
-		</div>
-		<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-		<div class="addressBox" id="tab0111" style="border-top:1px solid black;">
-			<div style="padding: 0 30px;"><span>주문자 정보</span></div>
-			
-		</div>
-		<div class="form_box" style="clear: both;">
-			<div class="form_mini_box">
-				<table style="margin-left: 80px;margin-top: 55px;margin-bottom:55px;">
-				<tr>
-					<td>연락처</td>
-					<td >${member.phone}</td>
-				</tr>
-			</table>
-			</div>
-		</div>
-		<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-		<div class="addressBox" id="tab0111" style="border-top:1px solid black;">
-			<div style="padding: 0 30px;"><span>할인 적용</span></div>
-		</div>
-		<div class="form_box" style="clear: both;">
-			<table style="margin-left: 80px;margin-top: 55px;margin-bottom:55px;">
-				<tr>
-					<td class="discount" >도미노콘 15% 할인</td>
-				</tr>
-			</table>
-		</div>	
+		-->
 		<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 		<div class="addressBox" id="tab0111" style="border-top:1px solid black;" >
 			<div style="padding: 0 30px;"><span>결제수단 선택</span></div>
@@ -472,14 +404,15 @@
 		<div class="form_box" style="clear: both;" >
 			<table style="margin-left: 80px;margin-top: 55px;margin-bottom: 55px;">
 				<tr>
-					<td class="paybox"><a href="kakao">카카오페이 결제</a></td>
+					<td class="paybox"><a href="kakao?total_price=${sum }">카카오페이 결제</a></td>
 					<td width=10px></td>
 					<td class="paybox"><a href="">무통장 결제</a></td>
 				</tr>
 			</table>
 			
 		</div>
-		<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+		<!--  -------------------------------- -------------------------------- -->
+		
 		<div class="addressBox" id="tab0111" style="border-top:1px solid black;">
 			<div style="padding: 0 30px;"><span>최종 결제 금액</span></div>
 		</div>
@@ -488,7 +421,7 @@
 				<tr>
 					<td align=center  width=75% style="height: 123px;vertical-align: bottom;">
 						<table align=center width=50%>
-							<c:set var="discount" value="${sum * 0.15}"/>
+							<c:set var="discount" value="${sum * 0}"/>
 							<c:set var="total_sum" value="${sum - discount}"/>
 							<tr>
 								<td class="money">총 상품 금액</td>
@@ -507,14 +440,16 @@
 				</tr>
 			</table>
 		</div>
-		<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-		<div style="display: flex;justify-content: center; padding: 40px 40px 40px 0; line-height: 4;">
-			<div style="width: 15px;"> </div>
-			<a href="#" class="goToGift" style="color: white;background: #ff143c; text-align: center;">결제하기</a>
-		</div>	
+		
+			<div style="display: flex;justify-content: center; padding: 40px 40px 40px 0; line-height: 4;">
+				<div style="width: 15px;"> </div>
+				<a href="kakao?total_price=${sum }" class="goToGift" style="color: white;background: #ff143c; text-align: center;">결제하기</a>
+			</div>	
+<!-- 		</form> -->
 	</div><!-- 중간폭 -->
 	<div style ="width: 13.5%"></div>
 </div>
+
 
 <script>
 
@@ -549,6 +484,17 @@ var b = $('.box_head a');
 	 } 
 	
 } 
+ 	function checkBoxClick(){
+		if(checked.checked){
+			name1.value="${member.name}";
+			phone.value="${member.phone}";
+		}else{
+			name1.value="";
+			phone.value="";
+			
+		}
+ 	}
+ 	
 </script>
 
 <%@ include file="/WEB-INF/views/include/footer.jsp" %>

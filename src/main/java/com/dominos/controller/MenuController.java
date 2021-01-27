@@ -33,6 +33,7 @@ import com.dominos.domain.SideVO;
 import com.dominos.persistence.CartDAO;
 import com.dominos.persistence.GiftDAO;
 import com.dominos.persistence.PizzaDAO;
+import com.dominos.persistence.PizzaImpl;
 import com.dominos.persistence.SideDAO;
 
 @Controller
@@ -53,47 +54,6 @@ public class MenuController {
    @Inject
    private GiftDAO dao;
 
-   ///////////관리자//////////////
-   //관리자--> 나중에 관리자 페이지로 이동하기
-   @RequestMapping(value = "/dataList", method = RequestMethod.GET)
-   public void listPage(Model model) throws Exception {
-      model.addAttribute("pizza",pizza.list());
-      model.addAttribute("side",side.listAll());
-      logger.info(""+model);
-   }
-   @RequestMapping(value = "/dataList", method = RequestMethod.POST)
-   public void listPagePost(Model model,PizzaVO pizzaVO, SideVO sideVO,String menu) throws Exception {
-      logger.info(""+pizzaVO);
-      logger.info(""+sideVO);
-      
-      if(menu.equals("pizza")) {
-         pizza.update(pizzaVO);
-      }else { //side
-         
-      }
-      
-      model.addAttribute("pizza",pizza.list());
-      model.addAttribute("side",side.listAll());
-      logger.info(""+model);
-   }
-   @RequestMapping(value = "/dataDeleteList", method = RequestMethod.POST)
-   public String listPageDeletePost(Model model,PizzaVO pizzaVO, SideVO sideVO,String menu) throws Exception {
-      logger.info(""+pizzaVO);
-      logger.info(""+sideVO);
-      
-      if(menu.equals("pizza")) {
-         pizza.delete(pizzaVO);
-      }else { //side
-         
-      }
-      
-      model.addAttribute("pizza",pizza.list());
-      model.addAttribute("side",side.listAll());
-      logger.info(""+model);
-      
-      return "redirect:/menu/dataList";
-   }
-   
 //   ----------------------------------------------pizza -------------------------------------------------------------
    
 //   @Resource(name = "uploadPath")
@@ -101,23 +61,18 @@ public class MenuController {
    // 피자 리스트 불러오기
    @RequestMapping(value = "/list", method = RequestMethod.GET) 
    public void list(Locale locale, Model model, String menu) throws Exception{
-      logger.info("list");
       if(menu.equals("pizza")) {
          model.addAttribute("list", pizza.list());
       }else { //sidedish 거나 juice 거나.
          model.addAttribute("list", side.list(menu)); 
       }
-      logger.info(""+menu);
       model.addAttribute("menu", menu);
-      logger.info(""+menu);
-      logger.info("--------"+model);
       
    }
 
    //리스트 사이드 메뉴 등록 및 삭제
    @RequestMapping(value = "/list", method = RequestMethod.POST)
    public void listPost(SideVO vo,@ModelAttribute("x") String x) throws Exception {
-      logger.info("list....post...."+vo.toString() + x);
       
       if(x.equals("1")) {
          side.delete();
@@ -129,7 +84,6 @@ public class MenuController {
    //피자든 사이드 메뉴든 view 페이지로 이동.
    @RequestMapping(value = "/view", method = RequestMethod.GET)   
    public void view(Model model, String uid, String menu,HttpSession session) throws Exception {
-      logger.info("model:" + model + "uid : " + uid+ "menu : " + menu);
 
 		//user_id
       	String session_id= (String)session.getAttribute("id"); 
@@ -168,12 +122,10 @@ public class MenuController {
       }
 
       model.addAttribute("menu",menu);
-      logger.info("```"+model);
       
    }
    @RequestMapping(value = "/viewSide", method = RequestMethod.GET)
    public void viewSide(Model model, String uid, String menu,HttpSession session) throws Exception {
-      logger.info("model:" + model + "uid : " + uid+ "menu : " + menu);
       if(menu.equals("pizza")) { //피자면 
          try {
             model.addAttribute("list",pizza.read(uid));
@@ -203,7 +155,12 @@ public class MenuController {
 		}
       cart.deleteAll(user_id);//카트 내용 다 지우기
       model.addAttribute("menu",menu);
-      logger.info("```"+model);
+
+      //비회원 세션 처리.
+	if(session_id == null || session_id.equals("")  ) {
+	String id2 = Integer.toString((int)(Math.random()*10000000));
+	session.setAttribute("id2", id2);
+	}
       
    }
    /*

@@ -66,22 +66,6 @@ public class HomeController {
 	public void newsList(Locale locale, Model model) {
 		logger.info("newsList");
 	}
-	@RequestMapping(value = "/myPage/maniaGrade", method = RequestMethod.GET)
-	public void maniaGrade(Locale locale, Model model) {
-		logger.info("maniaGrade");
-	}
-	@RequestMapping(value = "/myPage/myCoupon", method = RequestMethod.GET)
-	public void myCoupon(Locale locale, Model model) {
-		logger.info("myCoupon");
-	}
-	@RequestMapping(value = "/myPage/myOrderList", method = RequestMethod.GET)
-	public void myOrderList(Locale locale, Model model) {
-		logger.info("myOrderList");
-	}
-	@RequestMapping(value = "/myPage/questionList", method = RequestMethod.GET)
-	public void questionList(Locale locale, Model model) {
-		logger.info("questionList");
-	}
 	@RequestMapping(value = "/cart/cartLast", method = RequestMethod.GET)
 	public void cartLast(Locale locale, Model model) {
 		logger.info("cartLast");

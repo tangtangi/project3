@@ -11,7 +11,15 @@ public class MemberVO {
 	private String birth;
 	private String address;
 	private int level;
+	private String address_uid;
 	
+	
+	public String getAddress_uid() {
+		return address_uid;
+	}
+	public void setAddress_uid(String address_uid) {
+		this.address_uid = address_uid;
+	}
 	public String getId() {
 		return id;
 	}
@@ -66,12 +74,13 @@ public class MemberVO {
 	public void setLevel(int level) {
 		this.level = level;
 	}
-	
-	
 	@Override
 	public String toString() {
 		return "MemberVO [id=" + id + ", pass=" + pass + ", name=" + name + ", gender=" + gender + ", email=" + email
-				+ ", phone=" + phone + ", birth=" + birth + ", address=" + address + ", level=" + level + "]";
+				+ ", phone=" + phone + ", birth=" + birth + ", address=" + address + ", level=" + level
+				+ ", address_uid=" + address_uid + "]";
 	}
+	
+	
 	
 }

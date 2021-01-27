@@ -1,5 +1,6 @@
 package com.dominos.persistence;
 
+import com.dominos.domain.CartVO;
 import com.dominos.domain.MemberVO;
 
 public interface MemberDAO {
@@ -16,4 +17,7 @@ public interface MemberDAO {
 	public MemberVO passSelect(MemberVO vo) throws Exception;
 	public void withdraw(String session_id) throws Exception;
 	public int idCheck(String id) throws Exception;
+
+	public void updateAddr(CartVO cartVO) throws Exception;
+	public String getAddrUid(String session_id) throws Exception;
 }
