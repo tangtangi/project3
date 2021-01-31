@@ -257,11 +257,12 @@
 		<tr><td align=center width=73% >
 	<table style="width: 100%;text-align: center;">
 		<c:if test="${menu eq 'pizza' }">
-			<c:forEach var="list" items="${list }" varStatus="status" begin="13" end="20" >
+			<%-- <c:forEach var="list" items="${list }" varStatus="status" begin="13" end="20" > --%>
+			<c:forEach var="list" items="${list }" varStatus="status" begin="13" end="26" >
 					<c:if test="${status.index%4 ==1}"><tr></c:if>
 							<td width=25% align=center style="padding:0 0 32px 0;">
 								<table  style="width: 300px;">
-									<tr><td colspan=2><a href="/menu/view?uid=${list.uid }&menu=${menu}"><img src="/image/imageMenu/${list.image}" width=300 height=300></a></td>
+									<tr><td colspan=2><a href="/menu/view?uid=${list.uid }&menu=${menu}"><img src="/image/imageMenu${list.image}" width=300 height=300></a></td>
 									<tr><td colspan=2 class="foodname"><a href="/menu/view">${list.name} </a>
 										<c:if test="${list.uid <= 2 }"><img src="/image/day.PNG" style="margin-bottom: -3px;"></c:if>
 										<c:if test="${list.uid <= 16 }"><img src="/image/new.PNG" style="margin-bottom: -4px;"></c:if>
@@ -293,11 +294,11 @@
 
 
 <!-- --------------------------------------------------------------------------------------------------------- -->
-<a href="/menu/insert">인서트페이지로 이동</a>
+<!-- <a href="/menu/insert">인서트페이지로 이동</a>
 <a></a>
 <a href="/uploadForm">/uploadForm.jsp로 이동.</a>
 
-<!-- <form id='registerForm' role="form"  action="/uploadForm" method="post" enctype="multipart/form-data" target="zeroFrame"> -->
+<form id='registerForm' role="form"  action="/uploadForm" method="post" enctype="multipart/form-data" target="zeroFrame">
 <form id='form1' action="/uploadForm" method="post" enctype="multipart/form-data" target="zeroFrame">
 	<div>
 		<input name="name" placeholder="피자이름">
@@ -336,7 +337,7 @@
 	</div>
 </form>
 
-
+ -->
 
 
 

@@ -12,7 +12,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -38,6 +37,7 @@ public class MemberController {
 	//회원가입
 	@GetMapping("join")
 	public void joinGet() throws Exception{
+		logger.info("join get");
 	}
 	@PostMapping("join")
 	public String joinPost(MemberVO vo) throws Exception {
@@ -162,7 +162,6 @@ public class MemberController {
 	public String passFindPost(MemberVO vo, RedirectAttributes rttr) throws Exception {
 		
 		int passFind = dao.passFindPost(vo);
-		logger.info("3333333toString33333333"+vo.toString());
 		if(passFind == 1) {
 			
 			vo = dao.passSelect(vo);
@@ -182,7 +181,6 @@ public class MemberController {
 	@PostMapping("withdraw")
 	public String withdraw(HttpSession session) throws Exception {
 		
-		logger.info("dddddddddddddd");
 		String session_id = (String)session.getAttribute("id");
 		
 		dao.withdraw(session_id);
@@ -196,7 +194,6 @@ public class MemberController {
 	@ResponseBody
 	@PostMapping("idCheck")
 	public int idCheck(String id) throws Exception{
-		System.out.println("aaaaaaaaaaaaaaaa"+id.getClass().getName());
 		return dao.idCheck(id);
 	}
 }//닫지마라

@@ -1,7 +1,6 @@
 package com.dominos.persistence;
 
 import javax.inject.Inject;
-import javax.xml.stream.events.Namespace;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;

@@ -1,10 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
+<%@ include file="/WEB-INF/views/include/admin_header.jsp" %>
+
+
+<title>Domino's Menu!!</title>    
+
+<!-- --------------------------------------------------------------------------------------------------------- -->
 
 <style>
 iframe {
@@ -13,9 +14,15 @@ iframe {
 	border: 0px
 }
 </style>
+<div style="text-align: center;">
+	<div class="headDiv">
+		<a href="dataList">데이터 베이스 리스트 페이지로 이동.</a>&nbsp;&nbsp;
+		<a href="insert">인서트페이지로 이동</a>&nbsp;&nbsp;
+		<a></a>
+		<a href="uploadForm">uploadForm.jsp로 이동.</a>
+	</div>
+</div>
 
-</head>
-<body>
 <hr>
 	<form id='registerForm' role="form"  action="uploadForm" method="post" enctype="multipart/form-data" target="zeroFrame">
 <!-- <form id='form1' action="uploadForm" method="post" enctype="multipart/form-data" target="zeroFrame"> -->
@@ -27,8 +34,10 @@ iframe {
 			<input name="dough" placeholder="도우">
 			<input name="topping" placeholder="토핑">
 			<input type="file" name="file" placeholder = "파일 이름" > 
+			
+			<input type='submit' value="업로드하기">
+			
 		</div>
-		<input type='submit' value="확인">
 	</form>
 <iframe>
 </iframe>
@@ -40,5 +49,4 @@ iframe {
 		}
 	</script>
 <hr>	
-</body>
-</html>
+<%@ include file="/WEB-INF/views/include/admin_footer.jsp" %>

@@ -65,7 +65,7 @@
 								<td align=left width=15%><input onclick="formSubmit();" type="image" src="/image/search2.PNG" width=45 height=49 align=center></td>
 								 -->
 								<form onsubmit="searchPlaces(); return false;" >
-					                    <td style="text-align: right;"><input type="text"  name="box2" placeholder="매장명을 검색하세요." class="box2" size="15" id="keyword" value="서울 중구 도미노피자" ></td> 
+					                    <td style="text-align: right;"><input type="text"  name="box2" placeholder="매장명을 검색하세요." class="box2" size="15" id="keyword" value="온산점" ></td> 
 					                    <td><input type="image" src="/image/search2.PNG" width=45 height=49 align=center></td> 
 				                </form>
 							</tr>

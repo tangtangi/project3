@@ -17,8 +17,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.dominos.domain.CartVO;
 import com.dominos.domain.GiftVO;
 import com.dominos.domain.MemberVO;
+import com.dominos.persistence.CartDAO;
 import com.dominos.persistence.MemberDAO;
 import com.dominos.persistence.MyPageDAO;
 
@@ -34,11 +36,26 @@ private static final Logger logger = LoggerFactory.getLogger(MemberController.cl
 
 	@Inject
 	private MemberDAO member;
+
+	@Inject
+	private CartDAO cart;
 	
 	//////////////////우탁///////////////////////////////////
 	@GetMapping("geoLocation")
 	public void geoLocation() throws Exception {
 		logger.info("geoLocation get~~~~");
+	}
+	@GetMapping("detail")
+	public void detail(String order_uid,HttpSession session,Model model) throws Exception {
+		logger.info("detail get~~~~"+order_uid);
+		String session_id = (String)session.getAttribute("id");
+		CartVO vo = new CartVO();
+		vo.setUser_id(session_id);
+		vo.setOrder_uid(Integer.parseInt(order_uid));
+		
+		model.addAttribute("order",cart.listFromOrderUID(vo));
+		
+		logger.info("~~~~~~~~~~"+model);
 	}
 	//////////////////우탁///////////////////////////////////
 	

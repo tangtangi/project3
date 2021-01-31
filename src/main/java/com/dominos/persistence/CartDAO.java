@@ -50,8 +50,10 @@ public interface CartDAO {
 	public String sumJuice(CartVO cartVO) throws Exception;	//피자 수량 토탈 
 	public String sumSide(CartVO cartVO) throws Exception;	//피자 수량 토탈 
 	public String getMaxCart_id() throws Exception;	//피자인 것 중에서 가장 큰 카트아이디 값 찾기
+	public List<CartVO> list() throws Exception;	//전체 리스트 불러오기
 	public List<CartVO> list(String category) throws Exception;	//카테고리로 리스트 불러오기
 	public List<CartVO> listFromId(String id) throws Exception;	//아이디랑 장바구니에 해당하는 리스트 불러오기
+	public List<CartVO> listFromOrderUID(CartVO cartVO) throws Exception;	//order_uid 해당하는 리스트 불러오기
 	
 	
 //	--------------------------------------------

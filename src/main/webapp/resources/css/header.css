@@ -34,6 +34,7 @@ a{
 		top: 0px;
 		width: 100%;
 		border-top: 1px solid #ddd;
+		background: white;	/* 1.29 우탁 변경 */
 	
 	}
 	

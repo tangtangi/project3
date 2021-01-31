@@ -15,7 +15,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.FileCopyUtils;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,9 +24,9 @@ import com.dominos.domain.SideVO;
 import com.dominos.persistence.PizzaDAO;
 import com.dominos.persistence.SideDAO;
 import com.dominos.util.MediaUtils;
-import com.dominos.util.UploadFileUtils;
 
 @Controller
+@RequestMapping("/")
 public class UploadController {
 
 	public static final Logger logger = LoggerFactory.getLogger(UploadController.class);
@@ -52,52 +51,68 @@ public class UploadController {
 	//한글 파일 이름이 깨진다면 web.xml에 한글 처리용 필터를 적용
 	@RequestMapping(value = "/uploadForm", method = RequestMethod.POST)
 	public String uploadForm(MultipartFile file, Model model,PizzaVO vo) throws Exception {
-
-		logger.info("originalName: " + file.getOriginalFilename());
-		logger.info("size: " + file.getSize());
-		logger.info("contentType: " + file.getContentType());
-	//	String savedName2 = uploadFile2(file.getOriginalFilename(), file.getBytes());
-//		String savedName = UploadFileUtils.uploadFile(uploadPath, file.getOriginalFilename(), file.getBytes());
-		uploadPath = uploadPath + "\\imageMenu";
-		String savedName = uploadFile(uploadPath, file.getOriginalFilename(), file.getBytes());
-		model.addAttribute("savedName", savedName);
-		
-		String savedName2 = savedName.substring(0,12)+savedName.substring(14,savedName.length());
-
-		vo.setImage(savedName2);
-		vo.setImage_s(savedName);
-		vo.setImage_o(file.getOriginalFilename());
-		
-		pizza.create(vo);
-		
+		if(file.getSize() != 0) {
+				
+			logger.info("originalName: " + file.getOriginalFilename());
+			logger.info("size: " + file.getSize());
+			logger.info("contentType: " + file.getContentType());
+		//	String savedName2 = uploadFile2(file.getOriginalFilename(), file.getBytes());
+	//		String savedName = UploadFileUtils.uploadFile(uploadPath, file.getOriginalFilename(), file.getBytes());
+			uploadPath = uploadPath + "\\imageMenu";
+			String savedName = uploadFile(uploadPath, file.getOriginalFilename(), file.getBytes());
+			model.addAttribute("savedName", savedName);
+			
+			String savedName2 = savedName.substring(0,12)+savedName.substring(14,savedName.length());
+	
+			vo.setImage(savedName2);
+			vo.setImage_s(savedName);
+			vo.setImage_o(file.getOriginalFilename());
+			
+			pizza.create(vo);
+		}else {
+			
+		}
 		return "redirect:/menu/list?menu=pizza";
+		
+	}
+	public String reUploadForm(MultipartFile file, Model model,PizzaVO vo) throws Exception {
+		if(file.getSize() != 0) {
+			uploadFile(uploadPath, file.getOriginalFilename(), file.getBytes());
+		}else {
+			
+		}
+		return "redirect:/menu/list?menu=pizza";
+		
 	}
 	@RequestMapping(value = "/uploadFormSide", method = RequestMethod.POST)
 	public String uploadFormSide(MultipartFile file, Model model,SideVO vo,String menu) throws Exception {
-		
-		logger.info("originalName: " + file.getOriginalFilename());
-		logger.info("size: " + file.getSize());
-		logger.info("contentType: " + file.getContentType());
-//원본 경로 --  C:\jsp\domino\src\main\webapp\resources\image
-//섬네일, 이미지 사진 경로 -- C:\spring\ upload\ 2021\01\14 날짜에 따라
-		
-		//	String savedName2 = uploadFile2(file.getOriginalFilename(), file.getBytes());
-//		String savedName = UploadFileUtils.uploadFile(uploadPath, file.getOriginalFilename(), file.getBytes());
-		String savedName = uploadFile(uploadPath, file.getOriginalFilename(), file.getBytes());
-		model.addAttribute("savedName", savedName);
-		model.addAttribute("menu", menu);
-		
-		
-		
-		
-		String savedName2 = savedName.substring(0,12)+savedName.substring(14,savedName.length());
-		
-		vo.setImage(savedName2);
-		vo.setImage_s(savedName);
-		vo.setImage_o(file.getOriginalFilename());
-		
-		side.create(vo);
-		
+		if(file.getSize() != 0) {
+			
+			logger.info("originalName: " + file.getOriginalFilename());
+			logger.info("size: " + file.getSize());
+			logger.info("contentType: " + file.getContentType());
+	//원본 경로 --  C:\jsp\domino\src\main\webapp\resources\image
+	//섬네일, 이미지 사진 경로 -- C:\spring\ upload\ 2021\01\14 날짜에 따라
+			
+			//	String savedName2 = uploadFile2(file.getOriginalFilename(), file.getBytes());
+	//		String savedName = UploadFileUtils.uploadFile(uploadPath, file.getOriginalFilename(), file.getBytes());
+			String savedName = uploadFile(uploadPath, file.getOriginalFilename(), file.getBytes());
+			model.addAttribute("savedName", savedName);
+			model.addAttribute("menu", menu);
+			
+			
+			
+			
+			String savedName2 = savedName.substring(0,12)+savedName.substring(14,savedName.length());
+			
+			vo.setImage(savedName2);
+			vo.setImage_s(savedName);
+			vo.setImage_o(file.getOriginalFilename());
+			
+			side.create(vo);
+		}else {
+			
+		}
 		return "redirect:/menu/list";
 	}
 
@@ -121,15 +136,17 @@ public class UploadController {
 //	}	
 	public static String uploadFile(String uploadPath, String originalName, byte[] fileData) throws Exception{
 		logger.info("1");
-		UUID uid = UUID.randomUUID(); //e94738d9-9e4f-4361-ad0b-a5605a46f7dd
+		UUID uid2 = UUID.randomUUID(); //e94738d9-9e4f-4361-ad0b-a5605a46f7dd
+		String uid= uid2.toString().substring(0, 8);
+		String savedName = uid +"_"+originalName; //8자리만 받자
+//		String savedName = uid.toString() +"_"+originalName; //e94738d9-9e4f-4361-ad0b-a5605a46f7dd_cartEmpty.png
+//		String savedPath = calcPath(uploadPath); // \2021\01\13
+		String savedPath = ""; // \2021\01\13
+		logger.info("2 : "+uid+savedName+savedPath);
 
-		String savedName = uid.toString() +"_"+originalName; //e94738d9-9e4f-4361-ad0b-a5605a46f7dd_cartEmpty.png
-		String savedPath = calcPath(uploadPath); // \2021\01\13
-		logger.info("2"+uid+savedName+savedPath);
-
-		File target = new File(uploadPath +savedPath,savedName);
+		File target = new File(uploadPath +savedPath,savedName);	//해당경로에, 해당 이름을.
 		FileCopyUtils.copy(fileData, target);
-		logger.info("3"+target); // C:\spring \ upload\2021\01\13\e94738d9-9e4f-4361-ad0b-a5605a46f7dd_cartEmpty.png
+		logger.info("3 : "+target); // C:\spring \ upload\2021\01\13\e94738d9-9e4f-4361-ad0b-a5605a46f7dd_cartEmpty.png
 
 		String formatName = originalName.substring(originalName.lastIndexOf(".")+1);
 		String uploadedFileName = null;

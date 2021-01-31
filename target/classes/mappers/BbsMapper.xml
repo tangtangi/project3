@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace = "com.dominos.mapper.BbsMapper">
+	<select id="read" resultType="BbsVO">
+		<![CDATA[
+			select * from bbs order by uid desc
+		]]>
+	</select>
+	<select id="readCategory" resultType="BbsVO">
+			select * from bbs where category = #{category} order by uid desc
+	</select>
+	<select id="readOne" resultType="BbsVO">
+			select * from bbs where uid = #{uid}
+	</select>
+	<select id="listSearching" resultType="BbsVO">
+			<![CDATA[
+			select * from bbs where uid > 0 and category = #{category}
+			]]>
+			<include refid="search"></include>
+	 		<![CDATA[
+				order by uid desc, signdate desc limit #{pageStart}, #{perPageNum}
+	 		]]>
+	</select>
+	<select id="listSearchingCount" resultType="int">
+ 		<![CDATA[
+			select count(uid) from bbs where uid > 0 and category = #{category}
+ 		]]>  
+ 		<include refid="search"></include>
+	</select>
+	<select id="listAllSearching" resultType="BbsVO">
+			<![CDATA[
+			select * from bbs where uid > 0 
+			]]>
+			<include refid="search"></include>
+	 		<![CDATA[
+				order by uid desc, signdate desc limit #{pageStart}, #{perPageNum}
+	 		]]>
+	</select>
+	<select id="listAllSearchingCount" resultType="int">
+ 		<![CDATA[
+			select count(uid) from bbs where uid > 0
+ 		]]>  
+ 		<include refid="search"></include>
+	</select>
+	
+	<insert id="insert">
+		insert into bbs (title, content, signdate, category) values (#{title},#{content},#{signdate},#{category})
+	</insert>
+	<update id="update">
+		update bbs set views = views + 1 where uid = #{uid}
+	</update>
+	<update id="updateBBS">
+		update bbs set title = #{title} , content=#{content}, signdate=#{signdate} where uid = #{uid}
+	</update>
+	<delete id="delete">
+		delete from bbs where uid = #{uid}
+	</delete>
+	
+	
+ 	<sql id="search">
+		<if test="searchType != null" >
+			<!-- 
+			MyBatis에서는 변수가 자바객체처럼 사용되므로 
+			( OGNL (Object Graph Navigation Language)를 사용하여 속성 처리를 하고 있기 때문에)
+			자바에서 사용되는 문자열 비교 메소드를 이용하면 된다.
+			단 비교할 문자를 먼저 쓴 경우도 에러 발생.
+	
+		<if test="searchType == 't'.toString()"> (o)
+			<if test="searchType eq 't'.toString()"> (o)
+			<if test="searchType.toString() == 't'.toString()"> (o)
+			<if test="searchType.equalsIgnoreCase('t')"> (o)
+			<if test='searchType == "t"'> (o)
+	
+	//char 작은따옴표 , 문자열 큰따옴표
+			// 작은, 큰 따옴표 순서 		//결과가 한글자 char형식이니까!
+			<if test='"t".equals(searchType)'> (o) 
+			<if test="'t'.equals(searchType)"> (x) //큰따옴표로해야만 문자열 비교(equals)가 된다!!
+	//equals 비교는 문자열이다.
+			<if test='searchType.equals("t")'> (o)
+			<if test="searchType.equals('t')"> (x)
+			
+			
+			//concat : 문자열 + 문자열 (합치기)
+			-->
+			<if test="searchType == 't'.toString()">
+				and title like CONCAT('%', #{keyword}, '%')
+			</if>
+			<if test="searchType == 'c'.toString()">
+				and content like CONCAT('%', #{keyword}, '%')
+			</if>
+			<if test="searchType == 'w'.toString()">
+				and writer like CONCAT('%', #{keyword}, '%')
+			</if>     
+			<if test="searchType == 'tc'.toString()">
+				and ( title like CONCAT('%', #{keyword}, '%') OR content like CONCAT('%', #{keyword}, '%'))
+			</if>        
+			<if test="searchType == 'cw'.toString()">
+				and ( content like CONCAT('%', #{keyword}, '%') OR writer like CONCAT('%', #{keyword}, '%'))
+			</if>        
+			<if test="searchType == 'tcw'.toString()">
+				and 
+				( title like CONCAT('%', #{keyword}, '%') 
+				OR content like CONCAT('%', #{keyword}, '%') 
+				OR writer like CONCAT('%', #{keyword}, '%'))
+			</if>              
+		</if>
+	</sql>
+</mapper>

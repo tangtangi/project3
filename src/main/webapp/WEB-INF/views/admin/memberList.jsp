@@ -15,9 +15,9 @@
 					<td>주소</td>
 					<td>등급</td>
 				</tr>
-				<c:forEach var="member" items="${member }">
+				<c:forEach var="member" items="${member }" varStatus="status">
 				<tr>
-					<td>NO</td>
+					<td>${status.index }</td>
 					<td>${member.id }</td>
 					<td>${member.name }</td>
 					<td>${member.phone }</td>

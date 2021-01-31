@@ -1,11 +1,7 @@
 package com.dominos.controller;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.UUID;
 
 import javax.annotation.Resource;
@@ -17,23 +13,18 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.FileCopyUtils;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.dominos.domain.CartVO;
 import com.dominos.domain.GiftVO;
-import com.dominos.domain.PizzaVO;
 import com.dominos.domain.SideVO;
 import com.dominos.persistence.CartDAO;
 import com.dominos.persistence.GiftDAO;
 import com.dominos.persistence.PizzaDAO;
-import com.dominos.persistence.PizzaImpl;
 import com.dominos.persistence.SideDAO;
 
 @Controller

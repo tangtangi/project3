@@ -93,18 +93,16 @@ div a{
 		<div class="box_head" >
 			<div style="  border-right: 1px solid black;padding-right: 35px;color:#8c8888;">
 				<a href="/myPage/myOrderList"><b>피자 주문내역</b></a></div>
-         <div style="padding: 0 35px;color:#8c8888;"><a href="/myPage/myOrderList_gift"><b>상품권 주문내역</b></a></div>
+         <div style="padding: 0 35px;color:#8c8888;"><a href="/myPage/myOrderList_gift">상품권 주문내역</a></div>
       </div>   
-      <div class="myBlack" >
+            <div class="myBlack" >
          <div style="width: 50%;">
-         <div style="width: 80%; margin-left: 100px; text-align: left;">
-            <p>'${session_id }'님이 주문하신 내역입니다.</p>
-            <p style="width: 300px;height: 3px; background: #1391ff;"></p>
-            <p>주문을 취소하시려면 해당 매장으로 전화하셔야 합니다.</p>
+            <div style="width: 80%; margin-left: 100px; text-align: left;">
+               <p style="font-size: 35px;border-bottom: 3px solid #1391ff;color:white;">'${name }'님이 주문하신 내역입니다.</p>
+               <p>주문을 취소하시려면 해당 매장으로 전화하셔야 합니다.</p>
+            </div>
          </div>
       </div>
-         <div style="width: 25%;" class="before">매니아 등급</div>
-         <div style="width: 25%;" class="before">매니아 등급</div>
       </div>
    </div>
    <div style ="width: 13.5%"></div>
@@ -121,7 +119,7 @@ div a{
                         <tr>
                            <td width= 15% align= center>${pizza.kind }</td>
                            <td width= 30% align= center>주문일시 ${pizza.signdate}</td>
-                           <td width= 55% align= left>주문번호 ${pizza.order_uid }</td>
+                           <td width= 55% align= left><a href="/myPage/detail?order_uid=${pizza.order_uid }">주문번호 ${pizza.order_uid } &lt;- 클릭하여 상세보기 </a> </td>
                         </tr>
                         <tr>
                            <td align= center>결제완료</td>

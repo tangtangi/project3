@@ -155,12 +155,20 @@ public class CartImpl implements CartDAO{
 	}
 
 	@Override	//카테고리로 리스트 불러오기
+	public List<CartVO> list() throws Exception {
+		return sql.selectList(namespace+"listAll");
+	}
+	@Override	//카테고리로 리스트 불러오기
 	public List<CartVO> list(String category) throws Exception {
 		return sql.selectList(namespace+"list",category);
 	}
 	@Override	//아이디랑 장바구니에 해당하는 리스트 불러오기
 	public List<CartVO> listFromId(String id) throws Exception {
 		return sql.selectList(namespace+"listFromId",id);
+	}
+	@Override	//order_uid 해당하는 리스트 불러오기
+	public List<CartVO> listFromOrderUID(CartVO cartVO) throws Exception {
+		return sql.selectList(namespace+"listFromOrderUID",cartVO);
 	}
 
 // --------------------------------------------------------

@@ -33,6 +33,40 @@
 <!-- xeicon - cdn -->
 <link rel="stylesheet" href="http://cdn.jsdelivr.net/npm/xeicon@2.3.3/xeicon.min.css">
 <!-- slick 이용해서 slide 만들기 -->  
+
+<!-- 우클릭, f12 방지 -->
+<script type="text/javascript">
+    // F12 버튼 방지
+    $(document).ready(function(){
+        $(document).bind('keydown',function(e){
+            if ( e.keyCode == 123 /* F12 */) {
+                e.preventDefault();
+                e.returnValue = false;
+            }else if(e.keyCode == 16  ){
+            	e.preventDefault();
+            	e.returnValue = false;
+            }else if(e.keyCode == 17  ){
+            	e.preventDefault();
+            	e.returnValue = false;
+            }
+            	
+            console.log(e.keyCode);
+        });
+    });
+    
+    // 우측 클릭 방지
+    document.onmousedown=disableclick;
+    status="Right click is not available.";
+    
+    function disableclick(event){
+        if (event.button==2) {
+//             alert(status);
+            return false;
+        }
+    }
+</script>
+
+
 </head>
 
 <script>
@@ -72,15 +106,27 @@ $(document).ready(function(){
   	  alert(document.body.scrollHeight);
   	});
   
-	$(".snb-more").click(function(){
+	$(".snb-more").click(function(){	//더보기 누르면
   	var chk = $("input:checkbox[id='more']").is(":checked");
 	var snb = $(".snb-wrap");
+	var tw = $(".top-wrap");		/* 1.29 우탁 변경 */
+	var gw = $(".gnb-wrap");		/* 1.29 우탁 변경 */
 		if(chk){ //체크 하면 나타내기
 			snb.css("max-height",200+'px'); //클래스 .snb-wrap을  max-height: 100px;으로
 			$("#moreImg").attr("src","/image/arrowUp.png");	
+			tw.css({top:tw.position().top=0+'px'});		/* 1.29 우탁 변경 */
+			gw.css({top:gw.position().top=70+'px'});		/* 1.29 우탁 변경 */
 		}else{ //체크 해제하면 숨기기
 			snb.css("max-height",0+'px'); //클래스 .snb-wrap을  max-height: 0px; 으로
 			$("#moreImg").attr("src","/image/arrowDown.png");	//src="/image/arrowDown.png"
+			if(currentScrollPos >= 70){
+				tw.css({top:tw.position().top=-70+'px'});
+				gw.css({top:gw.position().top=0+'px'});
+			}
+			else{ //현재스크롤이 70보다 작으면
+				tw.css({top:tw.position().top=0+'px'});
+				gw.css({top:gw.position().top=70+'px'});
+			}
 		}
 	});
 	
@@ -103,9 +149,12 @@ $(document).ready(function(){
 	
 </script>
 
+<!-- 우클릭, f12 방지 -->
+<!-- <body> -->
+<body oncontextmenu='return false' onselectstart='return false' ondragstart='return false'>
 
-<body>
-<div>
+
+<div style="z-index: 9999999999999999;">
 session_id:${session_id}<br>
 session_id2:${sessionScope.id2}<br> <!-- 01.21우탁 수정 -->
 session_level:${session_level}<br>
@@ -168,12 +217,12 @@ session_level:${session_level}<br>
 				<li>
 					<a href="/menu/store"><span>매장검색</span></a>
 				</li>
-				<li>
+	<!-- 			<li>
 					<a href="/cart/cart2"><span>카트1</span></a>
-	<!-- 				<a href="/cart/pizza_cart"><span>피자주문</span></a>
+					<a href="/cart/pizza_cart"><span>피자주문</span></a>
 					<a href="/cart/pizza_cart_last"><span>카트Last</span></a>
- -->				</li>
-			</ul>
+ 				</li>
+-->			</ul>
 			<a href="#" class="snb-more ">
 				<input type="checkbox" id="more">
 				<label for="more">  
@@ -214,8 +263,8 @@ session_level:${session_level}<br>
 					<div class="mnu-box" style="border-left: 1px solid gainsboro; padding-left: 83px;">
 						<a href="/moreList/bbs/newsList?type=N" >공지사항</a>
 						<ul>
-							<li><a href="/moreList/bbs/newsList?type=N">도미노뉴스</a></li>
-							<li><a href="/moreList/bbs/newsList?type=P">보도자료</a></li>
+							<li><a href="/moreList/bbs/newsList?category=n">도미노뉴스</a></li>
+							<li><a href="/moreList/bbs/newsList?category=p">보도자료</a></li>
 						</ul>
 					</div>
 					<div class="mnu-box">

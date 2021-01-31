@@ -82,11 +82,17 @@
 	<delete id="deleteAll">
 		delete from cart_pizza where user_id = #{user_id} and state = '담기전'
 	</delete>
+	<select id="listAll" resultType="CartVO">
+		select * from cart_pizza 
+	</select>
 	<select id="list" resultType="CartVO">
 		select * from cart_pizza where category = #{category}
 	</select>
 	<select id="listFromId" resultType="CartVO">
 		select * from cart_pizza where user_id = #{user_id} and state = '장바구니' order by uid desc
+	</select>
+	<select id="listFromOrderUID" resultType="CartVO">
+		select * from cart_pizza where order_uid = #{order_uid} and user_id = #{user_id} order by uid desc
 	</select>
 	
 	<select id="countPizza" resultType="String">

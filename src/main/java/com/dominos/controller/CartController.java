@@ -110,6 +110,7 @@ public class CartController {
 	 */
 	@RequestMapping(value = "cart2", method = RequestMethod.POST)
 	public String cart2(HttpSession session,AddressVO vo,String category,RedirectAttributes rttr) {
+		logger.info("왔다!!!!!!!!!!!!");
 		String user_id = (String)session.getAttribute("id");
 		vo.setUser_id(user_id);
 		

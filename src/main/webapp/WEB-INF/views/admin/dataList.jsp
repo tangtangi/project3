@@ -6,7 +6,7 @@
 <title>Domino's Menu!!</title>    
 <style>
 	div>input{
-		width: 100px;
+		 width: 100px; 
 	}
 	div{
 /* 		border-bottom: 1px solid black; */
@@ -28,10 +28,9 @@
 <!-- --------------------------------------------------------------------------------------------------------- -->
 <div style="text-align: center;">
 	<div class="headDiv">
-		데이터 베이스 리스트 페이지&nbsp;&nbsp;
+		<a href="dataList">데이터 베이스 리스트 페이지</a>&nbsp;&nbsp;
 		<a href="insert">인서트페이지로 이동</a>&nbsp;&nbsp;
 		<a></a>
-		<a href="uploadForm">uploadForm.jsp로 이동.</a>
 	</div>
 </div>
 <div style="text-align: center;">
@@ -56,22 +55,22 @@
 	<form  id='form1' name="form(${stat.index })" action="dataList" method="post" enctype="multipart/form-data" target="zeroFrame">
 		<div>
 			${stat.index }
-			<input name="menu" type="hidden" value="pizza">
-			<input name="uid" placeholder="uid" value="${pizza.uid }">
-			<input name="name" placeholder="피자이름" value="${pizza.name }">
-			<input name="size_L" placeholder="size_L"  value="${pizza.size_L }">
-			<input name="price_L" placeholder="price_L"  value="${pizza.price_L }">
-			<input name="size_M" placeholder="size_M"  value="${pizza.size_M }">
-			<input name="price_M" placeholder="price_M"  value="${pizza.price_M }">
-			<input name="info" placeholder="한줄정보"  value="${pizza.info }">
-			<input name="kind" placeholder="kind"  value=${pizza.kind }>
-			<input name="signdate" placeholder="등록일??"  value="${pizza.signdate }">
-			<input name="dough" placeholder="도우"  value="${pizza.dough }" type="hidden">
-			<input name="topping" placeholder="토핑"  value="${pizza.topping }" type="hidden">
-			<input name="image" placeholder="이미지"  value="${pizza.image_o }">
-			<input type="file" name="file">
-			<input type="submit" value="수정하기">
-			<input type="submit"  formaction="dataDeleteList" value="삭제하기">
+			<input class="a" style="" name="menu" type="hidden" value="pizza" >
+			<input class="a" style="" name="uid" placeholder="uid" value="${pizza.uid }">
+			<input class="a" style="" name="name" placeholder="피자이름" value="${pizza.name }">
+			<input class="a" style="" name="size_L" placeholder="size_L"  value="${pizza.size_L }">
+			<input class="a" style="" name="price_L" placeholder="price_L"  value="${pizza.price_L }">
+			<input class="a" style="" name="size_M" placeholder="size_M"  value="${pizza.size_M }">
+			<input class="a" style="" name="price_M" placeholder="price_M"  value="${pizza.price_M }">
+			<input class="a" style="" name="info" placeholder="한줄정보"  value="${pizza.info }">
+			<input class="a" style="" name="kind" placeholder="kind"  value=${pizza.kind }>
+			<input class="a" style="" name="signdate" placeholder="등록일??"  value="${pizza.signdate }">
+			<input class="a" style="" name="dough" placeholder="도우"  value="${pizza.dough }" type="hidden">
+			<input class="a" style="" name="topping" placeholder="토핑"  value="${pizza.topping }" type="hidden">
+			<input class="a" style="" name="image" placeholder="이미지"  value="${pizza.image_o }">
+			<input class="a" style="" type="file" name="file">
+			<input class="a" style="" type="submit" value="수정하기">
+			<input class="a" style="" type="submit"  formaction="dataDeleteList" value="삭제하기">
 		</div>
 	</form>
 </c:forEach>
@@ -82,24 +81,21 @@
 	<form action="dataList" method="post" enctype="multipart/form-data" >
 		<div>
 			${stat.index }
-			<input name="menu" type="hidden" value="side">
-			<input name="uid" placeholder="uid" value="${side.uid }">
-			<input name="name" placeholder="사이드 이름(토핑)" value="${side.name }">
-			<input name="price" placeholder="사이드 가격(토핑)" value="${side.price }">
-			<input name="signdate" placeholder="등록일??" value="${side.signdate }">
-			<input name="category" placeholder="사이드 이넘" value="${side.category }">
-			<input name="image_o"  value="${side.image_o }">
-			<input type="file" name="file" >
-			<input type="submit" value="수정하기">
+			<input class="a" style="" name="menu" type="hidden" value="side">
+			<input class="a" style="" name="uid" placeholder="uid" value="${side.uid }">
+			<input class="a" style="" name="name" placeholder="사이드 이름(토핑)" value="${side.name }">
+			<input class="a" style="" name="price" placeholder="사이드 가격(토핑)" value="${side.price }">
+			<input class="a" style="" name="signdate" placeholder="등록일??" value="${side.signdate }">
+			<input class="a" style="" name="category" placeholder="사이드 이넘" value="${side.category }">
+			<input class="a" style="" name="image_o"  value="${side.image_o }">
+			<input class="a" style="" type="file" name="file" >
+			<input class="a" style="" type="submit" value="수정하기">
 			
-			<input type="text" value="0" name="x">
-			<input type="submit" value="사이드 데이터 삭제" onclick=" x.value='1';">
+			<input class="a" style="" type="text" value="0" name="x">
+			<!-- <input class="a" type="submit" value="사이드 데이터 삭제" onclick=" x.value='1';"> -->
 		</div>
 	</form>
 </c:forEach>
-
-<br>
-
 
 
 

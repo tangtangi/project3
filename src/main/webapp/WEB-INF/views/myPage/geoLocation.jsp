@@ -72,7 +72,7 @@ div a{
 					<input type="" id="locate4" name="" value=""  placeholder="나머지 주소를 입력해주세요">
 					<input type="hidden" id="locate5" name="address" value="" readonly >
 					<a href="javascript:void(0)" onclick="submitButtonClick();" class="goToGift" style="background: #ff143c; style:right;text-align: center;">등록</a>
-					<input type="hidden" name="category" value="delivery" readonly >
+					<input type="hidden" name="category" value="배달" readonly >
 				</div>
 			</form>
 		</div>
@@ -128,6 +128,8 @@ div a{
         // 우편번호와 주소 정보를 해당 필드에 넣는다.
         if(${session_id eq null}){
         	alert('로그인 먼저 하세요.');
+        }else if(locate4.value==""){
+			alert('나머지 주소를 입력해주세요');
         }else{
         	locate5.value= locate3.value +" "+ locate4.value;
  			form.submit();
