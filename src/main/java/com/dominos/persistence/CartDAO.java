@@ -1,17 +1,18 @@
 package com.dominos.persistence;
 
+
 import java.util.List;
 
 import com.dominos.domain.CartVO;
+import com.dominos.domain.CouponVO;
 import com.dominos.domain.GiftVO;
+import com.dominos.domain.MemberVO;
+import com.dominos.domain.OrderGiftVO;
 import com.dominos.domain.OrderVO;
 
-/**
- * @author pc5
- *
- */
 public interface CartDAO {
 	
+//	----------------------------pizzaCart-----------------------------------
 	public void update(CartVO cartVO) throws Exception;
 	public void update(CartVO cartVO,String state) throws Exception;
 	public void updatePlus(CartVO cartVO) throws Exception;
@@ -54,14 +55,22 @@ public interface CartDAO {
 	public List<CartVO> list(String category) throws Exception;	//카테고리로 리스트 불러오기
 	public List<CartVO> listFromId(String id) throws Exception;	//아이디랑 장바구니에 해당하는 리스트 불러오기
 	public List<CartVO> listFromOrderUID(CartVO cartVO) throws Exception;	//order_uid 해당하는 리스트 불러오기
-	
-	
-//	--------------------------------------------
-	
+//	----------------------------giftCart-----------------------------------
 	public GiftVO giftSelect(String pizza) throws Exception;
 	public List<GiftVO> giftGet(String user_id) throws Exception;
 	public void giftInsert(GiftVO vo) throws Exception; 
 	public int pizzacount(GiftVO vo) throws Exception;
 	public void giftdelete(int uid) throws Exception;
 	public void giftDeleteAll(String user_id) throws Exception;
+	public void giftOrderUpdate(GiftVO vo) throws Exception;
+	public List<GiftVO> giftSelectGet(GiftVO vo) throws Exception;
+	public List<GiftVO> giftOrderSelect(String user_id) throws Exception;
+	public MemberVO memberSelect(String user_id) throws Exception;
+	public void bankUpdate(GiftVO vo1) throws Exception;
+	public MemberVO kakaoMember(String user_id) throws Exception;
+	public CouponVO couponSelect(String user_id)throws Exception; 	
+	public GiftVO coupon_order(CouponVO coupon)throws Exception; 	
+	public List<OrderGiftVO> cartGiftSelect(String user_id)throws Exception;
+	public GiftVO couponOrder(int e_coupon)throws Exception;
+
 }

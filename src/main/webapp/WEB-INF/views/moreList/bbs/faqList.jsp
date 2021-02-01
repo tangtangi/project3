@@ -76,12 +76,12 @@
 	    color: white;
 	    transition : all .6s;
 	}
-	.maniaUl>ul>li>a:after{
-		content: ">";
-	    position: absolute;
-	    right: 10px;
+/* 	.maniaUl>ul>li>a:after{ */
+/* 		content: ">"; */
+/* 	    position: absolute; */
+/* 	    right: 10px; */
 		
-	}
+/* 	} */
 	div a{
 		color: black;
 	}
@@ -161,10 +161,8 @@
 	    font-size: 16px;
 	    margin-right: 20px;
 	    vertical-align: 2px;
-	    margin: 0 20px;/* 
-	    position: absolute;
-	    top: 28px;
-	    left: 36px; */
+ 		margin: -5px 0px 15px 23px;
+  	  	display: block;
     }
     .aaccordion2 label:before{
 		content: 'Q';
@@ -173,11 +171,16 @@
 	    font-size: 16px;
 	    vertical-align: 2px;
 	    margin: 0 20px;
+	    
     }
     .aaccordion2 div{
 		display: flex;
 		justify-content: left;
     }
+	.aaccordion2 div p {
+		text-align:left;
+	}
+	
 	/* 아코디언 끝 */
 	
 </style>
@@ -199,7 +202,7 @@
 		<div class="box_head" >
 			<div style="  border-right: 1px solid black;   padding-right: 10px;">
 				<a href="/moreList/bbs/faqList"><b>자주하는 질문</b></a></div>
-			<div style="padding: 0 10px;"><a href="/moreList/bbs/qnaForm">온라인 신문고</a></div>
+<!-- 			<div style="padding: 0 10px;"><a href="/moreList/bbs/qnaForm">온라인 신문고</a></div> -->
 		</div>
 		<div class="" style="padding: 50px 0 30px; border-bottom: 1px solid lightgray;">
 			<p>도미노피자에 대한 궁금증을 바로 확인하실 수 있습니다.</p>
@@ -242,8 +245,8 @@
 		    	<b><img style="width: 30px; height: 30px;" src="/image/arrowUp.png"></b> 
 		    </label><!--em 태그 이미지 전환시 사용-->
 		    <div >
-		        <p>배달사원부족, 주문폭주 등으로 부득이 하게 예약주문만 가능한 경우가 있습니다. 이 경우 매장이나 콜센터(1577-3082)로 전화하셔도 예약주문만 가능하기 때문에 고객님의 많은 양해 
-				부탁 드립니다. 또한, 매장 오픈시간 전이나, 영업 종료 후에는 예약 주문만 가능합니다.</p>
+		        <p >배달사원부족, 주문폭주 등으로 부득이 하게 예약주문만 가능한 경우가 있습니다. 이 경우 매장이나 콜센터(1577-3082)로 전화하셔도 예약주문만 가능하기 때문에 고객님의 많은 양해 
+				부탁 드립니다. <br>또한, 매장 오픈시간 전이나, 영업 종료 후에는 예약 주문만 가능합니다.</p>
 		    </div>
 		</div>
 		</c:forEach>
@@ -575,7 +578,6 @@
 		    </label><!--em 태그 이미지 전환시 사용-->
 		    <div >
 		        <p>온라인 서베이 참여 후 제공되는 피자 20% 할인쿠폰은 인터넷 주문 시 이용 가능합니다
-					<br/><br>
 					<br/><br>마이 쿠폰함을 확인하세요
 		        </p>
 		    </div>
@@ -589,10 +591,10 @@
 		    </label><!--em 태그 이미지 전환시 사용-->
 		    <div>
 		        <p>1. 온라인 주문 고객은 익일 고객의 이메일로 설문지가 발송됩니다. 
-					<br/>&ltbr&gt 2. 주문하신 피자에 대한 만족도 및 매장의 서비스 평가가 가능합니다.
-					<br/>&ltbr&gt3. 설문 참여 기간은 이메일 수령 후 2일간 참여가 가능합니다.
+					<br/> 2. 주문하신 피자에 대한 만족도 및 매장의 서비스 평가가 가능합니다.
+					<br/>3. 설문 참여 기간은 이메일 수령 후 2일간 참여가 가능합니다.
 					<br/>
-					<br/>&ltbr&gt&ltbr&gt 고객님의 소중한 평가를 바탕으로 더욱 친절한 서비스를 제공해 드릴 수 있도록 최선의 노력을 다 하겠습니다
+					<br/> 고객님의 소중한 평가를 바탕으로 더욱 친절한 서비스를 제공해 드릴 수 있도록 최선의 노력을 다 하겠습니다
 					<br/>
 		        </p>
 		    </div>

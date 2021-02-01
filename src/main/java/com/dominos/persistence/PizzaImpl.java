@@ -10,10 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.dominos.domain.PizzaVO;
 
-/**
- * @author pc5
- *
- */
 @Repository
 public class PizzaImpl implements PizzaDAO{
 	
@@ -33,7 +29,6 @@ public class PizzaImpl implements PizzaDAO{
 		sql.insert(namespace+"addAttach",fullName);
 		
 	}
-
 
 	@Override	//피자 전체 리스트 불러오기
 	public List<PizzaVO> list() throws Exception {

@@ -66,12 +66,12 @@
 	    color: white;
 	    transition : all .6s;
 	}
-	.maniaUl>ul>li>a:after{
-		content: ">";
-	    position: absolute;
-	    right: 10px;
+/* 	.maniaUl>ul>li>a:after{ */
+/* 		content: ">"; */
+/* 	    position: absolute; */
+/* 	    right: 10px; */
 		
-	}
+/* 	} */
 	div a{
 		color: black;
 	}

@@ -8,15 +8,27 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
 import com.dominos.domain.AddressVO;
+import com.dominos.domain.GiftVO;
 
 @Repository
 public class AddressImpl implements AddressDAO{
 
-	@Inject
-	SqlSession sql;
+private static final String namespace = "com.dominos.mapper.AddressMapper.";
 	
-	private static final String namespace="com.dominos.mapper.AddressMapper.";
+	@Inject
+	private SqlSession sql;
 
+	//저장된 주소 불러오기
+	@Override
+	public List<AddressVO> addSelect(String user_id) throws Exception {
+		return sql.selectList(namespace+"addSelect", user_id);
+	}
+	
+	//주소 값 insert
+	@Override
+	public void add_insert(AddressVO vo) throws Exception {
+		sql.insert(namespace+"add_insert",vo);
+	}
 	@Override
 	public List<AddressVO> getAll(String user_id) {
 		return sql.selectList(namespace+"getAll",user_id);
@@ -48,4 +60,8 @@ public class AddressImpl implements AddressDAO{
 		return sql.selectOne(namespace+"selectOne",uid);
 	}
 
+	
+
+	
+	
 }

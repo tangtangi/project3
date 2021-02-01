@@ -2,7 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/include/header.jsp" %>
 
-<title>My Page!!</title>
+<title>나의 위치</title>
 <style>
 div a{
 	color: black;

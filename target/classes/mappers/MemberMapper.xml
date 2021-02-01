@@ -6,9 +6,19 @@
 <mapper namespace="com.dominos.mapper.MemberMapper">
 	<insert id="joininsert" >
 		<![CDATA[
-			insert into member (id, pass, name, gender, email, phone, birth, address, level) values (#{id},#{pass},#{name},#{gender},#{email},#{phone},#{birth},#{address},#{level})
+			insert into member (id, pass, name, gender, email, phone, birth, address, level) values (#{id},#{pass},#{name},#{gender},#{email},#{phone},#{birth},#{address},1)
 		]]>
 	</insert>
+	<insert id="join_coupon" >
+		<![CDATA[
+			insert into coupon (name, rate, user_id, e_coupon, state ) values ("join", 20, #{user_id}, #{e_coupon}, "사용전")
+		]]>
+	</insert>
+	<select id="idCheck" resultType="int">
+		<![CDATA[
+			select count(*) from member where id=#{join_id}
+		]]>
+	</select>
 	<select id="login" resultType="int">
 		<![CDATA[
 			select count(*) from member where id=#{id} and pass=#{pass} 
@@ -17,11 +27,6 @@
 	<select id="memberselect" resultType="MemberVO">
 		<![CDATA[
 			select * from member where id=#{id} 
-		]]>
-	</select>
-	<select id="modifyPass" resultType="int">
-		<![CDATA[
-			select count(*) from member where id=#{id} and pass=#{pass}  
 		]]>
 	</select>
 	<select id="modifyGet" resultType="MemberVO">
@@ -59,14 +64,11 @@
 			update member set level='0' where id=#{session_id}
 		]]>
 	</update>
-	<select id="idCheck" resultType="int">
-		select count(*) from member where id=#{id}
-	</select>
-	
 	<insert id="updateAddr">
 		update member set address_uid=#{address_uid} where id=#{user_id} 
 	</insert>
 	<select id="getAddrUid" resultType="String">
 		select address_uid from member where id=#{user_id} limit 1
 	</select>
+	
 </mapper>

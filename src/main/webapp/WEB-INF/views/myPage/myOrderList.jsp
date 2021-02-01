@@ -4,61 +4,69 @@
 
 <title>My Page!!</title>
 <style>
-div a{
-	color: black;
-}
-.addressBox{
-	font-size:18px;
-    height: 70px;
-    line-height: 70px;
-    background: #f5f5f5;
-    border-top: 2px solid black;
-}
-.box_head{
-	clear: both;
-    display: flex;
-    border-bottom: 2px solid black;
-    padding: 10px 0px;
-    color:#8c8888;
-}
-.box_head2{
-/* 	padding: 0 10px; 
- 	border-right: 1px solid lightgray;    
-	padding-right: 10px; */
-}
-.box_head2:after{
-	content:"";
-    width: 1px;
-    height: 16px;
-    background: #ddd;
-    display: inline-block;
-    margin: 2px 20px;
-    vertical-align: middle;
-}
-   .myBlack{
-      width: 100%;
-      height: 250px;
-      background: #111;
-      color: #fff;
-      display: flex;
-       justify-content: space-around;
-       align-items: center;
-   }
-   .myBlack>div{
-      text-align: center;
-      position: relative;
-      color: #aaa;
-   }
-   .before:before{
-       content: "";
-       width: 1px;
-       height: 70px;
-       background: #aaa;
-       display: inline-block;
-       position: absolute;
-       left: 0%;
-       top: -66%;
-   }
+	div a{
+		color: black;
+	}
+	.addressBox{
+		font-size:18px;
+	    height: 70px;
+	    line-height: 70px;
+	    background: #f5f5f5;
+	    border-top: 2px solid black;
+	}
+	.box_head{
+		clear: both;
+	    display: flex;
+	    border-bottom: 2px solid black;
+	    padding: 10px 0px;
+	    color:#8c8888;
+	}
+	.box_head2{
+	/* 	padding: 0 10px; 
+	 	border-right: 1px solid lightgray;    
+		padding-right: 10px; */
+	}
+	.box_head2:after{
+		content:"";
+	    width: 1px;
+	    height: 16px;
+	    background: #ddd;
+	    display: inline-block;
+	    margin: 2px 20px;
+	    vertical-align: middle;
+	}
+	.myBlack{
+		width: 100%;
+		height: 250px;
+		background: #111;
+		color: #fff;
+		display: flex;
+	    justify-content: space-around;
+	    align-items: center;
+	}
+	.myBlack>div{
+		text-align: center;
+		position: relative;
+		color: #aaa;
+	}
+	.before:before{
+	    content: "";
+	    width: 1px;
+	    height: 70px;
+	    background: #aaa;
+	    display: inline-block;
+	    position: absolute;
+	    left: 0%;
+	    top: -66%;
+	}
+	.orderBox{
+		border-bottom:2px solid black;
+/* 		font-size:16px; */
+		height:120px;
+		
+		
+	}
+	.aaa>a { color:black; text-decoration: none;}
 </style>
 
 
@@ -93,7 +101,7 @@ div a{
 		<div class="box_head" >
 			<div style="  border-right: 1px solid black;padding-right: 35px;color:#8c8888;">
 				<a href="/myPage/myOrderList"><b>피자 주문내역</b></a></div>
-         <div style="padding: 0 35px;color:#8c8888;"><a href="/myPage/myOrderList_gift">상품권 주문내역</a></div>
+         <div style="padding: 0 35px;color:#8c8888;" ><a href="/myPage/myOrderList_gift">상품권 주문내역</a></div>
       </div>   
             <div class="myBlack" >
          <div style="width: 50%;">
@@ -115,11 +123,11 @@ div a{
             <c:forEach var="pizza" items="${pizza }">
                <tr>
                   <td width=100% >
-                     <table border=1 width=100% class="orderBox">
+                     <table border=0 width=100% class="orderBox">
                         <tr>
                            <td width= 15% align= center>${pizza.kind }</td>
                            <td width= 30% align= center>주문일시 ${pizza.signdate}</td>
-                           <td width= 55% align= left><a href="/myPage/detail?order_uid=${pizza.order_uid }">주문번호 ${pizza.order_uid } &lt;- 클릭하여 상세보기 </a> </td>
+                           <td width= 55% align= left class="aaa"><a href="/myPage/detail?order_uid=${pizza.order_uid }">주문번호 ${pizza.order_uid } &lt;- 클릭하여 상세보기 </a> </td>
                         </tr>
                         <tr>
                            <td align= center>결제완료</td>
@@ -134,6 +142,33 @@ div a{
       </td>
       <td width=13.5%></td>
    </tr>
+</table>
+<table width=100% align= center>
+	<tr>
+		<td width=13.5%></td>
+		<td width=73% align= center>
+			<table width=100% align= center>
+				<c:forEach var="order" items="${order }">
+					<tr>
+						<td width=100% >
+							<table border=1 width=100% class="orderBox">
+								<tr>
+									<td width= 15% align= center>상품권</td>
+									<td width= 30% align= center>주문일시 ${order.signdate}</td>
+									<td width= 55% align= left>주문번호 ${order.order_uid }</td>
+								</tr>
+								<tr>
+									<td align= center>모바일</td>
+									<td colspan=2><a href="/myPage/myOrderView_gift?order_uid=${order.order_uid }"> [e-coupon]상세 페이지 바로 가기</a></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+				</c:forEach>
+			</table>
+		</td>
+		<td width=13.5%></td>
+	</tr>
 </table>
 
 <%@ include file="/WEB-INF/views/include/footer.jsp" %>

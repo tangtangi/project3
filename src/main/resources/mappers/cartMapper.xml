@@ -2,7 +2,8 @@
 <!DOCTYPE mapper
 	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.dominos.mapper.CartMapper">
+<mapper namespace = "com.dominos.mapper.CartMapper">
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~pizza~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 	<update id="update">
 		update cart_pizza set count = #{count} where menu_uid=#{menu_uid} and user_id=#{user_id} and state='장바구니' 
 	</update>
@@ -110,7 +111,6 @@
 			select sum(count) from cart_pizza where user_id=#{user_id} and state='장바구니' and category = 'sidedish'
 		]]>
 	</select>
-
 <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~gift~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 	<select id="giftSelect" resultType="GiftVO" >
 		<![CDATA[
@@ -124,7 +124,7 @@
 	</select>
 	<insert id="giftInsert">
 		<![CDATA[
-			insert into cart_gift (pizza_uid, user_id, pizza, price_L, size_L, image, image_o, image_s, count) values (#{uid},#{user_id},#{pizza},#{price_L},#{size_L},#{image},#{image_o},#{image_s},#{count})
+			insert into cart_gift (pizza_uid, user_id, pizza, price_L, size_L, image, image_o, image_s, count, e_coupon) values (#{uid},#{user_id},#{pizza},#{price_L},#{size_L},#{image},#{image_o},#{image_s},#{count}, #{e_coupon})
 		]]>	
 	</insert>
 	<select id="pizzacount" resultType="int">
@@ -159,8 +159,38 @@
 	</select>
 	<select id="memberSelect" resultType="MemberVO">
 		<![CDATA[
-			select * from member where id=#{id}
+			select * from member where id=#{id} order by uid desc limit 1
 		]]>
 	</select>
-
+	<update id="bankUpdate" >
+		<![CDATA[
+			update cart_gift set state='입금대기', total_price=#{total_price} where user_id=#{user_id} and state='대기'
+		]]>
+	</update>
+	
+	<select id="kakaoMember" resultType="MemberVO">
+		<![CDATA[
+			select * from member where id=#{user_id}
+		]]>
+	</select>
+	<select id="couponSelect" resultType="CouponVO">
+		<![CDATA[
+			select * from coupon where user_id=#{user_id} order by uid desc limit 1
+		]]>
+	</select>
+	<select id="coupon_order" resultType="GiftVO">
+		<![CDATA[
+			select * from cart_gift where e_coupon=#{e_coupon}
+		]]>
+	</select>
+	<select id="cartGiftSelect" resultType="OrderGiftVO">
+		<![CDATA[
+			select * from order_all where user_id=#{user_id}
+		]]>
+	</select>
+	<select id="couponOrder" resultType="GiftVO">
+		<![CDATA[
+			select * from cart_gift where e_coupon=#{e_coupon}
+		]]>
+	</select>
 </mapper>

@@ -14,11 +14,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.dominos.domain.BbsVO;
 import com.dominos.domain.CartVO;
+import com.dominos.domain.GiftVO;
 import com.dominos.domain.MemberVO;
 import com.dominos.domain.PagingVO;
 import com.dominos.domain.PizzaVO;
@@ -52,19 +53,8 @@ public class AdminController {
 
 	@Inject
 	private UploadController upload;
-	
-	/** 회원관리 멤버 리스트
-	 *
-	 * @param vo
-	 * @param model
-	 * @throws Exception
-	 */
-	@GetMapping("memberList") //회원관리 멤버 리스트
-	public void memberListGet(MemberVO vo, Model model)throws Exception {
-		logger.info("memberListGet");
-		model.addAttribute("member",dao.a_memberList(vo));//멤버 리스트 존재
-		
-	}
+//	----------------------------우탁---------------------------------
+
 	/** 전체 카트 리스트 불러오기
 	 * @param cartVO
 	 * @param model
@@ -211,4 +201,58 @@ public class AdminController {
 		return "redirect:/admin/bbs?category=n";
 	}
 	
+
+
+	
+	
+	//	----------------------------채윤---------------------------------
+	@GetMapping("memberList") //회원관리 멤버 리스트
+	public void memberListGet(MemberVO vo, Model model)throws Exception {
+		
+		model.addAttribute("member",dao.a_memberList(vo));//멤버 리스트 존재
+		
+	}
+	
+	
+	@GetMapping("OrderList")
+	public void OrderListGet () throws Exception{
+		
+	}
+	
+	//문의글 리스트
+	@GetMapping("questionList")
+	public void questionListGet (Model model) throws Exception{
+		
+		model.addAttribute("question",dao.questionList()); 
+	}
+	//문의글 상세 페이지
+	@GetMapping("questionView")
+	public void questionViewGet (int uid, Model model) throws Exception{
+		
+		model.addAttribute("question",dao.questionView(uid));
+	}
+	
+	@GetMapping("answer")
+	public void answerGet(int uid, Model model)throws Exception {
+		
+		model.addAttribute("question",dao.questionView(uid));
+	}
+	//답변 내용 업데이트
+	@PostMapping("answerPost")
+	public String answer (BbsVO vo, RedirectAttributes rttr) throws Exception{
+		
+		dao.answerUpdate(vo);
+		
+		int uid = vo.getUid();
+		
+		return "redirect:/admin/questionList?uid="+uid;
+	}
+	
+	@GetMapping("OrderList_gift")
+	public void OrderList_gift (Model model) throws Exception{
+		
+		List<GiftVO> gift = dao.OrderList_gift();
+		
+		model.addAttribute("gift",gift);
+	}
 }

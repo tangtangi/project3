@@ -1,10 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/include/admin_header.jsp" %>
-<table style="width:100%" >
+<table width=100% >
 	<tr>
 		<td width=100% align=center>
-			<table style="width:75%">
+			<table width=75%>
 				<tr>
 					<td>NO</td>
 					<td>아이디</td>
@@ -15,9 +15,9 @@
 					<td>주소</td>
 					<td>등급</td>
 				</tr>
-				<c:forEach var="member" items="${member }" varStatus="status">
+				<c:forEach var="member" items="${member }" varStatus="index">
 				<tr>
-					<td>${status.index }</td>
+					<td>${index.index+1 }</td>
 					<td>${member.id }</td>
 					<td>${member.name }</td>
 					<td>${member.phone }</td>
@@ -33,4 +33,3 @@
 	</tr>
 
 </table>
-<%@ include file="/WEB-INF/views/include/admin_footer.jsp" %>

@@ -419,7 +419,7 @@
 						<input type="radio" id="kakao" name="pay" checked style="display: none;">
 						<input type="radio" id="withOutPayBook" name="pay" style="display: none;">
 					</td>
-					<td class="paybox" id="payBookTD"><a href="javascript:void(0)" onclick="payMethod()" name="payMethod"><label for="withOutPayBook">무통장 결제</label></a></td>
+<!-- 					<td class="paybox" id="payBookTD"><a href="javascript:void(0)" onclick="payMethod()" name="payMethod"><label for="withOutPayBook">무통장 결제</label></a></td> -->
 				</tr>
 			</table>
 			

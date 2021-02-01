@@ -3,6 +3,14 @@
 	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace = "com.dominos.mapper.MyPageMapper">
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~피자~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+	<select id="pizzaSelect" resultType="OrderVO">
+		<![CDATA[
+			select * from order_all where user_id=#{user_id} and kind="피자" order by uid desc 
+		]]>
+	</select>
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~상품권~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+	
 	<select id="modifyPass" resultType="int">
 		<![CDATA[
 			select count(*) from member where id=#{id} and pass=#{pass}  
@@ -10,7 +18,7 @@
 	</select>
 	<update id="e_couponList">
 		<![CDATA[
-			update cart_gift set state="결제완료", e_coupon=#{e_coupon} where user_id=#{user_id} and state="대기"
+			update cart_gift set state="결제완료", total_price=#{total_price} where user_id=#{user_id} and state="대기"
 		]]>
 	</update>
 	<select id="cartGiftSelect" resultType="GiftVO">
@@ -25,13 +33,72 @@
 	</select>
 	<insert id="orderAll_insert">
 		<![CDATA[
-			insert into order_all (order_uid, user_id, total_price, pay_type, signdate, kind) values (1,'1',1,'1','1','1')
+			insert into order_all (order_uid, user_id, total_price, pay_type, signdate, kind) values (#{order_uid}, #{user_id}, #{total_price}, "카카오", #{signdate}, "상품권")
 		]]>
 	</insert>
-	<select id="pizzaSelect" resultType="OrderVO">
+	<select id="giftSelect" resultType="OrderGiftVO">
 		<![CDATA[
-			select * from order_all where user_id=#{user_id} and kind="피자" order by uid desc 
+			select * from order_all where user_id=#{user_id} and kind="상품권" order by uid desc
 		]]>
 	</select>
-
+	<select id="viewGift" resultType="GiftVO">
+		<![CDATA[
+			select * from cart_gift where order_uid=#{order_uid}
+		]]>
+	</select>
+	<select id="viewGift_order" resultType="OrderGiftVO">
+		<![CDATA[
+			select * from order_all where order_uid=#{order_uid}
+		]]>
+	</select>
+	<select id="couponSelect" resultType="OrderGiftVO">
+		<![CDATA[
+			select * from order_all where user_id=#{user_id} and kind="상품권" order by uid desc limit 1
+		]]>
+	</select>
+	<select id="orderList" resultType="GiftVO">
+		<![CDATA[
+			select * from cart_gift where order_uid=#{order_uid}
+		]]>
+	</select>
+	<insert id="order_insert">
+		<![CDATA[
+			insert into coupon (name, rate, user_id, e_coupon ) values ("gift", 15, #{user_id}, #{e_coupon})
+		]]>
+	</insert>
+	<select id="couponView" resultType="CouponVO">
+		<![CDATA[
+			select * from coupon where user_id=#{user_id}
+		]]>
+	</select>
+	<select id="memberSelect" resultType="String">
+		<![CDATA[
+			select name from member where id=#{user_id}
+		]]>
+	</select>
+	<select id="member_select" resultType="MemberVO">
+		<![CDATA[
+			select * from member where id=#{id}
+		]]>
+	</select>
+	<insert id="question_insert" >
+		<![CDATA[
+			insert into bbs (title, content, signdate, category, user_id, state) values (#{title}, #{content}, #{signdate}, "q", #{user_id}, "답변전" )
+		]]>
+	</insert>
+	<select id="questionList" resultType="BbsVO">
+		<![CDATA[
+			select * from bbs where user_id=#{id} order by uid desc
+		]]>
+	</select>
+	<select id="questionView" resultType="BbsVO">
+		<![CDATA[
+			select * from bbs where uid=#{uid}
+		]]>
+	</select>
+	<delete id="question_delete">
+		<![CDATA[
+			delete from bbs where uid=#{uid}
+		]]>
+	</delete>
 </mapper>

@@ -13,4 +13,24 @@
 			select * from gift
 		]]>
 	</select>
+	<select id="e_couponPost" resultType="int">
+		<![CDATA[
+			select count(*) from coupon where e_coupon=#{e_coupon} and state="사용전" 
+		]]>
+	</select>
+	<update id="couponUpdate">
+		<![CDATA[
+			update coupon set state="사용완료" where e_coupon=#{e_coupon}
+		]]>
+	</update>
+	<update id="cartUpdate">
+		<![CDATA[
+			update cart_gift set e_state="사용완료" where e_coupon=#{e_coupon}
+		]]>
+	</update>
+	<select id="cartSelect" resultType="int">
+		<![CDATA[
+			select order_uid from cart_gift where e_coupon=#{e_coupon}
+		]]>
+	</select>
 </mapper>

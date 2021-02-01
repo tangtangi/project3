@@ -1,9 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/include/header.jsp" %>
-
-<c:if test="${param.type == 'N' }"><title>Domino's NEWS!!</title></c:if>
-<c:if test="${param.type == 'P' }"><title>Report NEWS!!</title></c:if>
+<c:if test="${param.type == 'N' }"><title>도미노 뉴스</title></c:if>
+<c:if test="${param.type == 'P' }"><title>보도 뉴스</title></c:if>
 
 <!-- css 불러오기 -->
 <link rel="stylesheet" href="/css/news.css">

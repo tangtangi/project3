@@ -1,7 +1,36 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/include/header.jsp" %>
 <title>로그인</title>
-
+<style>
+	.inputCang {
+		border:1px solid #c1c1c1;
+		width:320px;
+		height:80%;
+	}
+	
+	.tdtd tr td{
+		height: 60px;
+		text-align: center;
+	}
+	.buttonCang{
+	    background: #ff143c;
+	    width: 250px;
+	    display: inline-block;
+	    height: 60px;
+	    color: white;
+	    text-align:center;
+	    line-height: 60px;
+	    border:0px;
+	    font-size:17px;
+        font-weight: bold;
+	}
+	.search{
+		font-size:17px;
+        font-weight: bold;
+        color:#888888;
+	}
+	search a {color:#888888; text-decoration: none;}
+</style>
 <script>
 	var msg = "${msg}";
 	if(msg == "find_id"){
@@ -15,106 +44,38 @@
 <table 	width=100% height=115px border=0>
 	<tr>
 		<td  width=13.5% ></td>
-		<td class="menuname2" width=73% >로그인</td>
+		<td class="menuname2" width=73% style="text-align: left;">로그인</td>
 		<td width=13.5% ></td>
 	</tr>
 </table>
 <form method="post" >
-<table width=100% border=1>
+<table width=100% border=0  style=" margin-top: 50px;" class="tdtd">
 	<tr>
-		<td  width=13.5% rowspan=4></td>
+		<td  width=35% rowspan=4></td>
 		<td>아이디</td>
-		<td><input name="id"></td>
-		<td  width=13.5% rowspan=4></td>
+		<td><input class="inputCang" name="id"></td>
+		<td  width=35% rowspan=4></td>
 	</tr>
 	<tr>
 		<td >비밀번호</td>
-		<td><input name="pass" id="pass" type="password"></td>
+		<td><input class="inputCang" name="pass" id="pass" type="password"></td>
 	</tr>
 	<tr>
-		<td ></td>
+		<td Style="height:130px;"></td>
+		<td><input class="buttonCang" type="submit" value="로그인"></td>
+	</tr>
+	<tr>
+		<td></td>
 		<td>
-			<input type="submit" value="로그인">
-			
-			<input type="image" src="/image/kakao_login_medium_narrow.png" value="카카오로그인" onclick="kakaoLogin()">
-			
-			<!-- 팝업방식 로그인 -->
-			<a id="custom-login-btn" href="javascript:loginWithKakao()">
-			  <img src="//k.kakaocdn.net/14/dn/btqCn0WEmI3/nijroPfbpCa4at5EIsjyf0/o.jpg" width="222"/>
-			</a>
-			
-			<button class="api-btn" onclick="kakaoLogout()">로그아웃</button>
-			
-			<!-- 다른 계정으로 로그인 -->
-			<a id="reauthenticate-popup-btn" href="javascript:loginFormWithKakao()">
-			  <img
-			    src="//k.kakaocdn.net/14/dn/btqCn0WEmI3/nijroPfbpCa4at5EIsjyf0/o.jpg"
-			    width="222"
-			  />
-			</a>
-			<p id="reauthenticate-popup-result"></p>
+			<table width=100%>
+				<tr>
+					<td width=50%><a href="/member/id_find" class="search">아이디 찾기</a></td>
+					<td width=50%><a href="/member/pass_find"  class="search">비밀번호 찾기</a></td>
+				</tr>
+			</table>
 		</td>
-	</tr>
-	<tr>
-		<td><a href="/member/id_find">아이디 찾기</a></td>
-		<td><a href="/member/pass_find">비밀번호 찾기</a></td>
 	</tr>
 </table>
 </form>
-
-<script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
-
- <script>
-    // SDK를 초기화 합니다. 사용할 앱의 JavaScript 키를 설정해 주세요.
-    Kakao.init('4cb58098a4eca69d5f57797fd052554a');
-
-    // SDK 초기화 여부를 판단합니다.
-    console.log(Kakao.isInitialized());
-</script>
-
-<script type="text/javascript">
-/* 팝업방식 */
-  function loginWithKakao() {
-    Kakao.Auth.login({
-      success: function(authObj) {
-        alert(JSON.stringify(authObj))
-      },
-      fail: function(err) {
-        alert(JSON.stringify(err))
-      },
-    })
-  }
-</script>
-
-
-<script type="text/javascript">
-/* 다른계정으로 로그인 */
-  function loginFormWithKakao() {
-    Kakao.Auth.loginForm({
-      success: function(authObj) {
-        showResult(JSON.stringify(authObj))
-      },
-      fail: function(err) {
-        showResult(JSON.stringify(err))
-      },
-    })
-  }
-  function showResult(result) {
-    document.getElementById('reauthenticate-popup-result').innerText = result
-  }
-</script>
-
-<script type="text/javascript">
-/* 로그아웃 */
-function kakaoLogout() {
-  if (!Kakao.Auth.getAccessToken()) {
-    alert('Not logged in.')
-    return
-  }
-  Kakao.Auth.logout(function() {
-    alert('logout ok\naccess token -> ' + Kakao.Auth.getAccessToken())
-  })
-}
-</script>
 
 <%@ include file="/WEB-INF/views/include/footer.jsp" %>

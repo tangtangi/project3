@@ -232,7 +232,7 @@
 			<table border=0>
 				<tr>
 					<td class="submenu_a" align=left width=120px><a href="/cart/pizza_cart">피자 주문</a></td>
-					<td class="submenu_b" align=center  width=170px><a href="/cart/gift_cart" >상품권 주문</a></td>
+					<td class="submenu_b" align=center  width=170px><a href="/cart/gift_cart" style="color: black;font-size: 17px;"><b>상품권 주문</b></a></td>
 				</tr>
 			</table>
 		</td>
@@ -240,7 +240,7 @@
 	</tr>
 </table>
 <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-<c:if test="${cartgift == null}">
+<c:if test="${empty cartgift}"> <!-- 리스트는 empty로 비교 -->
 	<div style ="width: 13.5%"></div>
 	<div style="display: flex;">
 		<div style ="width: 13.5%"></div>
@@ -250,14 +250,14 @@
 				<p style="font-size: 35px;">장바구니가 비어있습니다.</p><br>
 				<p style="font-size: 14px;">도미노피자의 맛있는 메뉴를 마음껏 골라 담으세요</p><br><br>
 			</div>	
-			<div><a href="/menu/list" style="display:inline-block; color: #888;background: #fff;width: 150px;height: 53px;line-height:53px; border: 1px solid lightgray;outline: 0px;">+ 메뉴 추가하기</a></div><br><br>
+			<div><a href="/menu/gift" style="display:inline-block; color: #888;background: #fff;width: 150px;height: 53px;line-height:53px; border: 1px solid lightgray;outline: 0px;">+ 메뉴 추가하기</a></div><br><br>
 			<div><img src="/image/cartNotice.jpg"></div>
 		</div>
 		<div style ="width: 13.5%"></div>
 	</div>
 </c:if> 
 <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-<c:if test="${cartgift!= null}"> 
+<c:if test="${!empty cartgift}"> 
 	<div style="display: flex; ">
 		<div style ="width: 13.5%"></div>
 		
@@ -286,7 +286,7 @@
 						</div>
 					</div>
 					<div class="little" style="width: 10%;justify-content: center;">${cartgift.count }</div>
-					<div class="little" style="width: 20%;justify-content: center;"><fmt:formatNumber type="number" maxFractionDigits="3" value="${cartgift.price_L}" />원</div>
+					<div class="little" style="width: 20%;justify-content: center;"><fmt:formatNumber type="number" maxFractionDigits="3" value="${cartgift.price_L * cartgift.count}" />원</div>
 					<div class="little" style="width: 20%;justify-content: center;"><a href="x?uid=${cartgift.uid}">x</a></div>
 				</div>
 			</c:forEach>  
@@ -295,8 +295,8 @@
 				<div class="little" style="width: 30%;"></div>
 				<div class="little" style="width: 10%;"></div>
 				<c:set var="sum" value="${0 }"/>
-					<c:forEach var="cartgift" items="${cartgift}">
-						<c:set var="sum" value="${sum+cartgift.price_L}"/>
+					<c:forEach var="cartgift" items="${cartgift}" >
+						<c:set var="sum" value="${sum+(cartgift.price_L * cartgift.count)}"/>
 					</c:forEach>
 				<div style="width: 20%; font-size: 30px; color:black;"><span style="font-size: 20px;margin: 0 30px 0 0;">총 금액</span><fmt:formatNumber type="number" maxFractionDigits="3" value="${sum}" />원</div>
 				<div class="little" style="width: 10%;"></div>

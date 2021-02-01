@@ -8,6 +8,7 @@
 <c:set var="session_id" value="${sessionScope.id }"/>
 <c:set var="session_pass" value="${sessionScope.pass }"/>
 <c:set var="session_level" value="${sessionScope.level}"/>
+<c:set var="session_name" value="${sessionScope.name}"/>
 <head>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
@@ -15,7 +16,6 @@
 <meta charset="UTF-8">
 <!-- <meta name="viewport" content="width=divice-width, initial-scale=1, minimum-scale=1,maximum-scale=1"> -->
 
-<!-- 헤더css파일 불러오기 -->
 <link rel="stylesheet" href="/css/header.css">
 
 <!-- 가로폭을 기기의 가로폭에 맞추고 콘텐트가 흔들리지 않도록 초기값, 최소,최대값모두 1로 설정. -->
@@ -33,70 +33,67 @@
 <!-- xeicon - cdn -->
 <link rel="stylesheet" href="http://cdn.jsdelivr.net/npm/xeicon@2.3.3/xeicon.min.css">
 <!-- slick 이용해서 slide 만들기 -->  
-
-<!-- 우클릭, f12 방지 -->
-<script type="text/javascript">
-    // F12 버튼 방지
-    $(document).ready(function(){
-        $(document).bind('keydown',function(e){
-            if ( e.keyCode == 123 /* F12 */) {
-                e.preventDefault();
-                e.returnValue = false;
-            }else if(e.keyCode == 16  ){
-            	e.preventDefault();
-            	e.returnValue = false;
-            }else if(e.keyCode == 17  ){
-            	e.preventDefault();
-            	e.returnValue = false;
-            }
-            	
-            console.log(e.keyCode);
-        });
-    });
-    
-    // 우측 클릭 방지
-    document.onmousedown=disableclick;
-    status="Right click is not available.";
-    
-    function disableclick(event){
-        if (event.button==2) {
-//             alert(status);
-            return false;
-        }
-    }
-</script>
-
-
 </head>
 
+<!-- <!-- 우클릭, f12 방지 --> -->
+<!-- <script type="text/javascript"> -->
+<!-- //     // F12 버튼 방지
+//     $(document).ready(function(){
+//         $(document).bind('keydown',function(e){
+//             if ( e.keyCode == 123 /* F12 */) {
+//                 e.preventDefault();
+//                 e.returnValue = false;
+//             }else if(e.keyCode == 16  ){
+//             	e.preventDefault();
+//             	e.returnValue = false;
+//             }else if(e.keyCode == 17  ){
+//             	e.preventDefault();
+//             	e.returnValue = false;
+//             }
+            	
+//             console.log(e.keyCode);
+//         });
+//     });
+    
+//     // 우측 클릭 방지
+//     document.onmousedown=disableclick;
+//     status="Right click is not available.";
+    
+//     function disableclick(event){
+//         if (event.button==2) {
+// //             alert(status);
+//             return false;
+//         }
+//     } -->
+<!-- </script> -->
 <script>
 	var prevScrollPos = window.pageYOffset;
 	window.onscroll = function(){
 		var currentScrollPos = window.pageYOffset;
 		var tw = $(".top-wrap");
 		var gw = $(".gnb-wrap");
-		
-		var menuImg = $(".menuImg");//view페이지 사진  21.01.15 우탁 변경.
-		var menuImg2 = $(".menuImg2");//view페이지 사진  21.01.15 우탁 변경.
+     	var menuImg = $(".menuImg");//view페이지 사진  21.01.15 우탁 변경.
+     	var menuImg2 = $(".menuImg2");//view페이지 사진  21.01.15 우탁 변경.
 
-//		if(prevScrollPos >= currentScrollPos){
-		if(currentScrollPos >= 300){	//현재스크롤이 70보다 크면
-			tw.css({top:tw.position().top=-70+'px'});
-			gw.css({top:gw.position().top=0+'px'});
-			menuImg.attr('class','menuImg2'); //view페이지 사진  21.01.15 우탁 변경.
-			
-		}else if(currentScrollPos >= 70){
-			tw.css({top:tw.position().top=-70+'px'});
-			gw.css({top:gw.position().top=0+'px'});
-			menuImg2.attr('class','menuImg'); //view페이지 사진  21.01.15 우탁 변경.
-		}
-		else{ //현재스크롤이 70보다 작으면
-			tw.css({top:tw.position().top=0+'px'});
-			gw.css({top:gw.position().top=70+'px'});
-			menuImg2.attr('class','menuImg'); //view페이지 사진  21.01.15 우탁 변경.
-			//d.css({top:d.position().top+100+'px'}); 더하고 싶을 때 
-		}
-		prevScrollPos = currentScrollPos;
+//	      if(prevScrollPos >= currentScrollPos){
+	      if(currentScrollPos >= 300){   //현재스크롤이 70보다 크면
+	         tw.css({top:tw.position().top=-70+'px'});
+	         gw.css({top:gw.position().top=0+'px'});
+	         menuImg.attr('class','menuImg2'); //view페이지 사진  21.01.15 우탁 변경.
+	         
+	      }else if(currentScrollPos >= 70){
+	         tw.css({top:tw.position().top=-70+'px'});
+	         gw.css({top:gw.position().top=0+'px'});
+	         menuImg2.attr('class','menuImg'); //view페이지 사진  21.01.15 우탁 변경.
+	      }
+	      else{ //현재스크롤이 70보다 작으면
+	         tw.css({top:tw.position().top=0+'px'});
+	         gw.css({top:gw.position().top=70+'px'});
+	         menuImg2.attr('class','menuImg'); //view페이지 사진  21.01.15 우탁 변경.
+	         //d.css({top:d.position().top+100+'px'}); 더하고 싶을 때 
+	      }
+	      prevScrollPos = currentScrollPos;
+
 	}
 	//window.scrollTo({top:0, left:0, behavior:'auto'}); //TOP으로
 
@@ -144,21 +141,18 @@ $(document).ready(function(){
 		
 	});
 });
-
-	
 	
 </script>
 
-<!-- 우클릭, f12 방지 -->
-<!-- <body> -->
-<body oncontextmenu='return false' onselectstart='return false' ondragstart='return false'>
+<body>
+<!-- <body oncontextmenu='return false' onselectstart='return false' ondragstart='return false'> -->
 
-
-<div style="z-index: 9999999999999999;">
+<%-- <div style="z-index: 9999999999999999;">
 session_id:${session_id}<br>
 session_id2:${sessionScope.id2}<br> <!-- 01.21우탁 수정 -->
 session_level:${session_level}<br>
 </div>
+ --%>
 <header id="header">
 	<div class="top-wrap">
 		<div style="width: 13.5%;"></div>
@@ -180,9 +174,8 @@ session_level:${session_level}<br>
 				<c:when test="${session_id != null}">
 					<a href = "/member/logout">로그아웃</a>
 					<a href = "/myPage/maniaGrade">나의정보</a>
-					<a href = "/cart/pizza_cart"><img id="cartImg" src="/image/cartEmpty.png" style="width: 20px; margin-bottom:-5px; ">
+					<a href = "/cart/gift_cart"><img id="cartImg" src="/image/cartEmpty.png" style="width: 20px; margin-bottom:-5px; ">
 					<sub><input readonly class="cartCnt" id="cartCnt" value=""></sub></a>
-					<!-- 1.21 우탁 변경 -->
 				</c:when>
 				
 				<c:otherwise >
@@ -217,12 +210,7 @@ session_level:${session_level}<br>
 				<li>
 					<a href="/menu/store"><span>매장검색</span></a>
 				</li>
-	<!-- 			<li>
-					<a href="/cart/cart2"><span>카트1</span></a>
-					<a href="/cart/pizza_cart"><span>피자주문</span></a>
-					<a href="/cart/pizza_cart_last"><span>카트Last</span></a>
- 				</li>
--->			</ul>
+			</ul>
 			<a href="#" class="snb-more ">
 				<input type="checkbox" id="more">
 				<label for="more">  
@@ -250,7 +238,7 @@ session_level:${session_level}<br>
 						<a href="/moreList/bbs/faqList" >고객센터</a>
 						<ul>
 							<li><a href="/moreList/bbs/faqList">자주하는 질문</a></li>
-							<li><a href="/moreList/bbs/qnaForm">온라인 신문고</a></li>
+<!-- 							<li><a href="/moreList/bbs/qnaForm">온라인 신문고</a></li> -->
 						</ul>
 					</div>
 					<div class="mnu-box">

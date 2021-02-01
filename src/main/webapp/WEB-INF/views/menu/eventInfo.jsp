@@ -16,7 +16,7 @@
 			<table border=0>
 				<tr>
 					<td class="submenu_a" width=60px><a href="/menu/event" >이벤트</a></td>
-					<td class="submenu_b" align=center  width=140px><a href="/menu/eventInfo" >할인안내</a></td>
+					<td class="submenu_b" align=center  width=140px><a href="/menu/eventInfo" style="color:black;"><b>할인안내</b></a></td>
 				</tr>
 			</table>
 		</td>

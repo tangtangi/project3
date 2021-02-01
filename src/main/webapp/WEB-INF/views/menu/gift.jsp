@@ -34,6 +34,8 @@
 		width:47px;\
 		text-align:center;
 	}
+	.juicebutton > a { color:black; text-decoration: none;}
+	
 	.juicecount{ /* 음료 수량박스 */
 		border:0px;
 		border-right:1px solid #dddddd;
@@ -62,27 +64,7 @@
 	}
 </style>
 
-<script>
-	var msg = "${msg}";
-	
-	if( msg == "cart_ok"){
-		alert("장바구니에 담았습니다.");
-	}else if (msg == "cartCount_1"){
-		alert("이미 장바구니에 담겨있습니다.");
-	}else if(msg == "cart_login"){
-		alert("로그인 후 이용바랍니다.");
-	}
-	
-	
-/* 수량 박스 */
-	function change(num,index){
-		var x = document.getElementsByName("count");
-		var y = Number(x[index].value)+num;
-		if(y < 1) y = 1;
-		x[index].value = y;
-	}
-	
-</script>
+
 <table 	width=100% height=115px>
 	<tr>
 		<td  width=13.5% ></td>
@@ -94,7 +76,7 @@
 		<td class="submenu" width=73%>
 			<table border=0>
 				<tr>
-					<td class="submenu_a" align=left width=185px><a href="/menu/gift">모바일상품권(도미노콘) </a></td>
+					<td class="submenu_a" align=left width=185px><a href="/menu/gift" style="color:black;"><b>모바일상품권(도미노콘)</b> </a></td>
 					<td class="submenu_b" align=center  width=170px><a href="/menu/giftInfo" >상품권 사용 안내</a></td>
 				</tr>
 			</table>
@@ -124,17 +106,15 @@
 						
 						<tr>
 							<td width=60% style="border:1px solid #dddddd;">
-								<form name="countform">
+							<form method="post" action="/cart/gift">
 								<table>
 									<tr>
 										<td class="juicebutton" align=center><a href="javascript:change(1,${num.index })" >+</a></td>
-										<td ><input name="count" value="1" class="juicecount"></td>
+										<td ><input name="count" value="1" class="juicecount" ></td>
 										<td class="juicebutton" align=center><a href="javascript:change(-1,${num.index })" style="text-align:center;">-</a></td>
 									</tr>
 								</table>
-								</form>
 							</td>
-							<form method="post" action="/cart/gift">
 								<td width=40% align=center>
 									<input type="hidden" name="pizza" value="${gift.pizza }">
 									<input type="submit" value="담기" class="order">
@@ -151,30 +131,52 @@
 		</tr>
 </table>
 
---------------------------------------------------
-<form  id='form1'  method="post" enctype="multipart/form-data"  >
-<table>
-	<tr>
-		<td>이름1</td>
-		<td><input name="name"></td>
-	</tr>
-	<tr>
-		<td>사이즈</td>
-		<td><input name="size_L"></td>
-	</tr>
-	<tr>
-		<td>가격</td>
-		<td><input name="price_L"></td>
-	</tr>
-	<tr>
-		<td>첨부파일</td>
-		<td><input name="file" type="file"></td>
-	</tr>
+<!-- -------------------------------------------------- -->
+<!-- <form  id='form1'  method="post" enctype="multipart/form-data"  > -->
+<!-- <table> -->
+<!-- 	<tr> -->
+<!-- 		<td>이름1</td> -->
+<!-- 		<td><input name="name"></td> -->
+<!-- 	</tr> -->
+<!-- 	<tr> -->
+<!-- 		<td>사이즈</td> -->
+<!-- 		<td><input name="size_L"></td> -->
+<!-- 	</tr> -->
+<!-- 	<tr> -->
+<!-- 		<td>가격</td> -->
+<!-- 		<td><input name="price_L"></td> -->
+<!-- 	</tr> -->
+<!-- 	<tr> -->
+<!-- 		<td>첨부파일</td> -->
+<!-- 		<td><input name="file" type="file"></td> -->
+<!-- 	</tr> -->
 	
-	<tr>
-		<td></td>
-		<td><input type="submit" value="글쓰기"></td>
-	</tr>
-</table>
-</form>
+<!-- 	<tr> -->
+<!-- 		<td></td> -->
+<!-- 		<td><input type="submit" value="글쓰기"></td> -->
+<!-- 	</tr> -->
+<!-- </table> -->
+<!-- </form> -->
+<script>
+	var msg = "${msg}";
+	
+	if( msg == "cart_ok"){
+		alert("장바구니에 담았습니다.");
+	}else if (msg == "cartCount_1"){
+		alert("이미 장바구니에 담겨있습니다.");
+	}else if(msg == "cart_login"){
+		alert("로그인 후 이용바랍니다.");
+	}
+	
+	
+/* 수량 박스 */
+	function change(num, index){
+		var x = document.getElementsByName("count");
+		var y = Number(x[index].value)+num;
+		if(y < 1) y = 1;
+		x[index].value = y;
+		count.value = y;
+	}
+	
+</script>
 <%@ include file="/WEB-INF/views/include/footer.jsp" %>

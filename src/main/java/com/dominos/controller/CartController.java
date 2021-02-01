@@ -1,4 +1,4 @@
-package com.dominos.controller;
+                                          package com.dominos.controller;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -22,7 +22,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.dominos.domain.AddressVO;
 import com.dominos.domain.CartVO;
+import com.dominos.domain.CouponVO;
 import com.dominos.domain.GiftVO;
+import com.dominos.domain.MemberVO;
 import com.dominos.domain.OrderVO;
 import com.dominos.domain.PizzaVO;
 import com.dominos.domain.SideVO;
@@ -37,7 +39,7 @@ import com.dominos.persistence.SideDAO;
 public class CartController {
 
 	private static final Logger logger = LoggerFactory.getLogger(MemberController.class);
-
+	
 	@Inject
 	private CartDAO dao;
 	
@@ -47,13 +49,12 @@ public class CartController {
 	@Inject
 	private PizzaDAO pizza;
 	
-	@Inject //--> 만들지 말고 cartDAO에서 만들어 쓰자. -->아니다 만들자
+	@Inject
 	private AddressDAO address;
-	
+
 	@Inject
 	private MemberDAO member;
-	
-	
+//	----------------------------------------------pizza -------------------------------------------------------------
 	
 	/*
 	@ResponseBody
@@ -556,19 +557,19 @@ public class CartController {
 		
 		return "redirect:/myPage/myOrderList";
 	}
-///////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	//상품권 장바구니 - 리스트
-	@GetMapping("gift_cart")
+
+//	----------------------------------------------gift -------------------------------------------------------------
+	
+	@GetMapping("gift_cart") //상품권 장바구니 - 리스트
 	public void giftCart(HttpSession session, Model model) throws Exception {
 		String user_id = (String)session.getAttribute("id");
 		
 		model.addAttribute("cartgift",dao.giftGet(user_id));// 장바구니 리스트
 	}
 	
-	//상품권 장바구니 - '담기'버튼 클릭 후
-	@PostMapping("gift")
-	public String giftOrder(String pizza,HttpSession session, GiftVO vo , RedirectAttributes rttr)throws Exception  {
+	@PostMapping("gift") //상품권 장바구니 - '담기'버튼 클릭 후
+	public String giftOrder(String pizza,HttpSession session, GiftVO vo , RedirectAttributes rttr, int count)throws Exception  {
 		String user_id = (String)session.getAttribute("id");
 		
 		vo.setUser_id(user_id);
@@ -584,6 +585,16 @@ public class CartController {
 				rttr.addFlashAttribute("msg","cart_ok");
 				
 				vo = dao.giftSelect(pizza); //피자 하나의 정보를 불러오기
+				
+					//e쿠폰 랜덤값 형성
+					Date now = new Date();
+					SimpleDateFormat sdate = new SimpleDateFormat("MMdd");
+					String signdate = sdate.format(now);
+					int random = (int) (Math.random()*10000000);
+					String e_coupon = signdate+random;
+					
+				vo.setE_coupon(e_coupon);
+				vo.setCount(count);
 				vo.setUser_id(user_id); 
 				dao.giftInsert(vo);
 				
@@ -595,17 +606,15 @@ public class CartController {
 		return "redirect:/menu/gift";
 	}
 	
-	//'x'버튼 클릭 시 삭제
-	@GetMapping("x")
+	@GetMapping("x") //'x'버튼 클릭 시 삭제
 	public String xDelete(int uid) throws Exception{
 		
 		dao.giftdelete(uid);
 		
 		return "redirect:/cart/gift_cart";
 	}
-	
-	//'전체삭제' 버튼 클릭 시 전체삭제
-	@GetMapping("deleteAll")
+
+	@GetMapping("deleteAll") //'전체삭제' 버튼 클릭 시 전체삭제
 	public String giftDeleteAll(HttpSession session) throws Exception{
 		
 		String user_id = (String)session.getAttribute("id");
@@ -615,7 +624,116 @@ public class CartController {
 		return "redirect:/cart/gift_cart";
 	}
 	
-
+	@GetMapping("giftOrderButton") //장바구니에서 '주문하기' 버튼 클릭 시
+	public String giftOrderButton(HttpSession session)throws Exception {
+		
+		String user_id = (String)session.getAttribute("id");
+		
+		//날짜 시작
+		Date now = new Date();
+		System.out.println(now);
+		SimpleDateFormat sdate = new SimpleDateFormat("MMdd");
+		String signdate = sdate.format(now);
+		
+		int random = (int) (Math.random()*10000000);
+		
+		GiftVO vo = new GiftVO();
+		
+		vo.setOrder_uid(Integer.parseInt(signdate+random));//주문번호 패턴 생성
+		vo.setUser_id(user_id);
+		
+		dao.giftOrderUpdate(vo); //장바구니의 상품 업데이트
+		logger.info(vo.toString());
+		
+		return "redirect:gift_cart_last";
+	}
 	
+	@GetMapping("gift_cart_last") //상품권 마지막 결제 사이트
+	public void cartLast(Model model, HttpSession session)throws Exception{
+
+		/*
+		 * for(int i=0; i<vo.size(); i++) { 
+		 * System.out.println(vo);
+		 * System.out.println(vo.get(i).getPizza()); }
+		 */
+		
+		String user_id = (String)session.getAttribute("id");
+		
+		model.addAttribute("member",dao.memberSelect(user_id)); //유저 아이디의 정보 불러오기
+		model.addAttribute("cartgift", dao.giftOrderSelect(user_id));//상품권 리스트 존재
+		
+	}
+	@GetMapping("kakao_gift")
+	public void kakaoGet(HttpSession session, double total_price, Model model)throws Exception {
+		String user_id = (String)session.getAttribute("id");
+		MemberVO vo = dao.kakaoMember(user_id); //멤버정보 불러오기
+		
+		model.addAttribute("member",vo);
+		model.addAttribute("total_price", total_price);
+	}
+	@ResponseBody
+	@PostMapping("kakao_gift")
+	public void kakaoPost() {
+		
+	}
+	//무통장 입금 눌렀을 때
+	@GetMapping("bank")
+	public void bankGet(HttpSession session, double total_price, Model model) throws Exception {
+		String user_id = (String)session.getAttribute("id");
+
+		//'대기' 상태를 '입금대기'로 변경
+		GiftVO vo1 = new GiftVO();
+		vo1.setUser_id(user_id);
+		vo1.setTotal_price((int)total_price);
+		dao.bankUpdate(vo1);
+		
+		model.addAttribute("total_price",total_price);
+		
+	}
+	//'입금 완료버튼 클릭 시 
+	@GetMapping("bank_last")
+	public String name(HttpSession session)throws Exception{
+		String user_id = (String)session.getAttribute("id");
+		
+		return "redirect:/myPage/myOrderList_gift";
+	}
+
+	//쿠폰 주문 페이지
+	@GetMapping("couponPage")
+	public void couponPage(HttpSession session, Model model, int e_coupon)throws Exception {
+		String user_id = (String)session.getAttribute("id");
+		
+		model.addAttribute("address",address.addSelect(user_id)); //저장된 주소 불러오기
+		//dao.cartGiftSelect(user_id); //order_uid 불러오기
+		model.addAttribute("gift",dao.couponOrder(e_coupon)); //e_coupon로 cart_gift
+		
+		
+	}	
+	//쿠폰 주문 페이지
+	@PostMapping("/cart/couponPage")
+	public void couponPagePost(HttpSession session, Model model)throws Exception {
+		String user_id = (String)session.getAttribute("id");
+				
+		CouponVO coupon = dao.couponSelect(user_id);//유저 아이디 정보 불러오기
+		
+		model.addAttribute("gift1",dao.coupon_order(coupon));//e쿠폰으로 불러온 피자 정보
+		
+	}
+	//주소 입력 페이지
+	@GetMapping("address")
+	public void addressGet() throws Exception{
+	}
+	
+	@PostMapping("addressCang")
+	public String addressPost(AddressVO vo, String user_id, int e_coupon, RedirectAttributes rttr) throws Exception{
+		
+		logger.info("e_coupon~~~~~~~~~~~~~~~~~~~~~~~~~"+e_coupon);
+		
+		vo.setUser_id(user_id);
+		address.add_insert(vo); //주소 값 insert
+		
+		rttr.addAttribute("e_coupon",e_coupon);
+		return "redirect:/cart/couponPage";
+	}
 	
 }//닫지말자

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.dominos.domain.CartVO;
+import com.dominos.domain.CouponVO;
 import com.dominos.domain.MemberVO;
 import com.dominos.persistence.CartDAO;
 import com.dominos.persistence.MemberDAO;
@@ -33,31 +34,51 @@ public class MemberController {
 	
 	@Inject
 	private CartDAO cart;
-	
+			
 	//회원가입
 	@GetMapping("join")
 	public void joinGet() throws Exception{
-		logger.info("join get");
 	}
 	@PostMapping("join")
 	public String joinPost(MemberVO vo) throws Exception {
-		dao.join(vo);
-		vo.toString();
+		
+		CouponVO coupon = new CouponVO();
+		
+		coupon.setUser_id(vo.getId());
+		
+		dao.join(vo);//회원가입 인설트
+		
+		//e쿠폰 랜덤값 형성
+		Date now = new Date();
+		SimpleDateFormat sdate = new SimpleDateFormat("MMdd");
+		String signdate = sdate.format(now);
+		int random = (int) (Math.random()*10000000);
+		String e_coupon = signdate+random;
+		
+		coupon.setE_coupon(e_coupon);
+		
+		dao.join_coupon(coupon); //회원가입 시 e쿠폰 발행
 		
 		return "redirect:/member/login";
 	}
 	//아이디 중복체크
-	//@PostMapping("")
-	//public
+	@ResponseBody //ajax 실행 시
+	@PostMapping("idCheck")
+	public int idCheck(String join_id)throws Exception{
+		int idCheck = dao.idCheck(join_id);
+		
+		return idCheck;
+	}
 	
 	//로그인
 	@GetMapping("login")
 	public void loginGet() throws Exception {
 	}
+	
 	@PostMapping("login")
 	public String loginPost(MemberVO vo, RedirectAttributes rttr, HttpSession session) throws Exception {
-		int logincount ;
-
+		
+		int logincount;
 		//세션 id2가 있고 카트_피자에 그 아이디에 해당되는값이 있으면 로그인하면 로그인 아이디로 업데이트 하고 
 		
 		String session_id2 = (String)session.getAttribute("id2");
@@ -75,7 +96,9 @@ public class MemberController {
 			
 			session.setAttribute("id", id);
 			session.setAttribute("pass", vo.getPass());
+			session.setAttribute("name", vo.getName());
 			session.setAttribute("level", vo.getLevel());
+			
 			if(count>=1) {	//카트_피자에 그 아이디에 해당되는값이 있으면
 				//user_id 를 세션 아이디 2에서 세션아이디1으로 업데이트, 날짜도. order_uid
 				
@@ -92,9 +115,7 @@ public class MemberController {
 
 				session.removeAttribute("id2");
 				return "redirect:/cart/pizza_cart";
-				
 			}else {
-				
 				session.removeAttribute("id2");
 				return "redirect:/";
 			}
@@ -102,8 +123,6 @@ public class MemberController {
 			rttr.addFlashAttribute("msg","fail");
 			return "redirect:/member/login";
 		}
-		
-		
 	}
 	//로그아웃
 	@GetMapping("logout")
@@ -190,10 +209,4 @@ public class MemberController {
 		
 	}
 	
-	//아이디 중복체크
-	@ResponseBody
-	@PostMapping("idCheck")
-	public int idCheck(String id) throws Exception{
-		return dao.idCheck(id);
-	}
 }//닫지마라

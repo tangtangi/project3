@@ -8,4 +8,25 @@
 			select * from member
 		]]>
 	</select>
+	<select id="questionList" resultType="BbsVO">
+		<![CDATA[
+			select * from bbs order by uid desc
+		]]>
+	</select>
+	<select id="questionView" resultType="BbsVO">
+		<![CDATA[
+			select * from bbs where uid=#{uid}
+		]]>
+	</select>
+	<update id="answerUpdate">
+		<![CDATA[
+			update bbs set state="답변완료", answer=#{answer} where uid=#{uid}
+		]]>
+	</update>
+	<select id="OrderList_gift" resultType="GiftVO">
+		<![CDATA[
+			select * from cart_gift where state="결제완료"
+		]]>
+	</select>
+	
 </mapper>

@@ -25,7 +25,7 @@
 			<table border=0>
 				<tr>
 					<td class="submenu_a" align=left width=185px><a href="/menu/gift">모바일상품권(도미노콘) </a></td>
-					<td class="submenu_b" align=center  width=170px><a href="/menu/giftInfo" >상품권 사용 안내</a></td>
+					<td class="submenu_b" align=center  width=170px><a href="/menu/giftInfo" style="color:black;"><b>상품권 사용 안내</b></a></td>
 				</tr>
 			</table>
 		</td>
@@ -42,7 +42,7 @@
 <table border=0 align=center width=100%>
 	<tr>
 		<td width=44%></td>
-		<td width=12% class="order"><a href="/menu/list">주문하기</a></td>
+		<td width=12% class="order"><a href="/menu/gift">주문하기</a></td>
 		<td width=44%></td>
 	</tr>
 </table>

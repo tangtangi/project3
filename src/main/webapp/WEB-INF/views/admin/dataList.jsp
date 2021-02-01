@@ -33,7 +33,7 @@
 		<a></a>
 	</div>
 </div>
-<div style="text-align: center;">
+<!-- <div style="text-align: center;">
 	<div class="headDiv" style="border-bottom: 2px solid black;">
 		&nbsp;&nbsp;
 		<input name="name" placeholder="피자이름" value="이름">
@@ -47,14 +47,14 @@
 		<input type="file" name="file">
 		<input type="submit" value="수정하기">
 	</div>
-</div>
+</div> -->
 	
 <!-- <form id='registerForm' role="form"  action="/uploadForm" method="post" enctype="multipart/form-data" target="zeroFrame"> -->
 <c:forEach items="${pizza }" var="pizza" varStatus="stat">
 <!-- onsubmit="return confirm('확실?')" -->
 	<form  id='form1' name="form(${stat.index })" action="dataList" method="post" enctype="multipart/form-data" target="zeroFrame">
 		<div>
-			${stat.index }
+			${stat.index+1 }
 			<input class="a" style="" name="menu" type="hidden" value="pizza" >
 			<input class="a" style="" name="uid" placeholder="uid" value="${pizza.uid }">
 			<input class="a" style="" name="name" placeholder="피자이름" value="${pizza.name }">
@@ -80,7 +80,7 @@
 <c:forEach items="${side }" var="side" varStatus="stat">
 	<form action="dataList" method="post" enctype="multipart/form-data" >
 		<div>
-			${stat.index }
+			${stat.index+1 }
 			<input class="a" style="" name="menu" type="hidden" value="side">
 			<input class="a" style="" name="uid" placeholder="uid" value="${side.uid }">
 			<input class="a" style="" name="name" placeholder="사이드 이름(토핑)" value="${side.name }">

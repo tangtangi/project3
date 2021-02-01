@@ -49,6 +49,31 @@
 		</div>
 	</form>
 </div>
-
+<!-- -------------------------------------------------- -->
+<!-- <form  id='form1'  method="post" enctype="multipart/form-data"  > -->
+<!-- <table> -->
+<!-- 	<tr> -->
+<!-- 		<td>이름1</td> -->
+<!-- 		<td><input name="name"></td> -->
+<!-- 	</tr> -->
+<!-- 	<tr> -->
+<!-- 		<td>사이즈</td> -->
+<!-- 		<td><input name="size_L"></td> -->
+<!-- 	</tr> -->
+<!-- 	<tr> -->
+<!-- 		<td>가격</td> -->
+<!-- 		<td><input name="price_L"></td> -->
+<!-- 	</tr> -->
+<!-- 	<tr> -->
+<!-- 		<td>첨부파일</td> -->
+<!-- 		<td><input name="file" type="file"></td> -->
+<!-- 	</tr> -->
+	
+<!-- 	<tr> -->
+<!-- 		<td></td> -->
+<!-- 		<td><input type="submit" value="글쓰기"></td> -->
+<!-- 	</tr> -->
+<!-- </table> -->
+<!-- </form> -->
 
 <%@ include file="/WEB-INF/views/include/admin_footer.jsp" %>

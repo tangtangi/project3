@@ -2,7 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/include/header.jsp" %>
 
-<title>Your Cart!!</title>
+<title>피자 결제</title>
 <style>
 	.box_head{
 		clear: both;
@@ -111,7 +111,7 @@
 		<!--  -->
 		<div class="addressBox" id="tab0111" style="">
 			<div style="color: #238ece; padding: 0 30px;"><span><img src="/image/cartPizza.jpg">밖에서 도미노 피자 먹고 싶을 땐?</span>
-					<a href="#"><span style="float: right;color: #238ece; ">DOMINO SPOT 배달 ></span></a>
+					<a href="javascript:underConstruction()"><span style="float: right;color: #238ece; ">DOMINO SPOT 배달 ></span></a>
 			</div>
 		</div>
 		<div class="addressBox" id="tab0222" style="display: none;">
@@ -161,14 +161,14 @@
 		
 		<div class="addressBox" >
 			<div style="color: #238ece; padding: 0 30px;">
-				<a href="/menu/list" style="display:inline-block; color: #888;background: #fff;width: 150px;height: 53px;line-height:53px; border: 1px solid lightgray;outline: 0px;text-align: center;">+ 포장매장 등록</a>
-					<a href="#"><span style="float: right;color: orange; ">*포장 매장은 10개까지만 등록 가능합니다.</span></a>
+				<a href="javascript:underConstruction()" style="display:inline-block; color: #888;background: #fff;width: 150px;height: 53px;line-height:53px; border: 1px solid lightgray;outline: 0px;text-align: center;">+ 포장매장 등록</a>
+					<a href="javascript:underConstruction()"><span style="float: right;color: orange; ">*포장 매장은 5개까지만 등록 가능합니다.</span></a>
 			</div>
 		</div>	
 			<div style="display: flex;justify-content: center; padding: 40px 40px 40px 0; line-height: 4; float: right;">
 				해당 배달주소로 주문을 진행하시겠습니까?
 				<div style="width: 15px;"> </div>
-				<a href="/member/cart3" class="goToGift" style="background: #ff143c; text-align: center;">선택</a>
+				<a href="javascript:underConstruction()" class="goToGift" style="background: #ff143c; text-align: center;">선택</a>
 			</div>	
 		</form>
 		
@@ -190,6 +190,10 @@
 	}
 </style>
 <script>
+function underConstruction(){
+	alert('준비중입니다.');
+	location.href="/cart/cart2";
+}
 
 window.onload = function(){
 	if(${session_id == null}){

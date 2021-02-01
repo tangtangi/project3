@@ -1,7 +1,11 @@
 package com.dominos.controller;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.annotation.Resource;
@@ -18,9 +22,13 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.dominos.domain.CartVO;
 import com.dominos.domain.GiftVO;
+import com.dominos.domain.PizzaVO;
 import com.dominos.domain.SideVO;
 import com.dominos.persistence.CartDAO;
 import com.dominos.persistence.GiftDAO;
@@ -31,53 +39,53 @@ import com.dominos.persistence.SideDAO;
 @RequestMapping("/menu")
 public class MenuController {
 
-   private static final Logger logger = LoggerFactory.getLogger(MenuController.class);
+	private static final Logger logger = LoggerFactory.getLogger(MenuController.class);
 
-   @Inject
-   public PizzaDAO pizza;
-   
-   @Inject
-   public SideDAO side;
-   
-   @Inject
-   public CartDAO cart;
+	@Inject
+	public PizzaDAO pizza;
+	
+	@Inject
+	public SideDAO side;
+	
+	@Inject
+	private GiftDAO dao;
+	
+	@Inject
+	private CartDAO cart;
+	
+	
+//	----------------------------------------------pizza -------------------------------------------------------------
+//  @Resource(name = "uploadPath")
+//  private String uploadPath;
+  // 피자 리스트 불러오기
+  @RequestMapping(value = "/list", method = RequestMethod.GET) 
+  public void list(Locale locale, Model model, String menu) throws Exception{
+     if(menu.equals("pizza")) {
+        model.addAttribute("list", pizza.list());
+     }else { //sidedish 거나 juice 거나.
+        model.addAttribute("list", side.list(menu)); 
+     }
+     model.addAttribute("menu", menu);
+     
+  }
 
-   @Inject
-   private GiftDAO dao;
-
-//   ----------------------------------------------pizza -------------------------------------------------------------
-   
-//   @Resource(name = "uploadPath")
-//   private String uploadPath;
-   // 피자 리스트 불러오기
-   @RequestMapping(value = "/list", method = RequestMethod.GET) 
-   public void list(Locale locale, Model model, String menu) throws Exception{
-      if(menu.equals("pizza")) {
-         model.addAttribute("list", pizza.list());
-      }else { //sidedish 거나 juice 거나.
-         model.addAttribute("list", side.list(menu)); 
-      }
-      model.addAttribute("menu", menu);
-      
-   }
-
-   //리스트 사이드 메뉴 등록 및 삭제
-   @RequestMapping(value = "/list", method = RequestMethod.POST)
-   public void listPost(SideVO vo,@ModelAttribute("x") String x) throws Exception {
-      
-      if(x.equals("1")) {
-         side.delete();
-      }else {
-         side.create(vo);
-      }
-   }
-   
-   //피자든 사이드 메뉴든 view 페이지로 이동.
-   @RequestMapping(value = "/view", method = RequestMethod.GET)   
-   public void view(Model model, String uid, String menu,HttpSession session) throws Exception {
+  //리스트 사이드 메뉴 등록 및 삭제
+  @RequestMapping(value = "/list", method = RequestMethod.POST)
+  public void listPost(SideVO vo,@ModelAttribute("x") String x) throws Exception {
+     
+     if(x.equals("1")) {
+        side.delete();
+     }else {
+        side.create(vo);
+     }
+  }
+  
+  //피자든 사이드 메뉴든 view 페이지로 이동.
+  @RequestMapping(value = "/view", method = RequestMethod.GET)   
+  public void view(Model model, String uid, String menu,HttpSession session) throws Exception {
 
 		//user_id
-      	String session_id= (String)session.getAttribute("id"); 
+     	String session_id= (String)session.getAttribute("id"); 
 		String session_id2 = (String)session.getAttribute("id2");
 		String user_id;
 		if(session_id==null || session_id.equals("")) {
@@ -92,51 +100,51 @@ public class MenuController {
 		String id2 = Integer.toString((int)(Math.random()*10000000));
 		session.setAttribute("id2", id2);
 		}
-      
-      if(menu.equals("pizza")) { //피자면 
-         try {
-            model.addAttribute("list",pizza.read(uid));
-            model.addAttribute("dough",side.list("dough"));
-            model.addAttribute("sidedish",side.list("sidedish"));
-            model.addAttribute("juice",side.list("juice"));
-            model.addAttribute("topping",side.list("topping"));
-         } catch (Exception e) {
-            e.printStackTrace();
-         }
-      }else { //사이드디시 이면 
-         try {
-            model.addAttribute("list",side.read(uid));
-            model.addAttribute("juice",side.list("juice"));
-         } catch (Exception e) {
-            e.printStackTrace();
-         }
-      }
+     
+     if(menu.equals("pizza")) { //피자면 
+        try {
+           model.addAttribute("list",pizza.read(uid));
+           model.addAttribute("dough",side.list("dough"));
+           model.addAttribute("sidedish",side.list("sidedish"));
+           model.addAttribute("juice",side.list("juice"));
+           model.addAttribute("topping",side.list("topping"));
+        } catch (Exception e) {
+           e.printStackTrace();
+        }
+     }else { //사이드디시 이면 
+        try {
+           model.addAttribute("list",side.read(uid));
+           model.addAttribute("juice",side.list("juice"));
+        } catch (Exception e) {
+           e.printStackTrace();
+        }
+     }
 
-      model.addAttribute("menu",menu);
-      
-   }
-   @RequestMapping(value = "/viewSide", method = RequestMethod.GET)
-   public void viewSide(Model model, String uid, String menu,HttpSession session) throws Exception {
-      if(menu.equals("pizza")) { //피자면 
-         try {
-            model.addAttribute("list",pizza.read(uid));
-            model.addAttribute("dough",side.list("dough"));
-            model.addAttribute("sidedish",side.list("sidedish"));
-            model.addAttribute("juice",side.list("juice"));
-            model.addAttribute("topping",side.list("topping"));
-         } catch (Exception e) {
-            e.printStackTrace();
-         }
-      }else { //사이드디시 이면 
-         try {
-            model.addAttribute("list",side.read(uid));
-            model.addAttribute("juice",side.list("juice"));
-         } catch (Exception e) {
-            e.printStackTrace();
-         }
-      }
-      	//user_id
-      String session_id = (String)session.getAttribute("id");
+     model.addAttribute("menu",menu);
+     
+  }
+  @RequestMapping(value = "/viewSide", method = RequestMethod.GET)
+  public void viewSide(Model model, String uid, String menu,HttpSession session) throws Exception {
+     if(menu.equals("pizza")) { //피자면 
+        try {
+           model.addAttribute("list",pizza.read(uid));
+           model.addAttribute("dough",side.list("dough"));
+           model.addAttribute("sidedish",side.list("sidedish"));
+           model.addAttribute("juice",side.list("juice"));
+           model.addAttribute("topping",side.list("topping"));
+        } catch (Exception e) {
+           e.printStackTrace();
+        }
+     }else { //사이드디시 이면 
+        try {
+           model.addAttribute("list",side.read(uid));
+           model.addAttribute("juice",side.list("juice"));
+        } catch (Exception e) {
+           e.printStackTrace();
+        }
+     }
+     	//user_id
+     String session_id = (String)session.getAttribute("id");
 		String session_id2 = (String)session.getAttribute("id2");
 		String user_id;
 		if(session_id==null || session_id.equals("")) {
@@ -144,103 +152,102 @@ public class MenuController {
 		}else {
 			user_id = session_id;
 		}
-      cart.deleteAll(user_id);//카트 내용 다 지우기
-      model.addAttribute("menu",menu);
+     cart.deleteAll(user_id);//카트 내용 다 지우기
+     model.addAttribute("menu",menu);
 
-      //비회원 세션 처리.
+     //비회원 세션 처리.
 	if(session_id == null || session_id.equals("")  ) {
 	String id2 = Integer.toString((int)(Math.random()*10000000));
 	session.setAttribute("id2", id2);
 	}
-      
-   }
-   /*
-   //view 페이지 - 카트 담기 - 토핑 +,- 누르면 하단 영역 등등 ajax로 하려다가 안한것!!
-   //ajax로 받으려면 responseBody 선언
-   @ResponseBody
-   @RequestMapping(value = "/view",method = RequestMethod.POST)
-   public Map<String, Object> viewCart(Model model, String side_uid, String menu, String count,String pizzaUid) throws Exception{
-      
-      
-      //넘어오는 side_uid 는 side의 uid
-      //menu는 pizza /side
-      logger.info("view Post...... " );
-      logger.info("model:" + model );
-      logger.info("side_uid : " + side_uid );
-      logger.info("menu : " + menu);
-      logger.info("count : " + count);
-      logger.info("pizzaUid : " + pizzaUid);
-      
-      int cnt = Integer.parseInt(count);
-      if(menu.equals("pizza")) { //피자면 
-         try {
-            logger.info("피자다");
-            SideVO sideVO = new SideVO();
-            CartVO cartVO = new CartVO();
-            
-            sideVO = side.read(side_uid);
-            String sideName = sideVO.getName();
-            //토핑 이름으로 카트에 있는지 없는지 판별.-> 없으면 인서트, 없으면 감소
-            int check = cart.getInt(sideName);
+     
+  }
+  /*
+  //view 페이지 - 카트 담기 - 토핑 +,- 누르면 하단 영역 등등 ajax로 하려다가 안한것!!
+  //ajax로 받으려면 responseBody 선언
+  @ResponseBody
+  @RequestMapping(value = "/view",method = RequestMethod.POST)
+  public Map<String, Object> viewCart(Model model, String side_uid, String menu, String count,String pizzaUid) throws Exception{
+     
+     
+     //넘어오는 side_uid 는 side의 uid
+     //menu는 pizza /side
+     logger.info("view Post...... " );
+     logger.info("model:" + model );
+     logger.info("side_uid : " + side_uid );
+     logger.info("menu : " + menu);
+     logger.info("count : " + count);
+     logger.info("pizzaUid : " + pizzaUid);
+     
+     int cnt = Integer.parseInt(count);
+     if(menu.equals("pizza")) { //피자면 
+        try {
+           logger.info("피자다");
+           SideVO sideVO = new SideVO();
+           CartVO cartVO = new CartVO();
+           
+           sideVO = side.read(side_uid);
+           String sideName = sideVO.getName();
+           //토핑 이름으로 카트에 있는지 없는지 판별.-> 없으면 인서트, 없으면 감소
+           int check = cart.getInt(sideName);
 
-            int pre_cnt = 0;
-            if(check!=0) {
-               pre_cnt = cart.getCount(sideName);
-            }
-            
-            cartVO.setCart_id(1); //cart_id 보류
-            cartVO.setName(sideVO.getName());
-            cartVO.setPrice(sideVO.getPrice());
-            cartVO.setCount(cnt);
-            cartVO.setSize("L"); //size 보류
-            cartVO.setMenu_uid(Integer.parseInt(pizzaUid));
-            cartVO.setCategory(sideVO.getCategory());
+           int pre_cnt = 0;
+           if(check!=0) {
+              pre_cnt = cart.getCount(sideName);
+           }
+           
+           cartVO.setCart_id(1); //cart_id 보류
+           cartVO.setName(sideVO.getName());
+           cartVO.setPrice(sideVO.getPrice());
+           cartVO.setCount(cnt);
+           cartVO.setSize("L"); //size 보류
+           cartVO.setMenu_uid(Integer.parseInt(pizzaUid));
+           cartVO.setCategory(sideVO.getCategory());
 
 
-            if(cnt==1 && check == 0) { // 누른거기 때문에 인서트.
-               cart.insert(cartVO);
-            }else if(cnt==0){ // 삭제하기
-               cart.delete(cartVO);
-            }else { // (cnt < pre_cnt){ // 업데이트. 개수 증감.
-               cart.update(cartVO);
-            }
-            System.out.println("cnt :" + cnt + ",check : "+check);
+           if(cnt==1 && check == 0) { // 누른거기 때문에 인서트.
+              cart.insert(cartVO);
+           }else if(cnt==0){ // 삭제하기
+              cart.delete(cartVO);
+           }else { // (cnt < pre_cnt){ // 업데이트. 개수 증감.
+              cart.update(cartVO);
+           }
+           System.out.println("cnt :" + cnt + ",check : "+check);
 
-         } catch (Exception e) {
-            e.printStackTrace();
-         }
-      }else { //사이드디시 이면 
-         try {
-            logger.info("사이드디시다");
-            model.addAttribute("list",side.read(side_uid));
-         } catch (Exception e) {
-            e.printStackTrace();
-         }
-      }
-//      model.addAttribute("sidedish",cart.list("sidedish"));
-//      model.addAttribute("juice",cart.list("juice"));
-//      model.addAttribute("topping",cart.list("topping"));
-      
-      model.addAttribute("dough",side.read(side_uid)); //음...뭐더라..
-      model.addAttribute("menu",menu);
-      logger.info("```"+model);
-      
-      List<Map<String, Object>> listMap = new ArrayList<Map<String, Object>>();
-      Map<String, Object> paramMap = new HashMap<String, Object>();
+        } catch (Exception e) {
+           e.printStackTrace();
+        }
+     }else { //사이드디시 이면 
+        try {
+           logger.info("사이드디시다");
+           model.addAttribute("list",side.read(side_uid));
+        } catch (Exception e) {
+           e.printStackTrace();
+        }
+     }
+//     model.addAttribute("sidedish",cart.list("sidedish"));
+//     model.addAttribute("juice",cart.list("juice"));
+//     model.addAttribute("topping",cart.list("topping"));
+     
+     model.addAttribute("dough",side.read(side_uid)); //음...뭐더라..
+     model.addAttribute("menu",menu);
+     logger.info("```"+model);
+     
+     List<Map<String, Object>> listMap = new ArrayList<Map<String, Object>>();
+     Map<String, Object> paramMap = new HashMap<String, Object>();
 
-      paramMap.put("topping",cart.list("topping"));
-      //listMap.add(paramMap);
-      paramMap.put("juice",cart.list("juice"));
-      //listMap.add(paramMap);
-      paramMap.put("sidedish",cart.list("sidedish"));
-      //listMap.add(paramMap);
-      
-      //String result = "{\"list\":[{\"uid\":\"1\"},{\"uid\":\"2\"}]}";
-      System.out.println("===map: "+paramMap);
-      return paramMap;
-   }
-   */
-   
+     paramMap.put("topping",cart.list("topping"));
+     //listMap.add(paramMap);
+     paramMap.put("juice",cart.list("juice"));
+     //listMap.add(paramMap);
+     paramMap.put("sidedish",cart.list("sidedish"));
+     //listMap.add(paramMap);
+     
+     //String result = "{\"list\":[{\"uid\":\"1\"},{\"uid\":\"2\"}]}";
+     System.out.println("===map: "+paramMap);
+     return paramMap;
+  }
+  */
 //	----------------------------------------------event -------------------------------------------------------------
 	@GetMapping("event")
 	public void eventGet () {
@@ -256,12 +263,6 @@ public class MenuController {
 	public void storeGet () {
 		
 	}
-	
-	@GetMapping("coupon")
-	public void couponGet () {
-		
-	}
-	
 	
 //	----------------------------------------------gift -------------------------------------------------------------
 	
@@ -313,4 +314,43 @@ public class MenuController {
 
 		return savedName;
 	}
-}
+
+//	----------------------------------------------coupon -------------------------------------------------------------
+	@GetMapping("coupon")
+	public void couponGet ()  throws Exception{
+		
+	}
+	
+	//쿠폰번호 입력 후
+	@PostMapping("e_coupon")
+	public String e_couponPost (int e_coupon, RedirectAttributes rttr) throws Exception {
+		
+	int couponCount = dao.e_couponPost(e_coupon);
+	
+		if(couponCount == 1) { //쿠폰 번호가 일치하면
+			
+			rttr.addAttribute("e_coupon",e_coupon);
+			return "redirect:/cart/couponPage";
+			
+		}else {
+			
+			rttr.addAttribute("msg", "no_coupon");
+			return "redirect:/menu/coupon";
+		}
+	}
+	
+	//상품권 주문페이지에서 '주문하기' 버튼 누른 후
+	@GetMapping("lastOrder")
+	public String lastOrder(int e_coupon)throws Exception {
+		
+		logger.info("e_couponaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"+e_coupon);
+		
+		dao.couponUpdate(e_coupon); //쿠폰 db변경
+		dao.cartUpdate(e_coupon); //cart_gift db변경
+		int order_uid = dao.cartSelect(e_coupon); //주문번호 가져오기
+	
+		logger.info("e_couponaaaaaaaaaaaaaaaaaorder_uidaaaaaaaaaaaaaaaaaaaaa"+order_uid);
+		return "redirect:/myPage/myOrderView_gift?order_uid="+order_uid;
+	}
+	
+}//닫지말자

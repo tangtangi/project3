@@ -42,7 +42,7 @@
 	    vertical-align: top;
 	}
 </style>
-<table width=100% class="view_footer" border=0  style="z-index: 2; position: fixed; bottom: 0px;">
+<table width=100% class="view_footer" border=0>
 	<tr>
 		<td  width=13.5% rowspan=2 ></td>
 		<td  class="ftName1">피자</td>

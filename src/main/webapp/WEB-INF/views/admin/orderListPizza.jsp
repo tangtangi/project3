@@ -20,7 +20,7 @@
 				</tr>
 				<c:forEach var="list" items="${order }" varStatus="status">
 				<tr>
-					<td>${status.index }</td>
+					<td>${status.index+1 }</td>
 					<td>${list.cart_id }</td>
 					<td>${list.user_id }</td>
 					<td>${list.order_uid }</td>
